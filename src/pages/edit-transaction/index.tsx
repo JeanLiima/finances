@@ -30,7 +30,23 @@ const EditTransaction = () => {
 		onChangeValue,
 		type,
 		onChangeType,
-	}= useEditTransactions();
+		isLoadingSubmitting
+	} = useEditTransactions();
+
+	if (isLoadingEdit) {
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: 'center',
+					alignItems: 'center',
+					backgroundColor: '#F0F4FF',
+				}}
+			>
+				<ActivityIndicator size="large" color="#131313" />
+			</View>
+		);
+	}
 
 	return (
 		<View style={styles.background}>
@@ -65,7 +81,7 @@ const EditTransaction = () => {
                     style={styles.submitButton}
                     onPress={onEdit}
                 >
-                    {isLoadingEdit ? (
+                    {isLoadingSubmitting ? (
                         <ActivityIndicator size={20} color="#FFF" />
                     ) : (
                         <Text style={styles.submitButtonText}>
@@ -78,7 +94,7 @@ const EditTransaction = () => {
                     style={styles.backButton}
                     onPress={goBack}
                 >
-                    {isLoadingEdit ? (
+                    {isLoadingSubmitting ? (
                         <ActivityIndicator size={20} color="#FFF" />
                     ) : (
                         <Text style={styles.backButtonText}>

@@ -56,7 +56,7 @@ const Transactions = () => {
 				<ActivityIndicator size="large" color="#131313" />
 			</View>
 		);
-	  }
+	}
 
 	return (
 		<View style={styles.container}>

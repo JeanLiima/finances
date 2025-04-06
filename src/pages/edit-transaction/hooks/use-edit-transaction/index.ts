@@ -11,7 +11,8 @@ const useEditTransactions = () => {
 	const [description, setDescription] = useState<string>('');
 	const [value, setValue] = useState<string>('');
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
-	const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(false);
+	const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(true);
+	const [isLoadingSubmitting, setIsLoadingSubmitting] = useState<boolean>(false);
 
 	const { navigate } = useNavigation();
 	const route = useRoute<RouteProp<RootStackParamList, typeof EDIT_TRANSACTION>>();
@@ -22,6 +23,7 @@ const useEditTransactions = () => {
 		if(!id) return;
 		const transactionsRef = transactionsDoc(id);
 		if (!transactionsRef) return;
+		setIsLoadingEdit(true);
 
 		const getSpecificTransaction = async () => {
 			const docSnap = await getDoc(transactionsRef);
@@ -34,15 +36,10 @@ const useEditTransactions = () => {
 				alert('Documento não encontrado!');
 				navigate(TRANSACTIONS as never);
 			}
+			setIsLoadingEdit(false);
 		};
 		getSpecificTransaction();
 	}, [id]);
-
-	const onCleanUp = () => {
-		setDescription('');
-		setValue('');
-		setType(TRANSACTIONS_TYPES.EXPENSE);
-	};
 
 	const onEdit = async () => {
 		if(!id) return;
@@ -62,23 +59,22 @@ const useEditTransactions = () => {
 			);
 			return;
 		}
+		setIsLoadingSubmitting(true);
 	
-		setIsLoadingEdit(true);
 		try {
 			const payload = {
 				description,
 				value: Number(value).toFixed(2),
-				type
+				type,
+				lastUpdatedAt: new Date()
 			}
 			
 			await updateDoc(transactionsRef, payload);
-			setIsLoadingEdit(false);
-			onCleanUp();
 			navigate(TRANSACTIONS as never);
 		} catch (error) {
 			console.log(error);
-			setIsLoadingEdit(false);
 		}
+		setIsLoadingSubmitting(false);
 	};
 
 	const handleValue = (value: string) => {
@@ -97,6 +93,7 @@ const useEditTransactions = () => {
 		onChangeType: setType,
 		onEdit,
 		isLoadingEdit,
+		isLoadingSubmitting,
 	}
 };
 

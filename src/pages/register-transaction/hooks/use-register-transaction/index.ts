@@ -49,7 +49,8 @@ const useRegisterTransactions = () => {
 				description,
 				value: Number(value).toFixed(2),
 				status: PAID.UNPAID,
-				type
+				type,
+				createdAt: new Date()
 			});
 			setIsLoadingRegister(false);
 			onCleanUp();
