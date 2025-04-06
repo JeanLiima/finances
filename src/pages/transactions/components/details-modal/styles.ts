@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   		backgroundColor: 'rgba(34, 34, 34, 0.4)',
 	},
 	modalContent: {
-		flex: 0.3,
+		flex: 0.2,
 		backgroundColor: "#FFF",
 		padding: 14,
 		gap: 8
