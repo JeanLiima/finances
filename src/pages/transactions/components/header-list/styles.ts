@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 		marginEnd: 35,
 	},
 	item:{
-		marginLeft: 10,
+		marginLeft: 13,
 		color: "#000",
 		fontSize: 16,
 	},

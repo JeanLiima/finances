@@ -17,7 +17,14 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 3,
 	},
-	content:{
+	dataContent: { 
+		paddingHorizontal: 10,  
+		width: "90%", 
+		flexDirection: 'row', 
+		alignItems: "center", 
+		justifyContent: "center"
+	},
+	textContent:{
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "space-between",
@@ -26,6 +33,7 @@ const styles = StyleSheet.create({
 	},
 	item:{
 		color: "#000",
+		marginLeft: 8,
 		fontSize: 16,
 	},
 });

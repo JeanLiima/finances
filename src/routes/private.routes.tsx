@@ -1,11 +1,11 @@
-import React from 'react';
 import { createDrawerNavigator, DrawerContentComponentProps } from '@react-navigation/drawer';
 
 import { NavigationDrawer } from '@/components/navigation-drawer';
-import { TRANSACTIONS, REGISTER_TRANSACTION, EDIT_TRANSACTION } from '@/constants/routes';
+import { TRANSACTIONS, REGISTER_TRANSACTION, EDIT_TRANSACTION, TRANSACTION_DETAILS } from '@/constants/routes';
 import { RegisterTransaction } from '@/pages/register-transaction';
 import { Transactions } from '@/pages/transactions';
 import { EditTransaction } from '@/pages/edit-transaction';
+import { TransactionDetails } from '@/pages/transaction-details';
 
 const PrivateDrawer = createDrawerNavigator();
 
@@ -40,6 +40,14 @@ const PrivateRoutes = () => (
 			component={EditTransaction}
 			options={{
 				title: 'Edição de transação',
+				drawerItemStyle: { display: 'none' }
+			}}
+		/>
+		<PrivateDrawer.Screen
+			name={TRANSACTION_DETAILS}
+			component={TransactionDetails}
+			options={{
+				title: 'Detalhes de transação',
 				drawerItemStyle: { display: 'none' }
 			}}
 		/>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 
 import { useAuth } from '@/hooks/auth';
@@ -6,7 +5,7 @@ import { useAuth } from '@/hooks/auth';
 import { PublicRoutes } from './public.routes';
 import { PrivateRoutes } from './private.routes';
 
-function Routes(){
+const Routes = () =>{
   const { isLoading, isSigned }= useAuth();
 
   if (isLoading) {

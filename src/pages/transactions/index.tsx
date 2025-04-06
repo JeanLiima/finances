@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
@@ -20,7 +19,8 @@ const Transactions = () => {
 		transactions, 
 		onDelete, 
 		onEdit,
-		onSort
+		onSort,
+		onViewDetails
 	 } = useTransactions();
 
 	const hasTransactions = transactions.length > 0;
@@ -67,7 +67,7 @@ const Transactions = () => {
 						style={styles.list}
 						data={transactions}
 						keyExtractor={(item) => item.id}
-						renderItem={({ item }) => <TransactionItem data={item} />}
+						renderItem={({ item }) => <TransactionItem data={item} onViewDetails={() => onViewDetails(item.id)} />}
 						renderHiddenItem={({ item }, rowMap) => (
 							<SwipeOptions
 								itemId={item.id}

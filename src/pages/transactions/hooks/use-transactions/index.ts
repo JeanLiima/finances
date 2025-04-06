@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { deleteDoc, onSnapshot } from "firebase/firestore";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 
-import { EDIT_TRANSACTION, RootStackParamList } from "@/constants/routes";
+import { EDIT_TRANSACTION, RootStackParamList, TRANSACTION_DETAILS } from "@/constants/routes";
 import { PAID } from "@/constants/paid-status";
 import { useTransactionsRef } from "@/hooks/use-transactions-ref";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
@@ -60,6 +60,12 @@ const useTransactions = () => {
 		} as RootStackParamList[typeof EDIT_TRANSACTION]);
 	};
 
+	const onViewDetails = async (id: string) => {
+		navigate(TRANSACTION_DETAILS, {
+			id: id,
+		} as RootStackParamList[typeof TRANSACTION_DETAILS]);
+	};
+
 	const parseValue = (val: any) => {
 		if (typeof val === "string") {
 		  return parseFloat(val.replace(/[^\d,-]/g, "").replace(",", "."));
@@ -99,7 +105,8 @@ const useTransactions = () => {
 		transactions,
 		onDelete,
 		onEdit,
-		onSort
+		onSort,
+		onViewDetails
 	}
 };
 
