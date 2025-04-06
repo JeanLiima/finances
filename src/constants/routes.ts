@@ -3,7 +3,6 @@ const SIGN_UP = 'sign-up';
 const TRANSACTIONS = 'transactions';
 const REGISTER_TRANSACTION = 'register-transaction';
 const EDIT_TRANSACTION = 'edit-transaction';
-const TRANSACTION_DETAILS = 'transaction-details'
 
 type RootStackParamList = {
 	[SIGN_IN]: undefined,
@@ -11,7 +10,6 @@ type RootStackParamList = {
 	[TRANSACTIONS]: undefined,
 	[REGISTER_TRANSACTION]: undefined,
 	[EDIT_TRANSACTION]?: { id?: string },
-	[TRANSACTION_DETAILS]?: { id?: string }
 };
 
 export {
@@ -20,6 +18,5 @@ export {
 	SIGN_UP,
 	REGISTER_TRANSACTION,
 	EDIT_TRANSACTION,
-	TRANSACTION_DETAILS,
 	type RootStackParamList,
 };

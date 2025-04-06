@@ -27,7 +27,7 @@ const TransactionItem = ({ data, onViewDetails }: TransactionItemProps) => {
 					name={isIncomeType ? "arrow-down-circle" : "arrow-up-circle"} 
 					size={20} 
 					color={isIncomeType ? "#12A454" : "#E83F5B"} 
-					/>
+				/>
 				<View style={styles.textContent}>
 					<Text style={[styles.item, { flexShrink: 1 }]} numberOfLines={1}>{data.description}</Text>
 					<Text style={[styles.item, {color: isIncomeType ? "#12A454" : "#E83F5B"}]}>{!isIncomeType && "-"}R${formattedValue}</Text>

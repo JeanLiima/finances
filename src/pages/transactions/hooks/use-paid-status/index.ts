@@ -1,12 +1,12 @@
 import { updateDoc } from "firebase/firestore";
 
-import { PAID } from "@/constants/paid-status";
+import { PAID_STATUS } from "@/constants/paid-status";
 import { useTransactionsRef } from "@/hooks/use-transactions-ref";
 
 const usePaidStatus = () => {
 	const { transactionsDoc } = useTransactionsRef();
 
-  	const onChangePaidStatus = async (paid: PAID, id: string) => {
+  	const onChangePaidStatus = async (paid: PAID_STATUS, id: string) => {
 		try {
 			const transactionsRef = transactionsDoc(id);
 			if (!transactionsRef) return;

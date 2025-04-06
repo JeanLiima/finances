@@ -4,7 +4,7 @@ import { addDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 
 import { TRANSACTIONS } from "@/constants/routes";
-import { PAID } from "@/constants/paid-status";
+import { PAID_STATUS } from "@/constants/paid-status";
 import { useTransactionsRef } from "@/hooks/use-transactions-ref";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 
@@ -48,7 +48,7 @@ const useRegisterTransactions = () => {
 			await addDoc(transactionsCollection, {
 				description,
 				value: Number(value).toFixed(2),
-				status: PAID.UNPAID,
+				status: PAID_STATUS.UNPAID,
 				type,
 				createdAt: new Date()
 			});

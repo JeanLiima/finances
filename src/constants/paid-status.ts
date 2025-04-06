@@ -1,6 +1,6 @@
-enum PAID {
+enum PAID_STATUS {
 	PAID = 'paid',
 	UNPAID = 'unpaid',
 }
 
-export { PAID };
+export { PAID_STATUS };

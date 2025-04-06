@@ -4,23 +4,26 @@ import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-na
 
 import { REGISTER_TRANSACTION } from "@/constants/routes";
 
-import { useTransactions } from "./hooks/use-transactions";
+import { Transaction, useTransactions } from "./hooks/use-transactions";
 import { TransactionItem } from "./components/transaction-item";
 import { SwipeOptions } from "./components/swipe-options";
 import { HeaderList } from "./components/header-list";
 import { FooterList } from "./components/footer-list";
 
 import { styles } from "./styles";
+import { DetailsModal } from "./components/details-modal";
+import { useState } from "react";
 
 const Transactions = () => {
+	const [transaction, setTransaction] = useState<Transaction | null>(null);
+
 	const { navigate } = useNavigation();
 	const {
 		isLoadingTransactions,
 		transactions, 
 		onDelete, 
 		onEdit,
-		onSort,
-		onViewDetails
+		onSort
 	 } = useTransactions();
 
 	const hasTransactions = transactions.length > 0;
@@ -67,7 +70,7 @@ const Transactions = () => {
 						style={styles.list}
 						data={transactions}
 						keyExtractor={(item) => item.id}
-						renderItem={({ item }) => <TransactionItem data={item} onViewDetails={() => onViewDetails(item.id)} />}
+						renderItem={({ item }) => <TransactionItem data={item} onViewDetails={() => setTransaction(item)} />}
 						renderHiddenItem={({ item }, rowMap) => (
 							<SwipeOptions
 								itemId={item.id}
@@ -82,6 +85,10 @@ const Transactions = () => {
 						showsVerticalScrollIndicator={false}
 					/>
 					<FooterList />
+					<DetailsModal 
+						data={transaction} 
+						onClose={() => setTransaction(null)}
+					/>
 				</>
 			) : (
 				<View style={styles.emptyContainer}>
