@@ -9,18 +9,20 @@ import { PrivateRoutes } from './private.routes';
 function Routes(){
   const { isLoading, isSigned }= useAuth();
 
-  if(isLoading)(
-		<View 
+  if (isLoading) {
+	return (
+		<View
 			style={{
-				flex:1,
+				flex: 1,
 				justifyContent: 'center',
 				alignItems: 'center',
-				backgroundColor: '#F0F4FF'
+				backgroundColor: '#F0F4FF',
 			}}
 		>
 			<ActivityIndicator size="large" color="#131313" />
 		</View>
-  );
+	);
+  }
 
   return (
     isSigned ? <PrivateRoutes/> : <PublicRoutes/>

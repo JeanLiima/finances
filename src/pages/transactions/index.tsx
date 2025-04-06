@@ -1,8 +1,7 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 
 import { REGISTER_TRANSACTION } from "@/constants/routes";
 
@@ -10,13 +9,14 @@ import { useTransactions } from "./hooks/use-transactions";
 import { TransactionItem } from "./components/transaction-item";
 import { SwipeOptions } from "./components/swipe-options";
 import { HeaderList } from "./components/header-list";
+import { FooterList } from "./components/footer-list";
 
 import { styles } from "./styles";
-import { FooterList } from "./components/footer-list";
 
 const Transactions = () => {
 	const { navigate } = useNavigation();
-	const { 
+	const {
+		isLoadingTransactions,
 		transactions, 
 		onDelete, 
 		onEdit,
@@ -42,6 +42,21 @@ const Transactions = () => {
 			],
 		);
 	};
+
+	if (isLoadingTransactions) {
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: 'center',
+					alignItems: 'center',
+					backgroundColor: '#F0F4FF',
+				}}
+			>
+				<ActivityIndicator size="large" color="#131313" />
+			</View>
+		);
+	  }
 
 	return (
 		<View style={styles.container}>

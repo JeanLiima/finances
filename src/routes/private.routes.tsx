@@ -39,7 +39,7 @@ const PrivateRoutes = () => (
 			name={EDIT_TRANSACTION}
 			component={EditTransaction}
 			options={{
-				title: 'Edição de Transação',
+				title: 'Edição de transação',
 				drawerItemStyle: { display: 'none' }
 			}}
 		/>
@@ -47,7 +47,7 @@ const PrivateRoutes = () => (
 			name={REGISTER_TRANSACTION}
 			component={RegisterTransaction}
 			options={{
-				title: 'Cadastro de Transação',
+				title: 'Cadastro de transação',
 			}}
 		/>
 	</PrivateDrawer.Navigator>

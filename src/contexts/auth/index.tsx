@@ -21,18 +21,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
 	useEffect(() => {
 		const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-		  if (user) {
-			setLoggedUser({
-			  name: user.displayName || '',
-			  email: user.email || '',
-			  id: user.uid
-			});
-	  
+			if (user) {
+				setLoggedUser({
+				name: user.displayName || '',
+				email: user.email || '',
+				id: user.uid
+				});
+			} else {
+				setLoggedUser(null);
+			}
 			setIsLoading(false);
-		  } else {
-			setLoggedUser(null);
-			setIsLoading(false);
-		  }
 		});
 	  
 		return () => unsubscribeAuth();

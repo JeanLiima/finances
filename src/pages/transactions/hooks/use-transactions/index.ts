@@ -16,6 +16,7 @@ interface Transaction {
 }
 
 const useTransactions = () => {
+	const [isLoadingTransactions, setIsLoadingTransactions] = useState<boolean>(true);
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 
 	const lastSortColumn = useRef<keyof Transaction | null>(null);
@@ -41,6 +42,7 @@ const useTransactions = () => {
 			});
 
 			setTransactions(lista);
+			setIsLoadingTransactions(false);
 		});
 
 		return () => unsubscribe();
@@ -93,6 +95,7 @@ const useTransactions = () => {
 	};
 
 	return {
+		isLoadingTransactions,
 		transactions,
 		onDelete,
 		onEdit,
