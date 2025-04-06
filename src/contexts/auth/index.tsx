@@ -17,11 +17,9 @@ import { auth } from '../../services/firebase-connection';
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-    const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
-    const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    // const navigation = useNavigation();
+	const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
+	const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		const unsub = onAuthStateChanged(auth, (user) => {
@@ -43,7 +41,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 		console.log(unsub);
 	}, []);
 
-    const onSignIn = async (email: string, password: string) => {
+	const onSignIn = async (email: string, password: string) => {
 		try {
 			setIsLoadingAuth(true);
 			const response = await signInWithEmailAndPassword(auth, email, password);
@@ -101,7 +99,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             }
 			setIsLoadingAuth(false);
 		}
-    }
+	};
 
 	const onSignUp = async (email: string, password: string, name: string) => {
 		try {
@@ -121,52 +119,32 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 			console.log(err);
             if (err instanceof Error) {
                 const firebaseError = err as { code?: string };
-				const isUserEmailAlreadyInUse = firebaseError.code === "auth/email-already-in-use";
-				const isInvalidEmail = firebaseError.code === "auth/invalid-email";
-				const isPasswordWeak = firebaseError.code === "auth/weak-password";
-                if (isInvalidEmail || isUserEmailAlreadyInUse) {
-                    Alert.alert(
-						"Oops..",
-						"Verifique se o email é válido.",
-						[
-							{
-								text: "OK",
-							},
-						],
-						{ cancelable: false }
-					);
-                } else if (isPasswordWeak) {
-					Alert.alert(
-						"Oops..",
-						"A senha deve ter pelo menos 6 caracteres.",
-						[
-							{
-								text: "OK",
-							},
-						],
-						{ cancelable: false }
-					);
-				} else if (isUserEmailAlreadyInUse) {
-					Alert.alert(
-						"Oops..",
-						"O email já está em uso.",
-						[
-							{
-								text: "OK",
-							},
-						],
-						{ cancelable: false }
-					);
-				}
+				if(!firebaseError.code)	return;
+				const firebaseMessages: Record<string, string> = {
+					"auth/email-already-in-use": "O email já está em uso.",
+					"auth/invalid-email": "Verifique se o email é válido.",
+					"auth/weak-password": "A senha deve ter pelo menos 6 caracteres.",
+				};
+				const errorMessage = firebaseMessages[firebaseError.code] || "Ocorreu um erro inesperado.";
+				Alert.alert(
+					"Oops..",
+					errorMessage,
+					[
+						{
+							text: "OK",
+						},
+					],
+					{ cancelable: false }
+				);
             }
 			setIsLoadingAuth(false);
 		}
-	}
+	};
 
 	const onSignOut = async () => {
 		await signOut(auth);
 		setLoggedUser(null);
-	}
+	};
 
     return (
         <AuthContext.Provider value={{
