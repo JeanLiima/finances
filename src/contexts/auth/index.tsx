@@ -10,38 +10,37 @@ import {
 
 import { Alert } from 'react-native';
 
-import { auth } from '../../services/firebase-connection';
+import { auth } from '@/services/firebase-connection';
 
 import { AuthContextData, AuthProviderProps, LoggedUser } from './types';
 
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-	const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
-	const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(false);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
+    const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		const unsub = onAuthStateChanged(auth, (user) => {
-		  if(user){
+		const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+		  if (user) {
 			setLoggedUser({
-				name: user.displayName || '',
-				email: user.email || '',
-				id: user.uid
+			  name: user.displayName || '',
+			  email: user.email || '',
+			  id: user.uid
 			});
-	
+	  
 			setIsLoading(false);
-			return;
+		  } else {
+			setLoggedUser(null);
+			setIsLoading(false);
 		  }
-	
-		  setLoggedUser(null);
-		  setIsLoading(false);
-	
 		});
-		console.log(unsub);
-	}, []);
+	  
+		return () => unsubscribeAuth();
+	  }, []);
 
-	const onSignIn = async (email: string, password: string) => {
+    const onSignIn = async (email: string, password: string) => {
 		try {
 			setIsLoadingAuth(true);
 			const response = await signInWithEmailAndPassword(auth, email, password);
@@ -99,7 +98,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             }
 			setIsLoadingAuth(false);
 		}
-	};
+    }
 
 	const onSignUp = async (email: string, password: string, name: string) => {
 		try {
@@ -116,7 +115,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
 			setIsLoadingAuth(false);
 		} catch (err) {
-			console.log(err);
             if (err instanceof Error) {
                 const firebaseError = err as { code?: string };
 				if(!firebaseError.code)	return;
