@@ -10,8 +10,9 @@ import {
 
 import { Alert } from 'react-native';
 
-import { AuthContextData, AuthProviderProps, LoggedUser } from './types';
 import { auth } from '../../services/firebase-connection';
+
+import { AuthContextData, AuthProviderProps, LoggedUser } from './types';
 
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
