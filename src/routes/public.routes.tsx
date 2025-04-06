@@ -1,9 +1,9 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { SignIn } from '../pages/sign-in';
-import { SignUp } from '../pages/sign-up';
-import { SIGN_IN, SIGN_UP } from '../constants/routes';
+import { SignIn } from '@/pages/sign-in';
+import { SignUp } from '@/pages/sign-up';
+import { SIGN_IN, SIGN_UP } from '@/constants/routes';
 
 const PublicStack = createNativeStackNavigator();
 

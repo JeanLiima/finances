@@ -1,9 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native';
-
 import { DrawerItemList, DrawerContentScrollView, DrawerItem, DrawerContentComponentProps } from '@react-navigation/drawer';
 
-import { useAuth } from '../../hooks/auth';
+import { useAuth } from '@/hooks/auth';
 
 const NavigationDrawer = (props: DrawerContentComponentProps) => {
   const { loggedUser, onSignOut } = useAuth();
@@ -25,13 +24,6 @@ const NavigationDrawer = (props: DrawerContentComponentProps) => {
 
 			<DrawerItemList {...props} />
 
-			{/* Se caso quiser o sair em cima */}
-			{/* <DrawerItem
-				{...props}
-				label="Sair do app"
-				onPress={onSignOut}
-				labelStyle={{ alignSelf: 'center' }}
-			/> */}
 		</DrawerContentScrollView>
 		<View style={{ marginBottom: 20, marginTop: 10 }}>
 			<DrawerItem

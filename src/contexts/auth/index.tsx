@@ -1,6 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-// import { useNavigation } from '@react-navigation/native';
-
 import { 
 	createUserWithEmailAndPassword, 
 	onAuthStateChanged, 
@@ -8,11 +6,11 @@ import {
 	signOut,
 	updateProfile
 } from '@firebase/auth';
-
 import { Alert } from 'react-native';
 
+import { auth } from '@/services/firebase-connection';
+
 import { AuthContextData, AuthProviderProps, LoggedUser } from './types';
-import { auth } from '../../services/firebase-connection';
 
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
@@ -21,27 +19,24 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    // const navigation = useNavigation();
-
 	useEffect(() => {
-		const unsub = onAuthStateChanged(auth, (user) => {
-		  if(user){
+		const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+		  if (user) {
 			setLoggedUser({
-				name: user.displayName || '',
-				email: user.email || '',
-				id: user.uid
+			  name: user.displayName || '',
+			  email: user.email || '',
+			  id: user.uid
 			});
-	
+	  
 			setIsLoading(false);
-			return;
+		  } else {
+			setLoggedUser(null);
+			setIsLoading(false);
 		  }
-	
-		  setLoggedUser(null);
-		  setIsLoading(false);
-	
 		});
-		console.log(unsub);
-	}, []);
+	  
+		return () => unsubscribeAuth();
+	  }, []);
 
     const onSignIn = async (email: string, password: string) => {
 		try {
@@ -118,55 +113,34 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
 			setIsLoadingAuth(false);
 		} catch (err) {
-			console.log(err);
             if (err instanceof Error) {
                 const firebaseError = err as { code?: string };
-				const isUserEmailAlreadyInUse = firebaseError.code === "auth/email-already-in-use";
-				const isInvalidEmail = firebaseError.code === "auth/invalid-email";
-				const isPasswordWeak = firebaseError.code === "auth/weak-password";
-                if (isInvalidEmail || isUserEmailAlreadyInUse) {
-                    Alert.alert(
-						"Oops..",
-						"Verifique se o email é válido.",
-						[
-							{
-								text: "OK",
-							},
-						],
-						{ cancelable: false }
-					);
-                } else if (isPasswordWeak) {
-					Alert.alert(
-						"Oops..",
-						"A senha deve ter pelo menos 6 caracteres.",
-						[
-							{
-								text: "OK",
-							},
-						],
-						{ cancelable: false }
-					);
-				} else if (isUserEmailAlreadyInUse) {
-					Alert.alert(
-						"Oops..",
-						"O email já está em uso.",
-						[
-							{
-								text: "OK",
-							},
-						],
-						{ cancelable: false }
-					);
-				}
+				if(!firebaseError.code)	return;
+				const firebaseMessages: Record<string, string> = {
+					"auth/email-already-in-use": "O email já está em uso.",
+					"auth/invalid-email": "Verifique se o email é válido.",
+					"auth/weak-password": "A senha deve ter pelo menos 6 caracteres.",
+				};
+				const errorMessage = firebaseMessages[firebaseError.code] || "Ocorreu um erro inesperado.";
+				Alert.alert(
+					"Oops..",
+					errorMessage,
+					[
+						{
+							text: "OK",
+						},
+					],
+					{ cancelable: false }
+				);
             }
 			setIsLoadingAuth(false);
 		}
-	}
+	};
 
 	const onSignOut = async () => {
 		await signOut(auth);
 		setLoggedUser(null);
-	}
+	};
 
     return (
         <AuthContext.Provider value={{

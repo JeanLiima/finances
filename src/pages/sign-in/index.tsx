@@ -1,25 +1,27 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     Platform,
     ActivityIndicator,
     View,
     KeyboardAvoidingView,
-    TextInput,
     TouchableOpacity,
     Text,
 	Alert,
-    // Image
+	TextInput,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { useAuth } from '../../hooks/auth';
-import { SIGN_UP } from '../../constants/routes';
+import { Input } from '@/design-system/input';
+import { useAuth } from '@/hooks/auth';
+import { SIGN_UP } from '@/constants/routes';
 
 import { styles } from './styles';
 
 const SignIn = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+	const passwordRef = useRef<TextInput>(null);
 
     const navigation = useNavigation();
     const { onSignIn, isLoadingAuth } = useAuth();
@@ -48,25 +50,24 @@ const SignIn = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 enabled
             >
-                {/* <Image
-                    source={require('../../assets/Logo.png')}
-                    style={styles.logo}
-                /> */}
                 <View style={styles.areaInput}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Seu email"
+                    <Input
+                        placeholder="Digite seu email"
                         value={email}
                         onChangeText={setEmail}
+						returnKeyType="next"
+						onSubmitEditing={() => passwordRef.current?.focus()}
                     />
                 </View>
                 <View style={styles.areaInput}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Sua senha"
+                    <Input
+                        placeholder="Digite sua senha"
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry={true}
+						ref={passwordRef}
+						returnKeyType="done"
+						onSubmitEditing={handleSignIn}
                     />
                 </View>
                 <TouchableOpacity

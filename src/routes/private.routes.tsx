@@ -1,34 +1,53 @@
 import React from 'react';
 import { createDrawerNavigator, DrawerContentComponentProps } from '@react-navigation/drawer';
 
-import { NavigationDrawer } from '../components/navigation-drawer';
-
-import { Home } from '../pages/home';
-import { HOME } from '../constants/routes';
+import { NavigationDrawer } from '@/components/navigation-drawer';
+import { TRANSACTIONS, REGISTER_TRANSACTION, EDIT_TRANSACTION } from '@/constants/routes';
+import { RegisterTransaction } from '@/pages/register-transaction';
+import { Transactions } from '@/pages/transactions';
+import { EditTransaction } from '@/pages/edit-transaction';
 
 const PrivateDrawer = createDrawerNavigator();
 
 const PrivateRoutes = () => (
     <PrivateDrawer.Navigator
-		initialRouteName={HOME}
+		initialRouteName={TRANSACTIONS}
 		drawerContent={(props: DrawerContentComponentProps) => <NavigationDrawer {...props} />}
 		screenOptions={{
-			headerShown: false,
 			drawerStyle: {
 				backgroundColor: '#FFF',
-				paddingTop: 20,
+				paddingTop: 20
+			},
+			drawerItemStyle:{
+				marginVertical: 4,
+				borderRadius: 4,
 			},
 			drawerActiveBackgroundColor:'#3b3dbf',
 			drawerActiveTintColor: '#FFF',
 			drawerInactiveBackgroundColor: '#F0F2FF',
-			drawerInactiveTintColor: '#121212'
+			drawerInactiveTintColor: '#3b3dbf'
 		}}
     >
 		<PrivateDrawer.Screen
-			name={HOME}
-			component={Home}
+			name={TRANSACTIONS}
+			component={Transactions}
 			options={{
-				drawerLabel: 'Inicio',
+				title: 'Transações',
+			}}
+		/>
+		<PrivateDrawer.Screen
+			name={EDIT_TRANSACTION}
+			component={EditTransaction}
+			options={{
+				title: 'Edição de Transação',
+				drawerItemStyle: { display: 'none' }
+			}}
+		/>
+		<PrivateDrawer.Screen
+			name={REGISTER_TRANSACTION}
+			component={RegisterTransaction}
+			options={{
+				title: 'Cadastro de Transação',
 			}}
 		/>
 	</PrivateDrawer.Navigator>

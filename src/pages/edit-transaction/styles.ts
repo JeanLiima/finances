@@ -1,14 +1,14 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    background: {
+	background: {
         flex: 1,
         backgroundColor: '#F0F4FF',
     },
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+		paddingTop: 20
     },
     areaInput: {
         flexDirection: 'row'
@@ -22,16 +22,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    submitText: {
+	submitButtonText: {
         fontSize: 20,
         color: '#FFF',
     },
-    link: {
-        marginTop: 20,
-        marginBottom: 10,
-    },
-    linkText: {
-        color: '#171717',
+	backButton: {
+		width: '90%',
+        height: 45,
+        borderRadius: 8,
+		backgroundColor: '#FFF',
+        borderColor: '#3b3dbf',
+		borderWidth: 1,
+        marginTop: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+	},
+	backButtonText: {
+        fontSize: 20,
+        color: '#3b3dbf',
     },
 });
 

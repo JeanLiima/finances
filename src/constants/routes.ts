@@ -1,9 +1,22 @@
 const SIGN_IN = 'sign-in';
 const SIGN_UP = 'sign-up';
-const HOME = 'home';
+const TRANSACTIONS = 'transactions';
+const REGISTER_TRANSACTION = 'register-transaction';
+const EDIT_TRANSACTION = 'edit-transaction';
+
+type RootStackParamList = {
+	[SIGN_IN]: undefined;
+	[SIGN_UP]: undefined;
+	[TRANSACTIONS]: undefined;
+	[REGISTER_TRANSACTION]: undefined;
+	[EDIT_TRANSACTION]?: { id?: string };
+};
 
 export {
-	HOME,
+	TRANSACTIONS,
 	SIGN_IN,
 	SIGN_UP,
+	REGISTER_TRANSACTION,
+	EDIT_TRANSACTION,
+	type RootStackParamList,
 };

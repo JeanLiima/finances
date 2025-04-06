@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     Platform,
     ActivityIndicator,
     View,
     KeyboardAvoidingView,
-    TextInput,
     TouchableOpacity,
     Text,
-	Alert
+	Alert,
+	TextInput
 } from 'react-native';
 
-import { useAuth } from '../../hooks/auth';
+import { useAuth } from '@/hooks/auth';
+import { Input } from '@/design-system/input';
 
 import { styles } from './styles';
 
@@ -18,6 +19,9 @@ const SignUp = () => {
 	const [name, setName] = useState<string>('');
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
+
+	const emailRef = useRef<TextInput>(null);
+	const passwordRef = useRef<TextInput>(null);
 
 	const { isLoadingAuth, onSignUp } = useAuth();
 
@@ -47,28 +51,33 @@ const SignUp = () => {
 				enabled
 			>
 				<View style={styles.areaInput}>
-					<TextInput
-						style={styles.input}
-						placeholder="Seu nome"
+					<Input
+						placeholder="Digite seu nome"
 						value={name}
 						onChangeText={setName}
+						returnKeyType="next"
+						onSubmitEditing={() => emailRef.current?.focus()}
 					/>
 				</View>
 				<View style={styles.areaInput}>
-					<TextInput
-						style={styles.input}
-						placeholder="Seu email"
+					<Input
+						placeholder="Digite seu email"
 						value={email}
 						onChangeText={setEmail}
+						ref={emailRef}
+						returnKeyType="next"
+						onSubmitEditing={() => passwordRef.current?.focus()}
 					/>
 				</View>
 				<View style={styles.areaInput}>
-					<TextInput
-						style={styles.input}
+					<Input
 						placeholder="Sua senha"
 						value={password}
 						onChangeText={setPassword}
 						secureTextEntry={true}
+						ref={passwordRef}
+						returnKeyType="done"
+						onSubmitEditing={handleSignUp}
 					/>
 				</View>
 				<TouchableOpacity 
