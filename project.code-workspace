@@ -1,0 +1,60 @@
+{
+    "folders": [
+      {
+        "path": "."
+      }
+    ],
+    "settings": {
+	  	//EDITOR
+		"editor.tabSize": 4, 
+		"editor.fontSize": 14,
+		"editor.lineHeight": 18,
+		"files.eol": "\n",
+		"files.autoSave": "afterDelay",
+		"files.autoSaveDelay": 500,
+		"files.insertFinalNewline": true,
+    	"files.trimFinalNewlines": true,
+		"editor.formatOnSave": true,
+		"editor.insertSpaces": false,
+		"editor.detectIndentation": false,
+		"terminal.integrated.fontSize": 14, 
+		"editor.rulers": [ 
+			80,
+			180
+		],
+		"javascript.updateImportsOnFileMove.enabled": "always",
+      	"typescript.updateImportsOnFileMove.enabled": "always",
+		
+		//ESLINT
+		"eslint.validate": [
+			"javascript",
+			"javascriptreact",
+			"typescript",
+			"typescriptreact"
+		],
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit",
+			"source.fixAll.stylelint": "explicit"
+		},
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"eslint.format.enable": true,
+		"eslint.enable": true,
+
+		//STYLESLINT
+		"css.validate": false,
+		"less.validate": false,
+		"scss.validate": false,
+		"stylelint.enable": true,
+		"stylelint.validate": [
+			"css",
+			"scss"
+		],
+		"[scss]": {
+			"editor.formatOnSave": true,
+			"editor.defaultFormatter": "stylelint.vscode-stylelint"
+		},
+
+		//SPELL CHECKER
+		"cSpell.ignoreWords": [],
+    }
+  }
