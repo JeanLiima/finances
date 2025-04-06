@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { deleteDoc, onSnapshot } from "firebase/firestore";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 
 import { EDIT_TRANSACTION, RootStackParamList } from "@/constants/routes";
 import { PAID } from "@/constants/paid-status";
 import { useTransactionsRef } from "@/hooks/use-transactions-ref";
+import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 
 interface Transaction {
 	id: string;
 	description: string;
 	value: number;
-	status: PAID
-}
-
-interface Order {
-	column: keyof Transaction, 
-	order: 'ASC' | 'DESC' 
+	status: PAID,
+	type: TRANSACTIONS_TYPES
 }
 
 const useTransactions = () => {
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
-	const [order, setOrder] = useState<Order | null>(null);
+
+	const lastSortColumn = useRef<keyof Transaction | null>(null);
+	const lastSortDirection = useRef<'ASC' | 'DESC'>('ASC');
 
 	const { transactionsCollection, transactionsDoc } = useTransactionsRef()
 	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
@@ -37,6 +36,7 @@ const useTransactions = () => {
 				description: doc.data().description,
 				value: doc.data().value,
 				status: doc.data().status,
+				type: doc.data().type,
 			});
 			});
 
@@ -60,38 +60,37 @@ const useTransactions = () => {
 
 	const parseValue = (val: any) => {
 		if (typeof val === "string") {
-			return parseFloat(val.replace(/[^\d,-]/g, "").replace(",", "."));
+		  return parseFloat(val.replace(/[^\d,-]/g, "").replace(",", "."));
 		}
 		return Number(val);
 	};
 	  
 	const onSort = (column: keyof Transaction) => {
-		setOrder((currentOrder) => {
-			const isSameColumn = currentOrder?.column === column;
-			const direction = isSameColumn && currentOrder.order === 'ASC' ? 'DESC' : 'ASC';
-		
-			setTransactions((currentList) => {
-				return [...currentList].sort((a, b) => {
-				let valA = a[column];
-				let valB = b[column];
-		
-				if (column === "value") {
-					valA = parseValue(valA);
-					valB = parseValue(valB);
-				}
-		
-				const result =
-					typeof valA === "number" && typeof valB === "number"
-					? valA - valB
-					: String(valA).localeCompare(String(valB));
-		
-				return direction === "ASC" ? result : -result;
-				});
-			});
+		const isSameColumn = lastSortColumn.current === column;
+  		const direction = isSameColumn && lastSortDirection.current === 'ASC' ? 'DESC' : 'ASC';
 	  
-		  return { column, order: direction };
+		setTransactions((currentList) => {
+		  return [...currentList].sort((a, b) => {
+			let valA = a[column];
+			let valB = b[column];
+	  
+			if (column === "value") {
+			  valA = parseValue(valA);
+			  valB = parseValue(valB);
+			}
+	  
+			const result =
+			  typeof valA === "number" && typeof valB === "number"
+				? valA - valB
+				: String(valA).localeCompare(String(valB));
+	  
+			return direction === "ASC" ? result : -result;
+		  });
 		});
-	  };
+	  
+		lastSortColumn.current = column;
+  		lastSortDirection.current = direction;
+	};
 
 	return {
 		transactions,
