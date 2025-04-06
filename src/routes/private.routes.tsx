@@ -18,6 +18,7 @@ const PrivateRoutes = () => (
 				backgroundColor: '#FFF',
 				paddingTop: 20
 			},
+			headerTitleAlign: 'center',
 			drawerItemStyle:{
 				marginVertical: 4,
 				borderRadius: 4,
@@ -47,7 +48,7 @@ const PrivateRoutes = () => (
 			name={TRANSACTION_DETAILS}
 			component={TransactionDetails}
 			options={{
-				title: 'Detalhes de transação',
+				title: 'Detalhes da transação',
 				drawerItemStyle: { display: 'none' }
 			}}
 		/>
