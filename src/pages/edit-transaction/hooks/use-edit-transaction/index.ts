@@ -81,12 +81,19 @@ const useEditTransactions = () => {
 		}
 	};
 
+	const handleValue = (value: string) => {
+		const formattedValue = value.replace(',', '.');
+		if(formattedValue?.split('.')[0]?.length > 14) return;
+		if(formattedValue?.split('.')[1]?.length > 2) return;
+		setValue(formattedValue);
+	};
+
 	return {
 		description,
 		value,
 		type,
 		onChangeDescription: setDescription,
-		onChangeValue: (value: string) => setValue(value.replace(',', '.')),
+		onChangeValue: handleValue,
 		onChangeType: setType,
 		onEdit,
 		isLoadingEdit,
