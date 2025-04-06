@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-// import { useNavigation } from '@react-navigation/native';
 
 import { 
 	createUserWithEmailAndPassword, 
