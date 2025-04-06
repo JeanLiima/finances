@@ -6,13 +6,12 @@
 		"env.d.ts"
 	],
 	"compilerOptions": {
+		"baseUrl": ".",
 		"strict": true,
 		"module": "esnext",
 		"moduleResolution": "bundler",
 		"paths": {
-			"@firebase/auth": [
-				"./node_modules/@firebase/auth/dist/index.rn.d.ts"
-			]
+			"@/*": ["src/*"],
 		}
  	}
 }
