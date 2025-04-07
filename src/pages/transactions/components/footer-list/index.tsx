@@ -1,19 +1,28 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity, View } from "react-native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
-import { REGISTER_TRANSACTION } from "@/constants/routes";
+import { REGISTER_TRANSACTION, RootStackParamList } from "@/constants/routes";
 
 import { styles } from "./styles";
 
-const FooterList = () => {
-	const { navigate } = useNavigation();
+interface FooterListProps {
+	yearMonth?: string
+}
+
+const FooterList = ({ yearMonth }: FooterListProps) => {
+	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+
+	const onNew = async () => {
+		navigate(REGISTER_TRANSACTION, {
+			yearMonth: yearMonth,
+		} as RootStackParamList[typeof REGISTER_TRANSACTION]);
+	};
 
 	return (
 		<View style={styles.container}>
-			{/* <Text style={styles.totalText}>Total: </Text> */}
 			<TouchableOpacity
-				onPress={() => navigate(REGISTER_TRANSACTION as never)}
+				onPress={onNew}
 				style={styles.addButton}
 			>
 				<Feather name="plus" size={24} color="#fff" />

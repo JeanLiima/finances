@@ -1,4 +1,13 @@
-import { collection, CollectionReference, doc, DocumentReference } from "firebase/firestore";
+import { 
+	collection, 
+	CollectionReference, 
+	doc, 
+	DocumentReference, 
+	orderBy, 
+	query, 
+	where, 
+	WhereFilterOp 
+} from "firebase/firestore";
 
 import { db } from "@/services/firebase-connection";
 
@@ -15,8 +24,23 @@ function useTransactionsRef() {
 		? (doc(db, "users", loggedUser.id, "transactions", id) as DocumentReference)
 		: undefined;
 
+	const transactionsQuery = (
+		whereClauses: [string, WhereFilterOp, any][],
+		orderClauses: [string, "asc" | "desc"][] = []
+		) =>
+		loggedUser
+			? query(
+				collection(db, "users", loggedUser.id, "transactions"),
+				...[
+				...whereClauses.map((clause) => where(...clause)),
+				...orderClauses.map(([field, direction]) => orderBy(field, direction)),
+				]
+			)
+			: undefined;
+
 	return {
 		transactionsDoc,
+		transactionsQuery,
 		transactionsCollection
 	}
 };

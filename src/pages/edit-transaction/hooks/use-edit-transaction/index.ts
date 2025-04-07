@@ -6,6 +6,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { EDIT_TRANSACTION, RootStackParamList, TRANSACTIONS } from "@/constants/routes";
 import { useTransactionsRef } from "@/hooks/use-transactions-ref";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
+import { Transaction } from "@/types/transaction";
 
 const useEditTransactions = () => {
 	const [description, setDescription] = useState<string>('');
@@ -62,12 +63,12 @@ const useEditTransactions = () => {
 		setIsLoadingSubmitting(true);
 	
 		try {
-			const payload = {
+			const payload: Omit<Transaction, 'id' | 'status' | 'createdAt' | 'yearMonth'> = {
 				description,
-				value: Number(value).toFixed(2),
+				value: Number(Number(value).toFixed(2)),
 				type,
 				lastUpdatedAt: new Date()
-			}
+			};
 			
 			await updateDoc(transactionsRef, payload);
 			navigate(TRANSACTIONS as never);

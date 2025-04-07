@@ -1,6 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { Transaction } from "../../hooks/use-transactions";
+import { Transaction } from "@/types/transaction";
+
 import { styles } from "./styles";
 
 interface HeaderListProps {

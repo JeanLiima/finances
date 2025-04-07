@@ -1,16 +1,22 @@
 import { createDrawerNavigator, DrawerContentComponentProps } from '@react-navigation/drawer';
 
 import { NavigationDrawer } from '@/components/navigation-drawer';
-import { TRANSACTIONS, REGISTER_TRANSACTION, EDIT_TRANSACTION } from '@/constants/routes';
+import { 
+	TRANSACTIONS, 
+	REGISTER_TRANSACTION, 
+	EDIT_TRANSACTION, 
+	TRANSACTIONS_ANALYSIS 
+} from '@/constants/routes';
 import { RegisterTransaction } from '@/pages/register-transaction';
 import { Transactions } from '@/pages/transactions';
 import { EditTransaction } from '@/pages/edit-transaction';
+import { TransactionAnalysis } from '@/pages/analysis-transactions';
 
 const PrivateDrawer = createDrawerNavigator();
 
 const PrivateRoutes = () => (
     <PrivateDrawer.Navigator
-		initialRouteName={TRANSACTIONS}
+		initialRouteName={TRANSACTIONS_ANALYSIS}
 		drawerContent={(props: DrawerContentComponentProps) => <NavigationDrawer {...props} />}
 		screenOptions={{
 			drawerStyle: {
@@ -29,6 +35,13 @@ const PrivateRoutes = () => (
 		}}
     >
 		<PrivateDrawer.Screen
+			name={TRANSACTIONS_ANALYSIS}
+			component={TransactionAnalysis}
+			options={{
+				title: 'Análises de Transações',
+			}}
+		/>
+		<PrivateDrawer.Screen
 			name={TRANSACTIONS}
 			component={Transactions}
 			options={{
@@ -39,7 +52,7 @@ const PrivateRoutes = () => (
 			name={EDIT_TRANSACTION}
 			component={EditTransaction}
 			options={{
-				title: 'Edição de transação',
+				title: 'Edição de Transação',
 				drawerItemStyle: { display: 'none' }
 			}}
 		/>
@@ -47,7 +60,8 @@ const PrivateRoutes = () => (
 			name={REGISTER_TRANSACTION}
 			component={RegisterTransaction}
 			options={{
-				title: 'Cadastro de transação',
+				title: 'Cadastro de Transação',
+				drawerItemStyle: { display: 'none' }
 			}}
 		/>
 	</PrivateDrawer.Navigator>

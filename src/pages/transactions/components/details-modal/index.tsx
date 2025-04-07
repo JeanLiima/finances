@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import { 
 	Modal, 
 	Text, 
@@ -7,11 +8,9 @@ import {
 
 import { formatCurrency } from "@/utils/format-currency";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
-
-import { Transaction } from "../../hooks/use-transactions";
+import { Transaction } from "@/types/transaction";
 
 import { styles } from "./styles";
-import { Feather } from "@expo/vector-icons";
 
 interface DetailsModalProps {
 	data: Transaction | null,

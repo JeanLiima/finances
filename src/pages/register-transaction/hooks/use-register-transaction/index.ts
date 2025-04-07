@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { addDoc } from "firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
-import { TRANSACTIONS } from "@/constants/routes";
+import { REGISTER_TRANSACTION, RootStackParamList, TRANSACTIONS } from "@/constants/routes";
 import { PAID_STATUS } from "@/constants/paid-status";
 import { useTransactionsRef } from "@/hooks/use-transactions-ref";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
+import { formatYearMonth } from "@/utils/format-to-year-month";
+import { Transaction } from "@/types/transaction";
 
 const useRegisterTransactions = () => {
 	const [description, setDescription] = useState<string>('');
@@ -16,6 +18,8 @@ const useRegisterTransactions = () => {
 
 	const { transactionsCollection } = useTransactionsRef();
 	const { navigate, isFocused } = useNavigation();
+	const route = useRoute<RouteProp<RootStackParamList, typeof REGISTER_TRANSACTION>>();
+	const yearMonth = route.params?.yearMonth;
 
 	const onCleanUp = () => {
 		setDescription('');
@@ -45,13 +49,16 @@ const useRegisterTransactions = () => {
 
 		setIsLoadingRegister(true);
 		try {
-			await addDoc(transactionsCollection, {
+			const payload: Omit<Transaction, 'id'> = {
 				description,
-				value: Number(value).toFixed(2),
+				value: Number(Number(value).toFixed(2)),
 				status: PAID_STATUS.UNPAID,
 				type,
-				createdAt: new Date()
-			});
+				createdAt: new Date(),
+				yearMonth: yearMonth || formatYearMonth(new Date()),
+				lastUpdatedAt: null
+			};
+			await addDoc(transactionsCollection, payload);
 			setIsLoadingRegister(false);
 			onCleanUp();
 			navigate(TRANSACTIONS as never);

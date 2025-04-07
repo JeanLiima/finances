@@ -3,8 +3,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 import { formatCurrency } from "@/utils/format-currency";
-
-import { Transaction } from "../../hooks/use-transactions";
+import { Transaction } from "@/types/transaction";
 
 import { PaidStatusButton } from "./components/paid-status-button";
 import { styles } from "./styles";

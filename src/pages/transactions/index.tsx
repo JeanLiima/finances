@@ -1,29 +1,31 @@
-import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { View, Text, Alert, ActivityIndicator } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import * as Animatable from 'react-native-animatable';
 
-import { REGISTER_TRANSACTION } from "@/constants/routes";
+import { MonthlyCarousel } from "@/components/monthly-carousel";
+import { Transaction } from "@/types/transaction";
 
-import { Transaction, useTransactions } from "./hooks/use-transactions";
+import { useTransactions } from "./hooks/use-transactions";
 import { TransactionItem } from "./components/transaction-item";
 import { SwipeOptions } from "./components/swipe-options";
 import { HeaderList } from "./components/header-list";
 import { FooterList } from "./components/footer-list";
+import { DetailsModal } from "./components/details-modal";
 
 import { styles } from "./styles";
-import { DetailsModal } from "./components/details-modal";
-import { useState } from "react";
 
 const Transactions = () => {
 	const [transaction, setTransaction] = useState<Transaction | null>(null);
 
-	const { navigate } = useNavigation();
 	const {
 		isLoadingTransactions,
 		transactions, 
 		onDelete, 
 		onEdit,
-		onSort
+		onSort,
+		onSelectYearMonth
 	 } = useTransactions();
 
 	const hasTransactions = transactions.length > 0;
@@ -63,48 +65,56 @@ const Transactions = () => {
 
 	return (
 		<View style={styles.container}>
-			{hasTransactions ? (
 				<>
-					<HeaderList onSort={onSort} />
-					<SwipeListView
-						style={styles.list}
-						data={transactions}
-						keyExtractor={(item) => item.id}
-						renderItem={({ item }) => <TransactionItem data={item} onViewDetails={() => setTransaction(item)} />}
-						renderHiddenItem={({ item }, rowMap) => (
-							<SwipeOptions
-								itemId={item.id}
-   								rowMap={rowMap}
-								onDelete={() => handleDelete(item.id, item.description)} 
-								onEdit={() => onEdit(item.id)}
+					<MonthlyCarousel onSelect={onSelectYearMonth}/>
+					{hasTransactions ? ( 
+						<>
+							<HeaderList onSort={onSort} />
+							<SwipeListView
+								style={styles.list}
+								data={transactions}
+								keyExtractor={(item) => item.id}
+								renderItem={({ item }) => <TransactionItem data={item} onViewDetails={() => setTransaction(item)} />}
+								renderHiddenItem={({ item }, rowMap) => (
+									<SwipeOptions
+										itemId={item.id}
+										rowMap={rowMap}
+										onDelete={() => handleDelete(item.id, item.description)} 
+										onEdit={() => onEdit(item.id)}
+									/>
+								)}
+								swipeToOpenPercent={20}
+								rightOpenValue={-190}
+								leftOpenValue={-80}
+								showsVerticalScrollIndicator={false}
 							/>
-						)}
-						swipeToOpenPercent={20}
-						rightOpenValue={-190}
-						leftOpenValue={-80}
-						showsVerticalScrollIndicator={false}
-					/>
+						</>
+					) : (
+						<View style={styles.emptyContainer}>
+							<View style={styles.emptyTextContent}>
+								<Text style={styles.emptyText}>
+									Nenhuma transação encontrada neste período.
+								</Text>
+								<Text style={styles.emptyText}>
+									Toque no botão <Text style={{ fontWeight: 'bold' }}>+</Text> abaixo para adicionar sua primeira transação.
+								</Text>
+							</View>
+							<Animatable.View
+								animation="bounce"
+								iterationCount="infinite"
+								duration={1500}
+								style={{ marginTop: 16}}
+							>
+								<Feather style={{ textAlign: "center" }} name="arrow-down" size={60} color="#ccc"  />
+  							</Animatable.View>
+						</View>
+					)}
 					<FooterList />
 					<DetailsModal 
 						data={transaction} 
 						onClose={() => setTransaction(null)}
 					/>
 				</>
-			) : (
-				<View style={styles.emptyContainer}>
-					<Text style={styles.emptyText}>
-						Não há transações registradas.
-					</Text>
-					<TouchableOpacity 
-						onPress={() => navigate(REGISTER_TRANSACTION as never)} 
-						style={styles.emptyButton}
-					>
-						<Text style={styles.emptyButtonText}>
-							Cadastre agora
-						</Text>
-					</TouchableOpacity>
-				</View>
-			)}
 		</View>
 	)
 };
