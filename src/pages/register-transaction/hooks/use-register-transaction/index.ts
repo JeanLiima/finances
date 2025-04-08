@@ -59,13 +59,12 @@ const useRegisterTransactions = () => {
 				lastUpdatedAt: null
 			};
 			await addDoc(transactionsCollection, payload);
-			setIsLoadingRegister(false);
 			onCleanUp();
 			navigate(TRANSACTIONS as never);
 		} catch (error) {
-			console.log(error);
-			setIsLoadingRegister(false);
+			console.error(error);
 		}
+		setIsLoadingRegister(false);
 	};
 
 	const handleValue = (value: string) => {

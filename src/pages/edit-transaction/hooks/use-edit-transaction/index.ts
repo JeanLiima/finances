@@ -73,7 +73,7 @@ const useEditTransactions = () => {
 			await updateDoc(transactionsRef, payload);
 			navigate(TRANSACTIONS as never);
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 		setIsLoadingSubmitting(false);
 	};

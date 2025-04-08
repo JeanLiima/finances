@@ -14,7 +14,7 @@ const usePaidStatus = () => {
 				status: paid
 			});
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	};
 

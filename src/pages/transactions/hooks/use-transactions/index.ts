@@ -26,7 +26,6 @@ const useTransactions = () => {
 
 	
 	useEffect(() => {
-		console.log(orderBy);
 		const transactionsWithMonthQuery = transactionsQuery(
 			[["yearMonth", "==", selectedYearMonth]],
 			[[orderBy.column, orderBy.order]]
