@@ -35,21 +35,9 @@ const useRegisterTransactions = () => {
 
 	const onRegister = async () => {
 		if(!transactionsCollection) return;
-		if(description === '' || isNaN(parseFloat(value))) {
-			Alert.alert(
-				"Atenção",
-				"Preencha todos os campos antes de cadastrar.",
-				[{
-					text: "OK",
-				}],
-				{ cancelable: false }
-			);
-			return;
-		}
 
 		setIsLoadingRegister(true);
 		try {
-			
 			const baseDate = yearMonth
 			? new Date(`${yearMonth}-01T00:00:00`)
 			: new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -83,6 +71,21 @@ const useRegisterTransactions = () => {
 		}
 	};
 
+	const onConfirmRegister = () => {
+		if(description === '' || isNaN(parseFloat(value))) {
+			Alert.alert(
+				"Atenção",
+				"Preencha todos os campos antes de cadastrar.",
+				[{
+					text: "OK",
+					onPress: onRegister
+				}],
+				{ cancelable: false }
+			);
+			return;
+		}
+	};
+
 	const handleValue = (value: string) => {
 		const formattedValue = value.replace(',', '.');
 		if(formattedValue?.split('.')[0]?.length > 14) return;
@@ -100,6 +103,7 @@ const useRegisterTransactions = () => {
 		onChangeType: setType,
 		onChangeNumberOfInstallment: setNumberOfInstallment,
 		onRegister,
+		onConfirmRegister,
 		isLoadingRegister
 	}
 };

@@ -13,8 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Input } from "@/design-system/input";
 import { Select } from "@/design-system/select";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
+import { useRegisterTransactions } from "@/hooks/use-register-transaction";
 
-import { useRegisterTransactions } from "./hooks/use-register-transaction";
 import { styles } from "./styles";
 
 const RegisterTransaction = () => {
@@ -24,7 +24,7 @@ const RegisterTransaction = () => {
 
 	const { 
 		isLoadingRegister, 
-		onRegister,
+		onConfirmRegister,
 		description,
 		onChangeDescription,
 		value,
@@ -59,7 +59,7 @@ const RegisterTransaction = () => {
 						keyboardType="numeric"
 						returnKeyType="done"
 						ref={valueRef}
-						onSubmitEditing={onRegister}
+						onSubmitEditing={onConfirmRegister}
 					/>
 				</View>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
@@ -75,7 +75,7 @@ const RegisterTransaction = () => {
 				<TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.submitButton}
-                    onPress={onRegister}
+                    onPress={onConfirmRegister}
                 >
                     {isLoadingRegister ? (
                         <ActivityIndicator size={20} color="#FFF" />
