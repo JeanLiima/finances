@@ -3,6 +3,7 @@ import {
 	CollectionReference, 
 	doc, 
 	DocumentReference, 
+	limit, 
 	orderBy, 
 	query, 
 	where, 
@@ -26,14 +27,16 @@ function useTransactionsRef() {
 
 	const transactionsQuery = (
 		whereClauses: [string, WhereFilterOp, any][],
-		orderClauses: [string, "asc" | "desc"][] = []
+		orderClauses: [string, "asc" | "desc"][] = [],
+		limitCount?: number
 		) =>
 		loggedUser
 			? query(
 				collection(db, "users", loggedUser.id, "transactions"),
 				...[
-				...whereClauses.map((clause) => where(...clause)),
-				...orderClauses.map(([field, direction]) => orderBy(field, direction)),
+					...whereClauses.map((clause) => where(...clause)),
+					...orderClauses.map(([field, direction]) => orderBy(field, direction)),
+					...(limitCount !== undefined ? [limit(limitCount)] : []),
 				]
 			)
 			: undefined;
