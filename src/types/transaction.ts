@@ -10,6 +10,7 @@ interface Transaction {
 	createdAt: Date,
 	yearMonth: string,
 	lastUpdatedAt: Date | null,
+	numberOfInstallment: number | null
 }
 
 export type { Transaction }

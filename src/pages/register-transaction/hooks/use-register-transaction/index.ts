@@ -13,6 +13,7 @@ import { Transaction } from "@/types/transaction";
 const useRegisterTransactions = () => {
 	const [description, setDescription] = useState<string>('');
 	const [value, setValue] = useState<string>('');
+	const [numberOfInstallment, setNumberOfInstallment] = useState<string | null>(null);
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
 	const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
 
@@ -25,6 +26,7 @@ const useRegisterTransactions = () => {
 		setDescription('');
 		setValue('');
 		setType(TRANSACTIONS_TYPES.EXPENSE);
+		setNumberOfInstallment('')
 	};
 
 	useEffect(() => {
@@ -56,7 +58,8 @@ const useRegisterTransactions = () => {
 				type,
 				createdAt: new Date(),
 				yearMonth: yearMonth || formatYearMonth(new Date()),
-				lastUpdatedAt: null
+				lastUpdatedAt: null,
+				numberOfInstallment: numberOfInstallment ? Number(numberOfInstallment) : null
 			};
 			await addDoc(transactionsCollection, payload);
 			onCleanUp();
@@ -78,9 +81,11 @@ const useRegisterTransactions = () => {
 		description,
 		value,
 		type,
+		numberOfInstallment,
 		onChangeDescription: setDescription,
 		onChangeValue: handleValue,
 		onChangeType: setType,
+		onChangeNumberOfInstallment: setNumberOfInstallment,
 		onRegister,
 		isLoadingRegister
 	}

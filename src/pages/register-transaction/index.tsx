@@ -8,14 +8,14 @@ import {
 	ActivityIndicator,
 	TextInput
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import { Input } from "@/design-system/input";
+import { Select } from "@/design-system/select";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
 
 import { useRegisterTransactions } from "./hooks/use-register-transaction";
 import { styles } from "./styles";
-import { useNavigation } from "@react-navigation/native";
-import { DepositSelect } from "@/components/deposit-select";
 
 const RegisterTransaction = () => {
   	const valueRef = useRef<TextInput>(null);
@@ -31,6 +31,8 @@ const RegisterTransaction = () => {
 		onChangeValue,
 		type,
 		onChangeType,
+		numberOfInstallment,
+		onChangeNumberOfInstallment,
 	}= useRegisterTransactions();
 
 	return (
@@ -61,7 +63,14 @@ const RegisterTransaction = () => {
 					/>
 				</View>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
-				<DepositSelect />
+				<Select 
+					value={numberOfInstallment} 
+					onChangeValue={onChangeNumberOfInstallment}
+					options={Array.from({ length: 12 }, (_, i) => ({
+						label: `${i + 1}x`,
+						value: `${i + 1}`,
+					}))}
+				/>
 				<TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.submitButton}

@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     submitButton: {
-        width: '90%',
+        width: '89%',
         height: 45,
         borderRadius: 8,
         backgroundColor: '#3b3dbf',
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         color: '#FFF',
     },
 	backButton: {
-		width: '90%',
+		width: '89%',
         height: 45,
         borderRadius: 8,
 		backgroundColor: '#FFF',

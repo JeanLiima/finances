@@ -12,6 +12,7 @@ const useEditTransactions = () => {
 	const [description, setDescription] = useState<string>('');
 	const [value, setValue] = useState<string>('');
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
+	const [numberOfInstallment, setNumberOfInstallment] = useState<string | null>(null);
 	const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(true);
 	const [isLoadingSubmitting, setIsLoadingSubmitting] = useState<boolean>(false);
 
@@ -33,6 +34,7 @@ const useEditTransactions = () => {
 				setDescription(data.description);
 				setValue(data.value.toString());
 				setType(data.type);
+				setNumberOfInstallment(data.numberOfInstallment.toString());
 			} else {
 				alert('Documento não encontrado!');
 				navigate(TRANSACTIONS as never);
@@ -67,7 +69,8 @@ const useEditTransactions = () => {
 				description,
 				value: Number(Number(value).toFixed(2)),
 				type,
-				lastUpdatedAt: new Date()
+				lastUpdatedAt: new Date(),
+				numberOfInstallment: numberOfInstallment ? Number(numberOfInstallment) : null
 			};
 			
 			await updateDoc(transactionsRef, payload);
@@ -89,9 +92,11 @@ const useEditTransactions = () => {
 		description,
 		value,
 		type,
+		numberOfInstallment,
 		onChangeDescription: setDescription,
 		onChangeValue: handleValue,
 		onChangeType: setType,
+		onChangeNumberOfInstallment: setNumberOfInstallment,
 		onEdit,
 		isLoadingEdit,
 		isLoadingSubmitting,

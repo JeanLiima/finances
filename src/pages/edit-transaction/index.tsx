@@ -11,6 +11,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 import { Input } from "@/design-system/input";
+import { Select } from "@/design-system/select";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
 
 import { useEditTransactions } from "./hooks/use-edit-transaction";
@@ -30,6 +31,8 @@ const EditTransaction = () => {
 		onChangeValue,
 		type,
 		onChangeType,
+		numberOfInstallment,
+		onChangeNumberOfInstallment,
 		isLoadingSubmitting
 	} = useEditTransactions();
 
@@ -76,6 +79,14 @@ const EditTransaction = () => {
 					/>
 				</View>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
+				<Select 
+					value={numberOfInstallment} 
+					onChangeValue={onChangeNumberOfInstallment}
+					options={Array.from({ length: 12 }, (_, i) => ({
+						label: `${i + 1}x`,
+						value: `${i + 1}`,
+					}))}
+				/>
 				<TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.submitButton}
