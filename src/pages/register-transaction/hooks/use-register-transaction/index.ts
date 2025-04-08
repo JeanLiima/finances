@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
-import { addDoc } from "firebase/firestore";
+import { addDoc, Timestamp } from "firebase/firestore";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 import { REGISTER_TRANSACTION, RootStackParamList, TRANSACTIONS } from "@/constants/routes";
@@ -56,7 +56,7 @@ const useRegisterTransactions = () => {
 				value: Number(Number(value).toFixed(2)),
 				status: PAID_STATUS.UNPAID,
 				type,
-				createdAt: new Date(),
+				createdAt: Timestamp.fromDate(new Date()),
 				yearMonth: yearMonth || formatYearMonth(new Date()),
 				lastUpdatedAt: null,
 				numberOfInstallment: numberOfInstallment ? Number(numberOfInstallment) : null

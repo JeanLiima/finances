@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
-import { getDoc, updateDoc } from "firebase/firestore";
+import { getDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 import { EDIT_TRANSACTION, RootStackParamList, TRANSACTIONS } from "@/constants/routes";
@@ -69,7 +69,7 @@ const useEditTransactions = () => {
 				description,
 				value: Number(Number(value).toFixed(2)),
 				type,
-				lastUpdatedAt: new Date(),
+				lastUpdatedAt: Timestamp.fromDate(new Date()),
 				numberOfInstallment: numberOfInstallment ? Number(numberOfInstallment) : null
 			};
 			
