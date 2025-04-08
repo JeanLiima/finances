@@ -33,28 +33,33 @@ const useRegisterTransactions = () => {
 		onCleanUp();
 	}, [isFocused]);
 
-	const onRegister = async () => {
+	const onRegister = async (partialPayload: Partial<Transaction>) => {
 		if(!transactionsCollection) return;
 
 		setIsLoadingRegister(true);
 		try {
-			const baseDate = yearMonth
+			const baseDate =  partialPayload.yearMonth
 			? new Date(`${yearMonth}-01T00:00:00`)
 			: new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-			const installments = numberOfInstallment ? Number(numberOfInstallment) : 1;
+
+			const currentNumberOfInstallment = partialPayload.numberOfInstallment
+			const installments = currentNumberOfInstallment ?? 1;
 			const groupId = installments > 1 ? doc(transactionsCollection).id : null;
 
 			for (let i = 0; i < installments; i++) {
 				const installmentDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
 
 				const payload: Omit<Transaction, 'id'> = {
-					description,
-					value: Number(Number(value).toFixed(2)),
+					...partialPayload,
+
+					description: partialPayload.description || '',
+					value: partialPayload.value || 0,
+					type: partialPayload.type || TRANSACTIONS_TYPES.EXPENSE,
+					createdAt: partialPayload.createdAt || Timestamp.fromDate(new Date()),
+					lastUpdatedAt: partialPayload.lastUpdatedAt || null,
+
 					status: PAID_STATUS.UNPAID,
-					type,
-					createdAt: Timestamp.fromDate(new Date()),
 					yearMonth: formatYearMonth(installmentDate),
-					lastUpdatedAt: null,
 					numberOfInstallment: installments > 1 ? installments : null,
 					groupId: installments > 1 ? groupId : null,
 				};
@@ -73,12 +78,21 @@ const useRegisterTransactions = () => {
 
 	const onConfirmRegister = () => {
 		if(description === '' || isNaN(parseFloat(value))) {
+
+			const partialPayload: Partial<Transaction> = {
+				description,
+				value: Number(Number(value).toFixed(2)),
+				type,
+				numberOfInstallment: numberOfInstallment ? Number(numberOfInstallment) : null,
+				yearMonth
+			};
+
 			Alert.alert(
 				"Atenção",
 				"Preencha todos os campos antes de cadastrar.",
 				[{
 					text: "OK",
-					onPress: onRegister
+					onPress: () => onRegister(partialPayload)
 				}],
 				{ cancelable: false }
 			);
