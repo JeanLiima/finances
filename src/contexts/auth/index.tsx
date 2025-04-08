@@ -36,7 +36,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 		return unsubscribeAuth;
 	}, []);
 
-    const onSignIn = async (email: string, password: string) => {
+	const onSignIn = async (email: string, password: string) => {
 		try {
 			setIsLoadingAuth(true);
 			const response = await signInWithEmailAndPassword(auth, email, password);
