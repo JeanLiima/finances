@@ -1,7 +1,7 @@
 
 import { initializeApp } from "firebase/app";
-import { getFirestore } from 'firebase/firestore'
-import auth from '@react-native-firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
 
 import {
 	FIREBASE_API_KEY,
@@ -26,6 +26,7 @@ import {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 
 export { db, auth };

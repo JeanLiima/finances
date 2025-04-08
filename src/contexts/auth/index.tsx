@@ -20,12 +20,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		const unsubscribeAuth = auth().onAuthStateChanged((user) => {
+		const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
 			if (user) {
 				setLoggedUser({
-				name: user.displayName || '',
-				email: user.email || '',
-				id: user.uid
+					name: user.displayName || '',
+					email: user.email || '',
+					id: user.uid
 				});
 			} else {
 				setLoggedUser(null);
@@ -34,12 +34,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 		});
 	  
 		return unsubscribeAuth;
-	  }, []);
+	}, []);
 
     const onSignIn = async (email: string, password: string) => {
 		try {
 			setIsLoadingAuth(true);
-			const response = await auth().signInWithEmailAndPassword(email, password);
+			const response = await signInWithEmailAndPassword(auth, email, password);
 
 			if(!response.user.email || !response.user.displayName) return;
 
@@ -61,48 +61,42 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 					Alert.alert(
 						"Oops..",
 						"Verifique se o email e a senha estão corretos.",
-						[
-							{
-								text: "OK",
-							},
-						],
+						[{
+							text: "OK",
+						}],
 						{ cancelable: false }
 					);
                 } else if (isInvalidEmail) {
 					Alert.alert(
 						"Oops..",
 						"Verifique se o email é válido.",
-						[
-							{
-								text: "OK",
-							},
-						],
+						[{
+							text: "OK",
+						}],
 						{ cancelable: false }
 					);
 				} else if (isInvalidPassword) {
 					Alert.alert(
 						"Oops..",
 						"Verifique sua senha.",
-						[
-							{
-								text: "OK",
-							},
-						],
+						[{
+							text: "OK",
+						}],
 						{ cancelable: false }
 					);
 				}
             }
 			setIsLoadingAuth(false);
-		}
-    }
+		};
+    };
 
 	const onSignUp = async (email: string, password: string, name: string) => {
 		try {
 			setIsLoadingAuth(true);
-			const userCredential = await auth().createUserWithEmailAndPassword(email, password);
-			await userCredential.user.updateProfile({
+			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+			await updateProfile(userCredential.user, {
 				displayName: name,
-			  });
+			});
 			setLoggedUser({
 				name: name,
 				email: email,
@@ -123,20 +117,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 				Alert.alert(
 					"Oops..",
 					errorMessage,
-					[
-						{
-							text: "OK",
-						},
-					],
+					[{
+						text: "OK",
+					}],
 					{ cancelable: false }
 				);
             }
 			setIsLoadingAuth(false);
-		}
+		};
 	};
 
 	const onSignOut = async () => {
-		await auth().signOut();
+		await signOut(auth);
 		setLoggedUser(null);
 	};
 
