@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
-import { addDoc, Timestamp } from "firebase/firestore";
+import { addDoc, doc, Timestamp } from "firebase/firestore";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 import { REGISTER_TRANSACTION, RootStackParamList, TRANSACTIONS } from "@/constants/routes";
@@ -39,11 +39,9 @@ const useRegisterTransactions = () => {
 			Alert.alert(
 				"Atenção",
 				"Preencha todos os campos antes de cadastrar.",
-				[
-					{
-						text: "OK",
-					},
-				],
+				[{
+					text: "OK",
+				}],
 				{ cancelable: false }
 			);
 			return;
@@ -51,23 +49,38 @@ const useRegisterTransactions = () => {
 
 		setIsLoadingRegister(true);
 		try {
-			const payload: Omit<Transaction, 'id'> = {
-				description,
-				value: Number(Number(value).toFixed(2)),
-				status: PAID_STATUS.UNPAID,
-				type,
-				createdAt: Timestamp.fromDate(new Date()),
-				yearMonth: yearMonth || formatYearMonth(new Date()),
-				lastUpdatedAt: null,
-				numberOfInstallment: numberOfInstallment ? Number(numberOfInstallment) : null
-			};
-			await addDoc(transactionsCollection, payload);
+			
+			const baseDate = yearMonth
+			? new Date(`${yearMonth}-01T00:00:00`)
+			: new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+			const installments = numberOfInstallment ? Number(numberOfInstallment) : 1;
+			const groupId = installments > 1 ? doc(transactionsCollection).id : null;
+
+			for (let i = 0; i < installments; i++) {
+				const installmentDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
+
+				const payload: Omit<Transaction, 'id'> = {
+					description,
+					value: Number(Number(value).toFixed(2)),
+					status: PAID_STATUS.UNPAID,
+					type,
+					createdAt: Timestamp.fromDate(new Date()),
+					yearMonth: formatYearMonth(installmentDate),
+					lastUpdatedAt: null,
+					numberOfInstallment: installments > 1 ? installments : null,
+					groupId: installments > 1 ? groupId : null,
+				};
+
+				await addDoc(transactionsCollection, payload);
+			}
+
 			onCleanUp();
 			navigate(TRANSACTIONS as never);
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setIsLoadingRegister(false);
 		}
-		setIsLoadingRegister(false);
 	};
 
 	const handleValue = (value: string) => {
