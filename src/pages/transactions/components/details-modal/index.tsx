@@ -23,8 +23,8 @@ interface DetailsModalProps {
 const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 	const isIncomeType = data?.type === TRANSACTIONS_TYPES.INCOME;
 	
-	const installmentValue = data?.numberOfInstallment ? data?.value / data?.numberOfInstallment : data?.value;
-	const formattedValue = installmentValue ? formatCurrency(installmentValue) : undefined;
+	const totalValue = data?.totalInstallment ? data?.value * data?.totalInstallment : undefined;
+	const formattedValue = data?.value ? formatCurrency(data?.value) : undefined;
 	const formattedCreatedAt = data?.createdAt ? format(data.createdAt.toDate(), 'dd/MM/yyyy - HH:mm:ss') : null;
 	const formattedLastUpdatedAt = data?.lastUpdatedAt ? format(data.lastUpdatedAt.toDate(), 'dd/MM/yyyy - HH:mm:ss') : null;
 
@@ -40,27 +40,13 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 					<Divider />
 					<View style={styles.modalDescriptionContent}>
 						<TermValue term={"Descrição: "}>{data?.description}</TermValue>
-						{data?.numberOfInstallment && (
-							<>
-								<TermValue term={"Quantidade de vezes: "}>
-									{data?.numberOfInstallment}
-								</TermValue>
-								<TermValue term={"Valor: "}>
-									<Text
-										style={[
-											styles.valueText, {
-												color: isIncomeType ? "#12A454" : "#E83F5B",
-												fontWeight: 'bold' 
-											}
-										]}
-										>
-										{!isIncomeType && " -"} R$ {formattedValue}
-									</Text>
-								</TermValue>
-							</>
+						{data?.totalInstallment && (
+							<TermValue term={"Quantidade de vezes: "}>
+								{data?.totalInstallment}
+							</TermValue>
 						)}
-						<TermValue term={data?.numberOfInstallment ? "Valor total:" : "Valor:"}>
-							<Text 
+						<TermValue term={"Valor: "}>
+							<Text
 								style={[
 									styles.valueText, {
 										color: isIncomeType ? "#12A454" : "#E83F5B",
@@ -68,9 +54,23 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 									}
 								]}
 								>
-								{!isIncomeType && " -"} R$ {data?.numberOfInstallment && data?.value ? formatCurrency(data.value) : formattedValue}
+								{!isIncomeType && " -"}R${formattedValue}
 							</Text>
 						</TermValue>
+						{totalValue && (
+							<TermValue term="Valor total:">
+								<Text 
+									style={[
+										styles.valueText, {
+											color: isIncomeType ? "#12A454" : "#E83F5B",
+											fontWeight: 'bold' 
+										}
+									]}
+									>
+									{!isIncomeType && " -"}R${formatCurrency(totalValue)}
+								</Text>
+							</TermValue>
+						)}
 					</View>
 					<Divider />
 					<TermValue term={"Criado: "}>{formattedCreatedAt}</TermValue>

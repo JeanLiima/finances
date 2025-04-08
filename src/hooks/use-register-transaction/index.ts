@@ -13,7 +13,7 @@ import { Transaction } from "@/types/transaction";
 const useRegisterTransactions = () => {
 	const [description, setDescription] = useState<string>('');
 	const [value, setValue] = useState<string>('');
-	const [numberOfInstallment, setNumberOfInstallment] = useState<string | null>(null);
+	const [totalInstallment, setTotalInstallment] = useState<string | null>(null);
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
 	const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
 
@@ -26,7 +26,7 @@ const useRegisterTransactions = () => {
 		setDescription('');
 		setValue('');
 		setType(TRANSACTIONS_TYPES.EXPENSE);
-		setNumberOfInstallment('')
+		setTotalInstallment('')
 	};
 
 	useEffect(() => {
@@ -38,30 +38,32 @@ const useRegisterTransactions = () => {
 
 		setIsLoadingRegister(true);
 		try {
-			const baseDate =  partialPayload.yearMonth
-			? new Date(`${yearMonth}-01T00:00:00`)
+			const baseDate = partialPayload.yearMonth
+			? new Date(`${partialPayload.yearMonth}-01T00:00:00`)
 			: new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
-			const currentNumberOfInstallment = partialPayload.numberOfInstallment
-			const installments = currentNumberOfInstallment ?? 1;
-			const groupId = installments > 1 ? doc(transactionsCollection).id : null;
+			const installments = partialPayload.totalInstallment ?? 1;
+			const groupId = partialPayload?.groupId || doc(transactionsCollection).id;
+			const hasInstallmentAndGroupId = installments > 1;
 
 			for (let i = 0; i < installments; i++) {
 				const installmentDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
+				console.log({installmentDate});
 
 				const payload: Omit<Transaction, 'id'> = {
 					...partialPayload,
 
 					description: partialPayload.description || '',
-					value: partialPayload.value || 0,
+					value:  partialPayload.value || 0,
 					type: partialPayload.type || TRANSACTIONS_TYPES.EXPENSE,
 					createdAt: partialPayload.createdAt || Timestamp.fromDate(new Date()),
 					lastUpdatedAt: partialPayload.lastUpdatedAt || null,
 
 					status: PAID_STATUS.UNPAID,
 					yearMonth: formatYearMonth(installmentDate),
-					numberOfInstallment: installments > 1 ? installments : null,
-					groupId: installments > 1 ? groupId : null,
+					totalInstallment: hasInstallmentAndGroupId ? installments : null,
+					currentInstallment: hasInstallmentAndGroupId ? i + 1 : null,
+					groupId: hasInstallmentAndGroupId ? groupId : null,
 				};
 
 				await addDoc(transactionsCollection, payload);
@@ -78,26 +80,29 @@ const useRegisterTransactions = () => {
 
 	const onConfirmRegister = () => {
 		if(description === '' || isNaN(parseFloat(value))) {
-
-			const partialPayload: Partial<Transaction> = {
-				description,
-				value: Number(Number(value).toFixed(2)),
-				type,
-				numberOfInstallment: numberOfInstallment ? Number(numberOfInstallment) : null,
-				yearMonth
-			};
-
 			Alert.alert(
 				"Atenção",
 				"Preencha todos os campos antes de cadastrar.",
 				[{
 					text: "OK",
-					onPress: () => onRegister(partialPayload)
 				}],
 				{ cancelable: false }
 			);
 			return;
-		}
+		};
+
+		const parsedValue = Number(Number(value).toFixed(2));
+		const parsedInstallments = totalInstallment ? Number(totalInstallment) : 1;
+		const installmentValue = Number((parsedValue / parsedInstallments).toFixed(2));
+		const partialPayload: Partial<Transaction> = {
+			description,
+			value: installmentValue,
+			type,
+			totalInstallment: parsedInstallments,
+			yearMonth
+		};
+
+		onRegister(partialPayload);
 	};
 
 	const handleValue = (value: string) => {
@@ -111,11 +116,11 @@ const useRegisterTransactions = () => {
 		description,
 		value,
 		type,
-		numberOfInstallment,
+		totalInstallment,
 		onChangeDescription: setDescription,
 		onChangeValue: handleValue,
 		onChangeType: setType,
-		onChangeNumberOfInstallment: setNumberOfInstallment,
+		onChangeTotalInstallment: setTotalInstallment,
 		onRegister,
 		onConfirmRegister,
 		isLoadingRegister

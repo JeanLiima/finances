@@ -16,7 +16,9 @@ const useDeleteTransaction = () => {
 				return;
 			} else {
 				const transactionsWithGroupIdQuery = transactionsQuery(
-					[["groupId", "==", groupId]]
+					[["groupId", "==", groupId]],
+					undefined,
+					12
 				);
 				if(!transactionsWithGroupIdQuery) return;
 				const snapshot = await getDocs(transactionsWithGroupIdQuery);
@@ -37,11 +39,24 @@ const useDeleteTransaction = () => {
 		
 		Alert.alert(
 			"Excluir transação",
-			"Deseja excluir apenas esta parcela ou todas as parcelas deste lançamento?",
+			"Está transação tem vínculo. \nDeseja excluir apenas esta parcela ou todas as parcelas deste lançamento?",
 			[
 				{
 					text: "Apenas esta",
-					onPress: () => onDelete(id),
+					onPress: () => Alert.alert(
+						"Atenção",
+						"Ao deletar apenas esta parcela ela perderá o vinculo com as demais. \nDeseja continuar?",
+						[
+							{
+								text: "Continuar",
+								onPress: () => onDelete(id)
+							},
+							{
+								text: "Cancelar",
+								style: "cancel",
+							},
+						]
+					),
 					style: "default",
 				},
 				{
@@ -61,7 +76,7 @@ const useDeleteTransaction = () => {
 	const onConfirmDelete = (id: string, groupId: string | null, description: string) => {
 		if(!id) return;
 		Alert.alert(
-			"Atenção",
+			"Excluir transação",
 			`Você tem certeza que deseja deletar o registro "${description}"?`,
 			[
 				{

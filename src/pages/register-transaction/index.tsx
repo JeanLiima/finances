@@ -31,8 +31,8 @@ const RegisterTransaction = () => {
 		onChangeValue,
 		type,
 		onChangeType,
-		numberOfInstallment,
-		onChangeNumberOfInstallment,
+		totalInstallment,
+		onChangeTotalInstallment,
 	}= useRegisterTransactions();
 
 	return (
@@ -64,8 +64,8 @@ const RegisterTransaction = () => {
 				</View>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
 				<Select 
-					value={numberOfInstallment} 
-					onChangeValue={onChangeNumberOfInstallment}
+					value={totalInstallment} 
+					onChangeValue={onChangeTotalInstallment}
 					options={Array.from({ length: 12 }, (_, i) => ({
 						label: `${i + 1}x`,
 						value: `${i + 1}`,
@@ -91,7 +91,7 @@ const RegisterTransaction = () => {
                     onPress={goBack}
                 >
                     {isLoadingRegister ? (
-                        <ActivityIndicator size={20} color="#FFF" />
+                        <ActivityIndicator size={20} color="#3b3dbf" />
                     ) : (
                         <Text style={styles.backButtonText}>
 							Voltar

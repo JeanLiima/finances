@@ -31,8 +31,8 @@ const EditTransaction = () => {
 		onChangeValue,
 		type,
 		onChangeType,
-		numberOfInstallment,
-		onChangeNumberOfInstallment,
+		totalInstallment,
+		onChangeTotalInstallment,
 		isLoadingSubmitting
 	} = useEditTransactions();
 
@@ -80,8 +80,8 @@ const EditTransaction = () => {
 				</View>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
 				<Select 
-					value={numberOfInstallment} 
-					onChangeValue={onChangeNumberOfInstallment}
+					value={totalInstallment} 
+					onChangeValue={onChangeTotalInstallment}
 					options={Array.from({ length: 12 }, (_, i) => ({
 						label: `${i + 1}x`,
 						value: `${i + 1}`,
@@ -107,7 +107,7 @@ const EditTransaction = () => {
                     onPress={goBack}
                 >
                     {isLoadingSubmitting ? (
-                        <ActivityIndicator size={20} color="#FFF" />
+                        <ActivityIndicator size={20} color="#3b3dbf" />
                     ) : (
                         <Text style={styles.backButtonText}>
 							Voltar
