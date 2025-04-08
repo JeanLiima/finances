@@ -86,6 +86,7 @@ const EditTransaction = () => {
 						label: `${i + 1}x`,
 						value: `${i + 1}`,
 					}))}
+					label="Escolha o parcelamento: (Opcional)"
 				/>
 				<TouchableOpacity
                     activeOpacity={0.8}

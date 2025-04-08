@@ -13,20 +13,22 @@ interface SelectProps {
 	value: string | null, 
 	onChangeValue: (value: SetStateAction<string | null>) => void,
 	options: Options[],
-	placeholder?: string
+	placeholder?: string,
+	label?: string,
 }
 
 const Select = ({ 
 	value, 
 	onChangeValue,
 	options,
-	placeholder
-}:SelectProps) => {
+	placeholder,
+	label
+}: SelectProps) => {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.label}>Escolha o parcelamento:</Text>
+			{label && (<Text style={styles.label}>{label}</Text>)}
 			<DropDownPicker
 				style={styles.dropdown}
 				dropDownContainerStyle={styles.dropdownContainer}
