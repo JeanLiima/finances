@@ -22,32 +22,13 @@ const Transactions = () => {
 	const {
 		isLoadingTransactions,
 		transactions, 
-		onDelete, 
 		onEdit,
 		onSort,
 		onSelectYearMonth,
 		selectedYearMonth
-	 } = useTransactions();
+	} = useTransactions();
 
 	const hasTransactions = transactions.length > 0;
-
-	const handleDelete = (id: string, description: string) => {
-		if(!id) return;
-		Alert.alert(
-			"Atenção",
-			`Você tem certeza que deseja deletar o registro "${description}"?`,
-			[
-				{
-					text: "OK",
-					onPress: () => onDelete(id),
-				},
-				{
-					text: "Cancelar",
-					style: "cancel",
-				},
-			],
-		);
-	};
 
 	if (isLoadingTransactions) {
 		return (
@@ -78,9 +59,8 @@ const Transactions = () => {
 								renderItem={({ item }) => <TransactionItem data={item} onViewDetails={() => setTransaction(item)} />}
 								renderHiddenItem={({ item }, rowMap) => (
 									<SwipeOptions
-										itemId={item.id}
+										item={item}
 										rowMap={rowMap}
-										onDelete={() => handleDelete(item.id, item.description)} 
 										onEdit={() => onEdit(item.id)}
 									/>
 								)}

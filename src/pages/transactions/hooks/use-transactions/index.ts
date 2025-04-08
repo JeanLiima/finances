@@ -21,7 +21,7 @@ const useTransactions = () => {
 	});
 	const [selectedYearMonth, setSelectedYearMonth] = useState<string>(formatYearMonth(new Date()));
 
-	const { transactionsQuery, transactionsDoc } = useTransactionsRef()
+	const { transactionsQuery } = useTransactionsRef()
 	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
 	
@@ -52,12 +52,6 @@ const useTransactions = () => {
 		return () => unsubscribe();
 	}, [selectedYearMonth, orderBy]);
 
-	const onDelete = async (id: string) => {
-		const transactionsRef = transactionsDoc(id);
-		if (!transactionsRef) return;
-		await deleteDoc(transactionsRef);
-	};
-
 	const onEdit = async (id: string) => {
 		navigate(EDIT_TRANSACTION, {
 			id: id,
@@ -77,7 +71,6 @@ const useTransactions = () => {
 	return {
 		isLoadingTransactions,
 		transactions,
-		onDelete,
 		onEdit,
 		onSort,
 		onSelectYearMonth: setSelectedYearMonth,

@@ -1,23 +1,26 @@
 import { TouchableOpacity, View } from "react-native";
 import { Feather } from '@expo/vector-icons'
 
+import { Transaction } from "@/types/transaction";
+import { useDeleteTransaction } from "@/hooks/use-delete-transaction";
+
 import { styles } from "./styles";
 
 interface SwipeOptionsProps {
-	itemId: string;
+	item: Transaction;
 	rowMap: { [key: string]: any };
-	onDelete: VoidFunction;
 	onEdit: VoidFunction;
 };
 
-const SwipeOptions = ({ itemId, rowMap, onDelete, onEdit }: SwipeOptionsProps) => {
+const SwipeOptions = ({ item, rowMap, onEdit }: SwipeOptionsProps) => {
+	const {	onConfirmDelete } = useDeleteTransaction();
 
 	const handleDelete = () => {
-		rowMap?.[itemId]?.closeRow();
-		onDelete?.();
+		rowMap?.[item.id]?.closeRow();
+		onConfirmDelete(item.id, item?.groupId, item.description);
 	};
 	const handleEdit = () => {
-		rowMap?.[itemId]?.closeRow();
+		rowMap?.[item.id]?.closeRow();
 		onEdit?.();
 	};
 

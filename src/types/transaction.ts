@@ -12,7 +12,8 @@ interface Transaction {
 	createdAt: Timestamp,
 	yearMonth: string,
 	lastUpdatedAt: Timestamp | null,
-	numberOfInstallment: number | null
+	numberOfInstallment: number | null,
+	groupId: string | null
 }
 
 export type { Transaction }
