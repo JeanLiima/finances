@@ -24,7 +24,7 @@ const EditTransaction = () => {
 
 	const { 
 		isLoadingEdit, 
-		onEdit,
+		onConfirmeEdit,
 		description,
 		onChangeDescription,
 		value,
@@ -75,7 +75,7 @@ const EditTransaction = () => {
 						keyboardType="numeric"
 						returnKeyType="done"
 						ref={valueRef}
-						onSubmitEditing={onEdit}
+						onSubmitEditing={onConfirmeEdit}
 					/>
 				</View>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
@@ -91,7 +91,7 @@ const EditTransaction = () => {
 				<TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.submitButton}
-                    onPress={onEdit}
+                    onPress={onConfirmeEdit}
                 >
                     {isLoadingSubmitting ? (
                         <ActivityIndicator size={20} color="#FFF" />
