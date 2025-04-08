@@ -1,16 +1,19 @@
-import { Feather } from "@expo/vector-icons";
 import { 
 	Modal, 
 	Text, 
 	TouchableWithoutFeedback, 
 	View 
 } from "react-native"
+import { format } from "date-fns";
 
+import { TermValue } from "@/design-system/term-value";
 import { formatCurrency } from "@/utils/format-currency";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 import { Transaction } from "@/types/transaction";
 
+import { TransactionTypeBadge } from "./components/transaction-type-badge";
 import { styles } from "./styles";
+import { Divider } from "@/design-system/divider";
 
 interface DetailsModalProps {
 	data: Transaction | null,
@@ -19,7 +22,11 @@ interface DetailsModalProps {
 
 const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 	const isIncomeType = data?.type === TRANSACTIONS_TYPES.INCOME;
-	const formattedValue = data?.value ? formatCurrency(data?.value) : undefined;
+	
+	const installmentValue = data?.numberOfInstallment ? data?.value / data?.numberOfInstallment : data?.value;
+	const formattedValue = installmentValue ? formatCurrency(installmentValue) : undefined;
+	const formattedCreatedAt = data?.createdAt ? format(data.createdAt.toDate(), 'dd/MM/yyyy - HH:mm:ss') : null;
+	const formattedLastUpdatedAt = data?.lastUpdatedAt ? format(data.lastUpdatedAt.toDate(), 'dd/MM/yyyy - HH:mm:ss') : null;
 
 	return (
 		<Modal visible={!!data} animationType="fade" transparent={true}>
@@ -28,39 +35,46 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 				<View style={{ flex:1 }}></View>
 				</TouchableWithoutFeedback>
 				<View style={styles.modalContent}>
+					{data?.type && <TransactionTypeBadge type={data.type} />}
 					<Text style={styles.title}>Detalhes</Text>
-					<Text style={styles.item}>Descrição: {data?.description}</Text>
-					<View style={styles.line}>
-						<View style={styles.column}>
-							<Text style={styles.item}>Valor:
-								<Text 
-									style={[styles.item, {
+					<Divider />
+					<View style={styles.modalDescriptionContent}>
+						<TermValue term={"Descrição: "}>{data?.description}</TermValue>
+						{data?.numberOfInstallment && (
+							<>
+								<TermValue term={"Quantidade de vezes: "}>
+									{data?.numberOfInstallment}
+								</TermValue>
+								<TermValue term={"Valor: "}>
+									<Text
+										style={[
+											styles.valueText, {
+												color: isIncomeType ? "#12A454" : "#E83F5B",
+												fontWeight: 'bold' 
+											}
+										]}
+										>
+										{!isIncomeType && " -"} R$ {formattedValue}
+									</Text>
+								</TermValue>
+							</>
+						)}
+						<TermValue term={data?.numberOfInstallment ? "Valor total:" : "Valor:"}>
+							<Text 
+								style={[
+									styles.valueText, {
 										color: isIncomeType ? "#12A454" : "#E83F5B",
 										fontWeight: 'bold' 
-									}]}
-									>
-									{!isIncomeType && " -"} R$ {formattedValue}
-								</Text>
+									}
+								]}
+								>
+								{!isIncomeType && " -"} R$ {data?.numberOfInstallment && data?.value ? formatCurrency(data.value) : formattedValue}
 							</Text>
-						</View>
-						<View style={styles.column}>
-							<View style={[styles.type,{
-								borderColor: isIncomeType ? "#12A454" : "#E83F5B",
-								backgroundColor: isIncomeType ? "#12A45420" : "#E83F5B20",
-							}]}>
-								<Feather
-									name={isIncomeType ? "arrow-down-circle" : "arrow-up-circle"} 
-									size={20} 
-									color={isIncomeType ? "#12A454" : "#E83F5B"} 
-								/>
-								<Text style={[styles.item, {
-									color: isIncomeType ? "#12A454" : "#E83F5B"
-								}]}>
-									{isIncomeType ? "Entrada" : "Saída"}
-								</Text>
-							</View>
-						</View>
+						</TermValue>
 					</View>
+					<Divider />
+					<TermValue term={"Criado: "}>{formattedCreatedAt}</TermValue>
+					{formattedLastUpdatedAt && (<TermValue term={"Última atualização: "}>{formattedLastUpdatedAt}</TermValue>)}
 				</View>
     		</View>
       </Modal>

@@ -15,7 +15,8 @@ interface TransactionItemProps {
 
 const TransactionItem = ({ data, onViewDetails }: TransactionItemProps) => {
 	const isIncomeType = data.type === TRANSACTIONS_TYPES.INCOME;
-	const formattedValue = formatCurrency(data.value);
+	const installmentValue = data.numberOfInstallment ? data.value / data.numberOfInstallment : data.value;
+	const formattedValue = formatCurrency(installmentValue);
 
 	return (
 		<View style={styles.container}>

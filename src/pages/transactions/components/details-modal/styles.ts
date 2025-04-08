@@ -3,13 +3,20 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
 	container: {
+		position: 'relative',
 		flex: 3,
   		backgroundColor: 'rgba(34, 34, 34, 0.4)',
 	},
 	modalContent: {
-		flex: 0.2,
+		flex: 0.5,
 		backgroundColor: "#FFF",
 		padding: 14,
+		gap: 8,
+	},
+	modalDescriptionContent: {
+		flex: 0.8,
+		justifyContent: "flex-start",
+		backgroundColor: "#FFF",
 		gap: 8
 	},
 	title: {
@@ -21,7 +28,7 @@ const styles = StyleSheet.create({
 	line: {
 		width: "100%",
 		flexDirection: 'row',
-		justifyContent: "space-between",
+		justifyContent: "space-around",
 		alignContent: "center"
 	},
 	column: {
@@ -30,20 +37,10 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignContent: "center",
 	},
-	item: {
+	valueText: {
 		color: "#000",
 		fontSize: 16,
-	},
-	type: {
-		alignSelf: 'center',
-		gap: 8,
-		paddingHorizontal: 10,
-		paddingVertical: 5,
-		borderWidth: 1,
-		borderRadius: 4,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "center"
+		fontWeight: 'bold'
 	}
 });
 
