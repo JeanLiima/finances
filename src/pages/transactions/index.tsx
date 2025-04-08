@@ -25,7 +25,8 @@ const Transactions = () => {
 		onDelete, 
 		onEdit,
 		onSort,
-		onSelectYearMonth
+		onSelectYearMonth,
+		selectedYearMonth
 	 } = useTransactions();
 
 	const hasTransactions = transactions.length > 0;
@@ -109,7 +110,7 @@ const Transactions = () => {
   							</Animatable.View>
 						</View>
 					)}
-					<FooterList />
+					<FooterList yearMonth={selectedYearMonth} />
 					<DetailsModal 
 						data={transaction} 
 						onClose={() => setTransaction(null)}

@@ -81,7 +81,8 @@ const useTransactions = () => {
 		onDelete,
 		onEdit,
 		onSort,
-		onSelectYearMonth: setSelectedYearMonth
+		onSelectYearMonth: setSelectedYearMonth,
+		selectedYearMonth
 	}
 };
 
