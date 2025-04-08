@@ -15,6 +15,7 @@ import { TransactionTypeSelector } from "@/components/transaction-type-selection
 import { useRegisterTransactions } from "./hooks/use-register-transaction";
 import { styles } from "./styles";
 import { useNavigation } from "@react-navigation/native";
+import { DepositSelect } from "@/components/deposit-select";
 
 const RegisterTransaction = () => {
   	const valueRef = useRef<TextInput>(null);
@@ -60,6 +61,7 @@ const RegisterTransaction = () => {
 					/>
 				</View>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
+				<DepositSelect />
 				<TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.submitButton}

@@ -20,7 +20,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+		const unsubscribeAuth = auth().onAuthStateChanged((user) => {
 			if (user) {
 				setLoggedUser({
 				name: user.displayName || '',
@@ -33,13 +33,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 			setIsLoading(false);
 		});
 	  
-		return () => unsubscribeAuth();
+		return unsubscribeAuth;
 	  }, []);
 
     const onSignIn = async (email: string, password: string) => {
 		try {
 			setIsLoadingAuth(true);
-			const response = await signInWithEmailAndPassword(auth, email, password);
+			const response = await auth().signInWithEmailAndPassword(email, password);
 
 			if(!response.user.email || !response.user.displayName) return;
 
@@ -99,10 +99,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 	const onSignUp = async (email: string, password: string, name: string) => {
 		try {
 			setIsLoadingAuth(true);
-			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-			await updateProfile(userCredential.user, {
+			const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+			await userCredential.user.updateProfile({
 				displayName: name,
-			});
+			  });
 			setLoggedUser({
 				name: name,
 				email: email,
@@ -136,7 +136,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 	};
 
 	const onSignOut = async () => {
-		await signOut(auth);
+		await auth().signOut();
 		setLoggedUser(null);
 	};
 
