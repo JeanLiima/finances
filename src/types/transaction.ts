@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 import { PAID_STATUS } from "@/constants/paid-status";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 
@@ -7,9 +9,9 @@ interface Transaction {
 	value: number;
 	status: PAID_STATUS,
 	type: TRANSACTIONS_TYPES,
-	createdAt: Date,
+	createdAt: Timestamp,
 	yearMonth: string,
-	lastUpdatedAt: Date | null,
+	lastUpdatedAt: Timestamp | null,
 	numberOfInstallment: number | null
 }
 
