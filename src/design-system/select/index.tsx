@@ -1,5 +1,5 @@
 import React, { SetStateAction, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Keyboard } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import { styles } from './styles';
@@ -43,6 +43,7 @@ const Select = ({
 				placeholder={placeholder ? placeholder : "Selecione"}
 				zIndex={1000}
 				showTickIcon={false}
+				onOpen={() => Keyboard.dismiss()}
 			/>
 		</View>
 	);

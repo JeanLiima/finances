@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Keyboard, Text, TouchableOpacity, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
@@ -35,19 +35,25 @@ interface TransactionTypeSelectorProps {
 }
 
 const TransactionTypeSelector = ({ value, onChange }: TransactionTypeSelectorProps) => {
+
+	const handleChange = (type: TRANSACTIONS_TYPES) => {
+		Keyboard.dismiss();
+		onChange(type);
+	};
+
 	return (
 		<View style={styles.container}>
 			<TypeButton
 				label="Entrada"
 				selected={value === TRANSACTIONS_TYPES.INCOME}
-				onPress={() => onChange(TRANSACTIONS_TYPES.INCOME)}
+				onPress={() => handleChange(TRANSACTIONS_TYPES.INCOME)}
 				icon="arrow-down-circle"
 				color="#12A454"
 			/>
 			<TypeButton
 				label="Saída"
 				selected={value === TRANSACTIONS_TYPES.EXPENSE}
-				onPress={() => onChange(TRANSACTIONS_TYPES.EXPENSE)}
+				onPress={() => handleChange(TRANSACTIONS_TYPES.EXPENSE)}
 				icon="arrow-up-circle"
 				color="#E83F5B"
 			/>
