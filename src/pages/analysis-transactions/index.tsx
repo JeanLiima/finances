@@ -19,7 +19,6 @@ const TransactionAnalysis = () => {
 		isLoadingAnalysisTransactions, 
 		totalPaidTransactions 
 	} = useAnalysisTransactions();
-	
 
 	if (isLoadingAnalysisTransactions) {
 			return (
