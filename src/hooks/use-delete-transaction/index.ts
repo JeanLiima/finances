@@ -39,17 +39,18 @@ const useDeleteTransaction = () => {
 		
 		Alert.alert(
 			"Excluir transação",
-			"Está transação tem vínculo. \nDeseja excluir apenas esta parcela ou todas as parcelas deste lançamento?",
+			"Está transação tem vínculo. \n\nDeseja excluir apenas esta parcela ou todas as parcelas deste lançamento?",
 			[
 				{
 					text: "Apenas esta",
 					onPress: () => Alert.alert(
 						"Atenção",
-						"Ao deletar apenas esta parcela ela perderá o vinculo com as demais. \nDeseja continuar?",
+						"Ao deletar apenas esta parcela ela perderá o vinculo com as demais. \n\nDeseja continuar?",
 						[
 							{
 								text: "Continuar",
-								onPress: () => onDelete(id)
+								onPress: () => onDelete(id),
+								style: "destructive",
 							},
 							{
 								text: "Cancelar",
@@ -57,7 +58,7 @@ const useDeleteTransaction = () => {
 							},
 						]
 					),
-					style: "default",
+					style: "destructive",
 				},
 				{
 					text: "Todas",

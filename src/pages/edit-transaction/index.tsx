@@ -13,8 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Input } from "@/design-system/input";
 import { Select } from "@/design-system/select";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
+import { useEditTransactions } from "@/hooks/use-edit-transaction";
 
-import { useEditTransactions } from "./hooks/use-edit-transaction";
 import { styles } from "./styles";
 
 const EditTransaction = () => {

@@ -10,12 +10,14 @@ import { Transaction } from "@/types/transaction";
 import { useDeleteTransaction } from "@/hooks/use-delete-transaction";
 import { useRegisterTransactions } from "@/hooks/use-register-transaction";
 
+import { showTransactionWithInstallmentChangeAlert } from "./mappers/show-transaction-with-installment-change-alert";
+
 const useEditTransactions = () => {
 	const [description, setDescription] = useState<string>('');
 	const [value, setValue] = useState<string>('');
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
-	const [numberOfInstallment, setNumberOfInstallment] = useState<string | null>(null);
-	const [groupId, setGroupId] = useState<string | null>(null);
+	const [totalInstallment, setTotalInstallment] = useState<string | null>(null);
+	const [restOfData, setRestOfData] = useState<Transaction | null>(null);
 
 	const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(true);
 	const [isLoadingSubmitting, setIsLoadingSubmitting] = useState<boolean>(false);
@@ -40,8 +42,8 @@ const useEditTransactions = () => {
 				setDescription(data.description);
 				setValue(data.value.toString());
 				setType(data.type);
-				setGroupId(data.groupId);
-				setNumberOfInstallment(data.numberOfInstallment ? data.numberOfInstallment.toString() : null);
+				setTotalInstallment(data.totalInstallment ? data.totalInstallment.toString() : null);
+				setRestOfData(data);
 			} else {
 				alert('Documento não encontrado!');
 				navigate(TRANSACTIONS as never);
@@ -51,48 +53,73 @@ const useEditTransactions = () => {
 		getSpecificTransaction();
 	}, [id]);
 
-	const onEdit = async () => {
-		if(!id) return;
+	const onCleanUp = () => {
+		setDescription('');
+		setValue('');
+		setType(TRANSACTIONS_TYPES.EXPENSE);
+		setTotalInstallment('');
+		setRestOfData(null);
+	};
+
+	const onEdit = async (
+		id: string, 
+		partialPayload: Partial<Transaction>, 
+		isIsolatedEdit: boolean = false,
+		shouldRedistributeValue: boolean = false
+	) => {
 		const transactionsRef = transactionsDoc(id);
 		if (!transactionsRef) return;
 
 		setIsLoadingSubmitting(true);
 
 		try {
-			const payload: Omit<Transaction, 'id' | 'status' | 'createdAt' | 'yearMonth' | 'installmentGroupId' | 'groupId'> = {
-				description,
-				value: Number(Number(value).toFixed(2)),
-				type,
-				lastUpdatedAt: Timestamp.fromDate(new Date()),
-				numberOfInstallment: numberOfInstallment ? Number(numberOfInstallment) : null,
-			};
-	
-			if (!groupId) {
-				await updateDoc(transactionsRef, payload);
+			const hasGroupId = !!partialPayload.groupId;
+			const hasInstallment = !!partialPayload.totalInstallment && Number(partialPayload.totalInstallment) > 1;
+
+			if (isIsolatedEdit  || (!hasGroupId && !hasInstallment)) {
+				await updateDoc(transactionsRef, {
+					...partialPayload,
+					totalInstallment: null,
+					currentInstallment: null,
+					groupId: null
+				});
 				navigate(TRANSACTIONS as never);
 				return;
 			} else {
-				const transactionsWithGroupIdQuery = transactionsQuery(
-					[["groupId", "==", groupId]],
-					[["yearMonth", "asc"]],
-					1
-				);
-				if(!transactionsWithGroupIdQuery) return;
-				const snapshot = await getDocs(transactionsWithGroupIdQuery);
-				if (snapshot.empty) return;
+				let originalYearMonth = partialPayload.yearMonth;
+				let originalCreatedAt = partialPayload.createdAt;
 
-				const originalData = snapshot.docs[0].data();
-				const originalYearMonth = originalData.yearMonth;
-				const originalCreatedAt = originalData.createdAt;
+				if(hasGroupId) {
+					const transactionsWithGroupIdQuery = transactionsQuery(
+						[["groupId", "==", partialPayload.groupId]],
+						[["yearMonth", "asc"]],
+						1
+					);
+					if(!transactionsWithGroupIdQuery) return;
+					const snapshot = await getDocs(transactionsWithGroupIdQuery);
+					if (snapshot.empty) return;
+					
+					const originalData = snapshot.docs[0].data();
+					originalYearMonth = originalData.yearMonth;
+					originalCreatedAt = originalData.createdAt;
+				}
 
-				await onDelete(id, groupId);
+				const totalInstallments = Number(partialPayload.totalInstallment) || 1;
+				const value = shouldRedistributeValue ? partialPayload.value : ((partialPayload.value ?? 0) * totalInstallments);
+
+				await onDelete(id, partialPayload.groupId);
 				await onRegister({
-					...payload,
+					...partialPayload,
+					value,
+					totalInstallment: hasInstallment ? Number(partialPayload.totalInstallment) : null,
 					yearMonth: originalYearMonth,
 					createdAt: originalCreatedAt,
-					groupId: groupId,
+					groupId: hasGroupId ? partialPayload.groupId : null,
 				});
 			}
+
+			onCleanUp();
+			navigate(TRANSACTIONS as never);
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -101,31 +128,29 @@ const useEditTransactions = () => {
 	};
 
 	const onSelectEditType = async () => {
-		if (!groupId) {
-			await onEdit();
+		if(!id) return;
+
+		const partialPayload: Partial<Transaction> = {
+			description,
+			value: Number(value),
+			type,
+			totalInstallment: Number(totalInstallment),
+			lastUpdatedAt: Timestamp.fromDate(new Date()),
+			yearMonth: restOfData?.yearMonth,
+			createdAt: restOfData?.createdAt,
+			groupId: restOfData?.groupId
+		};
+
+		if (!restOfData?.groupId) {
+			await onEdit(id, partialPayload);
 			return;
 		};
 
-		Alert.alert(
-			"Editar transação",
-			"Deseja editar apenas esta parcela ou todas as parcelas deste lançamento?",
-			[
-				{
-					text: "Apenas esta",
-					onPress: onEdit,
-					style: "default",
-				},
-				{
-					text: "Todas",
-					onPress: onEdit,
-					style: "default",
-				},
-				{
-					text: "Cancelar",
-					style: "cancel",
-				},
-			],
-			{ cancelable: true }
+		showTransactionWithInstallmentChangeAlert(
+			id,
+			partialPayload,
+			restOfData,
+			onEdit
 		);
 	};
 
@@ -135,19 +160,22 @@ const useEditTransactions = () => {
 				"Atenção",
 				"Preencha todos os campos antes de cadastrar.",
 				[{
-					text: "OK",
-					onPress: onSelectEditType
+					text: "OK"
 				}],
 				{ cancelable: false }
 			);
 			return;
 		}
+
+		onSelectEditType();
 	};
 
 	const handleValue = (value: string) => {
 		const formattedValue = value.replace(',', '.');
-		if(formattedValue?.split('.')[0]?.length > 14) return;
-		if(formattedValue?.split('.')[1]?.length > 2) return;
+
+		if (formattedValue?.split('.')[0]?.length > 14) return;
+		if (formattedValue?.split('.')[1]?.length > 2) return;
+
 		setValue(formattedValue);
 	};
 
@@ -155,11 +183,11 @@ const useEditTransactions = () => {
 		description,
 		value,
 		type,
-		numberOfInstallment,
+		totalInstallment,
 		onChangeDescription: setDescription,
 		onChangeValue: handleValue,
 		onChangeType: setType,
-		onChangeNumberOfInstallment: setNumberOfInstallment,
+		onChangeTotalInstallment: setTotalInstallment,
 		onConfirmeEdit,
 		isLoadingEdit,
 		isLoadingSubmitting,

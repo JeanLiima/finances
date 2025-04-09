@@ -42,26 +42,28 @@ const useRegisterTransactions = () => {
 			? new Date(`${partialPayload.yearMonth}-01T00:00:00`)
 			: new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
-			const installments = partialPayload.totalInstallment ?? 1;
+			const parsedInstallments = partialPayload?.totalInstallment ? Number(partialPayload.totalInstallment) : 1;
 			const groupId = partialPayload?.groupId || doc(transactionsCollection).id;
-			const hasInstallmentAndGroupId = installments > 1;
+			const hasInstallmentAndGroupId = parsedInstallments > 1;
 
-			for (let i = 0; i < installments; i++) {
+			for (let i = 0; i < parsedInstallments; i++) {
 				const installmentDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
-				console.log({installmentDate});
+
+				const parsedValue = Number(Number(partialPayload.value).toFixed(2));
+				const installmentValue = Number((parsedValue / parsedInstallments).toFixed(2));
 
 				const payload: Omit<Transaction, 'id'> = {
 					...partialPayload,
 
 					description: partialPayload.description || '',
-					value:  partialPayload.value || 0,
+					value: installmentValue,
 					type: partialPayload.type || TRANSACTIONS_TYPES.EXPENSE,
 					createdAt: partialPayload.createdAt || Timestamp.fromDate(new Date()),
 					lastUpdatedAt: partialPayload.lastUpdatedAt || null,
 
 					status: PAID_STATUS.UNPAID,
 					yearMonth: formatYearMonth(installmentDate),
-					totalInstallment: hasInstallmentAndGroupId ? installments : null,
+					totalInstallment: hasInstallmentAndGroupId ? parsedInstallments : null,
 					currentInstallment: hasInstallmentAndGroupId ? i + 1 : null,
 					groupId: hasInstallmentAndGroupId ? groupId : null,
 				};
@@ -91,14 +93,11 @@ const useRegisterTransactions = () => {
 			return;
 		};
 
-		const parsedValue = Number(Number(value).toFixed(2));
-		const parsedInstallments = totalInstallment ? Number(totalInstallment) : 1;
-		const installmentValue = Number((parsedValue / parsedInstallments).toFixed(2));
 		const partialPayload: Partial<Transaction> = {
 			description,
-			value: installmentValue,
+			value: Number(value),
 			type,
-			totalInstallment: parsedInstallments,
+			totalInstallment: Number(totalInstallment),
 			yearMonth
 		};
 
