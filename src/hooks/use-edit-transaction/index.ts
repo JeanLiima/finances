@@ -113,13 +113,15 @@ const useEditTransactions = () => {
 					originalCreatedAt = originalData.createdAt;
 				}
 
-				const totalInstallments = Number(partialPayload.totalInstallment) || 1;
-				const amount = shouldRedistributeValue ? partialPayload.amount : ((partialPayload.amount ?? 0) * totalInstallments);
+				const amount = shouldRedistributeValue 
+					? partialPayload.amount ?? 0 
+					: partialPayload.totalAmount ?? 0;
 
 				await onDelete(id, partialPayload.groupId);
 				await onRegister({
 					...partialPayload,
 					amount,
+					totalAmount: amount,
 					totalInstallment: hasInstallment ? Number(partialPayload.totalInstallment) : null,
 					yearMonth: originalYearMonth,
 					createdAt: originalCreatedAt,
@@ -145,6 +147,7 @@ const useEditTransactions = () => {
 			type,
 			totalInstallment: Number(totalInstallment),
 			lastUpdatedAt: Timestamp.fromDate(new Date()),
+			totalAmount: restOfData?.totalAmount,
 			yearMonth: restOfData?.yearMonth,
 			createdAt: restOfData?.createdAt,
 			groupId: restOfData?.groupId

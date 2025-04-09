@@ -60,9 +60,10 @@ const useRegisterTransactions = () => {
 					type: partialPayload.type || TRANSACTIONS_TYPES.EXPENSE,
 					createdAt: partialPayload.createdAt || Timestamp.fromDate(new Date()),
 					lastUpdatedAt: partialPayload.lastUpdatedAt || null,
-
+					
 					status: PAID_STATUS.UNPAID,
 					yearMonth: formatYearMonth(installmentDate),
+					totalAmount: hasInstallmentAndGroupId ? parsedAmount : null,
 					totalInstallment: hasInstallmentAndGroupId ? parsedInstallments : null,
 					currentInstallment: hasInstallmentAndGroupId ? i + 1 : null,
 					groupId: hasInstallmentAndGroupId ? groupId : null,

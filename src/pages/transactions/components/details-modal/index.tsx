@@ -23,7 +23,6 @@ interface DetailsModalProps {
 const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 	const isIncomeType = data?.type === TRANSACTIONS_TYPES.INCOME;
 	
-	const totalAmount = data?.totalInstallment ? data?.amount * data?.totalInstallment : undefined;
 	const formattedAmount = data?.amount ? formatCurrency(data?.amount) : undefined;
 	const formattedCreatedAt = data?.createdAt ? format(data.createdAt.toDate(), 'dd/MM/yyyy - HH:mm:ss') : null;
 	const formattedLastUpdatedAt = data?.lastUpdatedAt ? format(data.lastUpdatedAt.toDate(), 'dd/MM/yyyy - HH:mm:ss') : null;
@@ -57,7 +56,7 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 								{!isIncomeType && " -"}R${formattedAmount}
 							</Text>
 						</TermValue>
-						{totalAmount && (
+						{data?.totalAmount && (
 							<TermValue term="Valor total:">
 								<Text 
 									style={[
@@ -67,7 +66,7 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 										}
 									]}
 									>
-									{!isIncomeType && " -"}R${formatCurrency(totalAmount)}
+									{!isIncomeType && " -"}R${formatCurrency(data?.totalAmount)}
 								</Text>
 							</TermValue>
 						)}

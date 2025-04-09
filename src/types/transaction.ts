@@ -7,6 +7,7 @@ interface Transaction {
 	id: string;
 	description: string;
 	amount: number;
+	totalAmount: number | null
 	status: PAID_STATUS,
 	type: TRANSACTIONS_TYPES,
 	createdAt: Timestamp,
