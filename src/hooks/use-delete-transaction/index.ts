@@ -26,6 +26,7 @@ const useDeleteTransaction = () => {
 					type: data.type,
 					status: data.status,
 				});
+				await deleteDoc(transactionsRef);
 				return;
 			} else {
 				const transactionsWithGroupIdQuery = transactionsQuery(
