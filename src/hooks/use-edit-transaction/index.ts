@@ -66,12 +66,10 @@ const useEditTransactions = () => {
 			}
 			setIsLoadingEdit(false);
 		};
-
+		
 		getSpecificTransaction();
 
-		return () => {
-			isActive = false;
-		};
+		return () => { isActive = false };
 	}, [id, isFocused]);
 
 	const onCleanUp = () => {

@@ -34,6 +34,8 @@ const useRegisterTransactions = () => {
 
 	useEffect(() => {
 		onCleanUp();
+
+		return () => onCleanUp();
 	}, [isFocused]);
 
 	const onRegister = async (partialPayload: Partial<Transaction>) => {
