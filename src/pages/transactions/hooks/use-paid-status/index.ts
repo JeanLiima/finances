@@ -1,18 +1,37 @@
 import { updateDoc } from "firebase/firestore";
 
-import { PAID_STATUS } from "@/constants/paid-status";
 import { useTransactionsRef } from "@/hooks/use-transactions-ref";
+import { useAnalytics } from "@/hooks/use-analytics";
+import { Transaction } from "@/types/transaction";
+import { PAID_STATUS } from "@/constants/paid-status";
 
 const usePaidStatus = () => {
 	const { transactionsDoc } = useTransactionsRef();
+	const { onUpdateAnalytics } = useAnalytics();
 
-  	const onChangePaidStatus = async (paid: PAID_STATUS, id: string) => {
+  	const onChangePaidStatus = async (item: Transaction, newStatus: PAID_STATUS) => {
 		try {
-			const transactionsRef = transactionsDoc(id);
+			const transactionsRef = transactionsDoc(item.id);
 			if (!transactionsRef) return;
+
 			await updateDoc(transactionsRef, {
-				status: paid
+				status: newStatus
 			});
+
+			await onUpdateAnalytics(
+				{
+					amount: item.amount,
+					yearMonth: item.yearMonth,
+					status: item.status,
+					type: item.type,
+				},
+				{
+					amount: item.amount,
+					yearMonth: item.yearMonth,
+					status: newStatus,
+					type: item.type,
+				}
+			);
 		} catch (error) {
 			console.error(error);
 		}

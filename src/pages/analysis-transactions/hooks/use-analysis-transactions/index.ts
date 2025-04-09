@@ -1,54 +1,41 @@
 import { useEffect, useState } from "react";
-import { getDocs, query, where } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
 
-import { useTransactionsRef } from "@/hooks/use-transactions-ref";
-import { PAID_STATUS } from "@/constants/paid-status";
+import { useAnalyticsRef } from "@/hooks/use-analytics-ref";
+import { formatYearMonth } from "@/utils/format-to-year-month";
+import { Analytics } from "@/types/analytics";
 
 const useAnalysisTransactions = () => {
-	const [totalPaidTransactions, setTotalPaidTransactions] = useState<number>(0);
-	const [totalUnpaidTransactions, setTotalUnpaidTransactions] = useState<number>(0);
+	const [analytics, setAnalytics] = useState<Analytics | null>(null);
+	const [selectedYearMonth, setSelectedYearMonth] = useState<string>(formatYearMonth(new Date()));
 	const [isLoadingAnalysisTransactions, setIsLoadingAnalysisTransactions] = useState<boolean>(true);
 
-	const { transactionsCollection } = useTransactionsRef()
+	const { analyticsDoc } = useAnalyticsRef()
 
 	useEffect(() => {
-		if(!transactionsCollection) return;
-		const getTotalTransactionValue = async () => {
-			try {
-				const q = query(transactionsCollection, where("status", "==", PAID_STATUS.PAID));
-				const snapshot = await getDocs(q);
-	
-				let totalPaid = 0;
-				let totalUnpaid = 0;
-	
-				snapshot.forEach(doc => {
-					const data = doc.data();
-    				let value = data.value;
+		const transactionsRef = analyticsDoc(selectedYearMonth);
+		if(!transactionsRef) return;
 
-					if (typeof value === "string") {
-						value = parseFloat(value.replace(/,/g, ''));
-					  }
-				  
-					  const numericValue = Number(value);
-				  
-					  if (!isNaN(numericValue)) {
-						totalPaid += numericValue;
-					  }
-				});
-				setTotalPaidTransactions(totalPaid);
-			} catch (error) {
-				alert(error);
+		const unsubscribe = onSnapshot(transactionsRef, (snapshot) => {
+			if (!snapshot.exists()) {
+				setAnalytics(null);
+				setIsLoadingAnalysisTransactions(false);
+				return;
 			}
+	
+			const data = snapshot.data() as Analytics;
+			setAnalytics(data);
 			setIsLoadingAnalysisTransactions(false);
-		};
-
-		getTotalTransactionValue();
-	}, []);
+		});
+	
+		return () => unsubscribe();
+	}, [selectedYearMonth]);
 
 	return {
 		isLoadingAnalysisTransactions,
-		totalUnpaidTransactions,
-		totalPaidTransactions
+		analytics,
+		onSelectYearMonth: setSelectedYearMonth,
+		selectedYearMonth
 	}
 };
 

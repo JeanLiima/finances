@@ -19,7 +19,7 @@ const TransactionItem = ({ data, onViewDetails }: TransactionItemProps) => {
 
 	return (
 		<View style={styles.container}>
-			<PaidStatusButton status={data.status} id={data.id} />
+			<PaidStatusButton item={data} />
 			<TouchableOpacity style={styles.dataContent} onPress={onViewDetails}>
 				<Feather 
 					style={{ marginRight: 10, left: 10 }}

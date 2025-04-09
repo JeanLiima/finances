@@ -5,23 +5,23 @@ import { PAID_STATUS } from "@/constants/paid-status";
 import { usePaidStatus } from "@/pages/transactions/hooks/use-paid-status";
 
 import { styles } from "./styles";
+import { Transaction } from "@/types/transaction";
 
 interface PaidStatusButtonProps {
-	status: PAID_STATUS,
-	id: string,
+	item: Transaction,
 };
 
-const PaidStatusButton = ({ status, id }:PaidStatusButtonProps) => {
+const PaidStatusButton = ({ item }:PaidStatusButtonProps) => {
 	const { onChangePaidStatus } = usePaidStatus();
 
 	const onPaidChange = () => {
 		onChangePaidStatus(
-			status === PAID_STATUS.PAID ? PAID_STATUS.UNPAID : PAID_STATUS.PAID, 
-			id
+			item,
+			item.status === PAID_STATUS.PAID ? PAID_STATUS.UNPAID : PAID_STATUS.PAID
 		);
 	};
 
-	const isPaid = status === PAID_STATUS.PAID;
+	const isPaid = item.status === PAID_STATUS.PAID;
 
 	return (
 		<TouchableOpacity

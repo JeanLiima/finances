@@ -1,5 +1,4 @@
-import { View, ActivityIndicator } from 'react-native';
-
+import { Loading } from '@/components/loading';
 import { useAuth } from '@/hooks/auth';
 
 import { PublicRoutes } from './public.routes';
@@ -10,16 +9,7 @@ const Routes = () =>{
 
   if (isLoading) {
 	return (
-		<View
-			style={{
-				flex: 1,
-				justifyContent: 'center',
-				alignItems: 'center',
-				backgroundColor: '#F0F4FF',
-			}}
-		>
-			<ActivityIndicator size="large" color="#131313" />
-		</View>
+		<Loading />
 	);
   }
 

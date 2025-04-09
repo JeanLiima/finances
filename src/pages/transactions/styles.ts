@@ -11,23 +11,6 @@ const styles = StyleSheet.create({
 		marginLeft: 8,
 		marginRight: 8,
 	},
-	emptyContainer: {
-		flex: 1,
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		padding: 20,
-	},
-	emptyTextContent: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	emptyText: { 
-		fontSize: 16,
-		color: '#666',
-		textAlign: 'center',
-		marginBottom: 20,
-	},
 	addButton: {
 		alignSelf: "center",
 		marginBottom: 30,
