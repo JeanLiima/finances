@@ -10,12 +10,12 @@ const useDeleteTransaction = () => {
 	const { transactionsDoc, transactionsQuery } = useTransactionsRef();
 	const { onDeleteAnalytics } = useAnalytics();
 
-	const onDelete = async (id: string, groupId?: string | null) => {
-		const transactionsRef = transactionsDoc(id);
+	const onDelete = async (item: Transaction) => {
+		const transactionsRef = transactionsDoc(item.id);
 		if (!transactionsRef) return;
 
 		try {
-			if (!groupId) {
+			if (!item.groupId) {
 				const snapshot = await getDoc(transactionsRef);
 				if (!snapshot.exists()) return;
 
@@ -29,7 +29,7 @@ const useDeleteTransaction = () => {
 				return;
 			} else {
 				const transactionsWithGroupIdQuery = transactionsQuery(
-					[["groupId", "==", groupId]],
+					[["groupId", "==", item.groupId]],
 					undefined,
 					12
 				);
@@ -53,9 +53,9 @@ const useDeleteTransaction = () => {
 		}
 	};
 
-	const onSelectDeleteType = async (id: string, groupId: string | null) => {
-		if (!groupId) {
-			await onDelete(id);
+	const onSelectDeleteType = async (item: Transaction) => {
+		if (!item.groupId) {
+			await onDelete(item);
 			return;
 		};
 		
@@ -71,7 +71,7 @@ const useDeleteTransaction = () => {
 						[
 							{
 								text: "Continuar",
-								onPress: () => onDelete(id),
+								onPress: () => onDelete(item),
 								style: "destructive",
 							},
 							{
@@ -84,7 +84,7 @@ const useDeleteTransaction = () => {
 				},
 				{
 					text: "Todas",
-					onPress:() => onDelete(id, groupId),
+					onPress:() => onDelete(item),
 					style: "destructive",
 				},
 				{
@@ -96,15 +96,15 @@ const useDeleteTransaction = () => {
 		);
 	};
 
-	const onConfirmDelete = (id: string, groupId: string | null, description: string) => {
-		if(!id) return;
+	const onConfirmDelete = (item: Transaction) => {
+		if(!item.id) return;
 		Alert.alert(
 			"Excluir transação",
-			`Você tem certeza que deseja deletar o registro "${description}"?`,
+			`Você tem certeza que deseja deletar o registro "${item.description}"?`,
 			[
 				{
 					text: "OK",
-					onPress: () => onSelectDeleteType(id, groupId),
+					onPress: () => onSelectDeleteType(item),
 					style: "destructive",
 				},
 				{

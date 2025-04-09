@@ -17,7 +17,7 @@ const SwipeOptions = ({ item, rowMap, onEdit }: SwipeOptionsProps) => {
 
 	const handleDelete = () => {
 		rowMap?.[item.id]?.closeRow();
-		onConfirmDelete(item.id, item?.groupId, item.description);
+		onConfirmDelete(item);
 	};
 	const handleEdit = () => {
 		rowMap?.[item.id]?.closeRow();
