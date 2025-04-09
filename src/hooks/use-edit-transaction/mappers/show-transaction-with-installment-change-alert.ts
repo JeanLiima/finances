@@ -42,8 +42,8 @@ const showBreakLinkAlert = (onConfirm: VoidFunction) =>
 		]
 	);
 
-const hasValueChanged = (partial: Partial<Transaction>, original: Transaction) =>
-	partial?.value !== original?.value;
+const hasAmountChanged = (partial: Partial<Transaction>, original: Transaction) =>
+	partial?.amount !== original?.amount;
 
 const hasInstallmentCountChanged = (partial: Partial<Transaction>, original: Transaction) =>
 	partial?.totalInstallment !== original?.totalInstallment;
@@ -59,7 +59,7 @@ const showTransactionWithInstallmentChangeAlert = (
 		shouldRedistributeValue: boolean
 	) => Promise<void>
 ) => {
-	const valueChanged = hasValueChanged(partialPayload, originalTransaction);
+	const valueChanged = hasAmountChanged(partialPayload, originalTransaction);
 	const installmentChanged = hasInstallmentCountChanged(partialPayload, originalTransaction);
 
 	Alert.alert(

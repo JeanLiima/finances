@@ -6,7 +6,7 @@ import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 interface Transaction {
 	id: string;
 	description: string;
-	value: number;
+	amount: number;
 	status: PAID_STATUS,
 	type: TRANSACTIONS_TYPES,
 	createdAt: Timestamp,

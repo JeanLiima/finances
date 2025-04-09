@@ -12,7 +12,7 @@ import { Transaction } from "@/types/transaction";
 
 const useRegisterTransactions = () => {
 	const [description, setDescription] = useState<string>('');
-	const [value, setValue] = useState<string>('');
+	const [amount, setAmount] = useState<string>('');
 	const [totalInstallment, setTotalInstallment] = useState<string | null>(null);
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
 	const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
@@ -24,7 +24,7 @@ const useRegisterTransactions = () => {
 
 	const onCleanUp = () => {
 		setDescription('');
-		setValue('');
+		setAmount('');
 		setType(TRANSACTIONS_TYPES.EXPENSE);
 		setTotalInstallment('')
 	};
@@ -49,14 +49,14 @@ const useRegisterTransactions = () => {
 			for (let i = 0; i < parsedInstallments; i++) {
 				const installmentDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
 
-				const parsedValue = Number(Number(partialPayload.value).toFixed(2));
-				const installmentValue = Number((parsedValue / parsedInstallments).toFixed(2));
+				const parsedAmount = Number(Number(partialPayload.amount).toFixed(2));
+				const installmentAmount = Number((parsedAmount / parsedInstallments).toFixed(2));
 
 				const payload: Omit<Transaction, 'id'> = {
 					...partialPayload,
 
 					description: partialPayload.description || '',
-					value: installmentValue,
+					amount: installmentAmount,
 					type: partialPayload.type || TRANSACTIONS_TYPES.EXPENSE,
 					createdAt: partialPayload.createdAt || Timestamp.fromDate(new Date()),
 					lastUpdatedAt: partialPayload.lastUpdatedAt || null,
@@ -81,7 +81,7 @@ const useRegisterTransactions = () => {
 	};
 
 	const onConfirmRegister = () => {
-		if(description === '' || isNaN(parseFloat(value))) {
+		if(description === '' || isNaN(parseFloat(amount))) {
 			Alert.alert(
 				"Atenção",
 				"Preencha todos os campos antes de cadastrar.",
@@ -95,7 +95,7 @@ const useRegisterTransactions = () => {
 
 		const partialPayload: Partial<Transaction> = {
 			description,
-			value: Number(value),
+			amount: Number(amount),
 			type,
 			totalInstallment: Number(totalInstallment),
 			yearMonth
@@ -104,20 +104,20 @@ const useRegisterTransactions = () => {
 		onRegister(partialPayload);
 	};
 
-	const handleValue = (value: string) => {
-		const formattedValue = value.replace(',', '.');
-		if(formattedValue?.split('.')[0]?.length > 14) return;
-		if(formattedValue?.split('.')[1]?.length > 2) return;
-		setValue(formattedValue);
+	const handleAmount = (newAmount: string) => {
+		const formattedAmount = newAmount.replace(',', '.');
+		if(formattedAmount?.split('.')[0]?.length > 14) return;
+		if(formattedAmount?.split('.')[1]?.length > 2) return;
+		setAmount(formattedAmount);
 	};
 
 	return {
 		description,
-		value,
+		amount,
 		type,
 		totalInstallment,
 		onChangeDescription: setDescription,
-		onChangeValue: handleValue,
+		onChangeAmount: handleAmount,
 		onChangeType: setType,
 		onChangeTotalInstallment: setTotalInstallment,
 		onRegister,

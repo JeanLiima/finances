@@ -14,7 +14,7 @@ import { showTransactionWithInstallmentChangeAlert } from "./mappers/show-transa
 
 const useEditTransactions = () => {
 	const [description, setDescription] = useState<string>('');
-	const [value, setValue] = useState<string>('');
+	const [amount, setAmount] = useState<string>('');
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
 	const [totalInstallment, setTotalInstallment] = useState<string | null>(null);
 	const [restOfData, setRestOfData] = useState<Transaction | null>(null);
@@ -44,7 +44,7 @@ const useEditTransactions = () => {
 			if (docSnap.exists()) {
 				const data = docSnap.data() as Transaction;
 				setDescription(data.description);
-				setValue(data.value.toString());
+				setAmount(data.amount.toString());
 				setType(data.type);
 				setTotalInstallment(data.totalInstallment ? data.totalInstallment.toString() : null);
 				setRestOfData(data);
@@ -64,7 +64,7 @@ const useEditTransactions = () => {
 
 	const onCleanUp = () => {
 		setDescription('');
-		setValue('');
+		setAmount('');
 		setType(TRANSACTIONS_TYPES.EXPENSE);
 		setTotalInstallment('');
 		setRestOfData(null);
@@ -114,12 +114,12 @@ const useEditTransactions = () => {
 				}
 
 				const totalInstallments = Number(partialPayload.totalInstallment) || 1;
-				const value = shouldRedistributeValue ? partialPayload.value : ((partialPayload.value ?? 0) * totalInstallments);
+				const amount = shouldRedistributeValue ? partialPayload.amount : ((partialPayload.amount ?? 0) * totalInstallments);
 
 				await onDelete(id, partialPayload.groupId);
 				await onRegister({
 					...partialPayload,
-					value,
+					amount,
 					totalInstallment: hasInstallment ? Number(partialPayload.totalInstallment) : null,
 					yearMonth: originalYearMonth,
 					createdAt: originalCreatedAt,
@@ -141,7 +141,7 @@ const useEditTransactions = () => {
 
 		const partialPayload: Partial<Transaction> = {
 			description,
-			value: Number(value),
+			amount: Number(amount),
 			type,
 			totalInstallment: Number(totalInstallment),
 			lastUpdatedAt: Timestamp.fromDate(new Date()),
@@ -164,7 +164,7 @@ const useEditTransactions = () => {
 	};
 
 	const onConfirmeEdit = () => {
-		if(description === '' || isNaN(parseFloat(value))) {
+		if(description === '' || isNaN(parseFloat(amount))) {
 			Alert.alert(
 				"Atenção",
 				"Preencha todos os campos antes de cadastrar.",
@@ -179,22 +179,22 @@ const useEditTransactions = () => {
 		onSelectEditType();
 	};
 
-	const handleValue = (value: string) => {
-		const formattedValue = value.replace(',', '.');
+	const handleAmount = (newAmount: string) => {
+		const formattedAmount = newAmount.replace(',', '.');
 
-		if (formattedValue?.split('.')[0]?.length > 14) return;
-		if (formattedValue?.split('.')[1]?.length > 2) return;
+		if (formattedAmount?.split('.')[0]?.length > 14) return;
+		if (formattedAmount?.split('.')[1]?.length > 2) return;
 
-		setValue(formattedValue);
+		setAmount(formattedAmount);
 	};
 
 	return {
 		description,
-		value,
+		amount,
 		type,
 		totalInstallment,
 		onChangeDescription: setDescription,
-		onChangeValue: handleValue,
+		onChangeAmount: handleAmount,
 		onChangeType: setType,
 		onChangeTotalInstallment: setTotalInstallment,
 		onConfirmeEdit,

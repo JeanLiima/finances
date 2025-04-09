@@ -23,8 +23,8 @@ interface DetailsModalProps {
 const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 	const isIncomeType = data?.type === TRANSACTIONS_TYPES.INCOME;
 	
-	const totalValue = data?.totalInstallment ? data?.value * data?.totalInstallment : undefined;
-	const formattedValue = data?.value ? formatCurrency(data?.value) : undefined;
+	const totalAmount = data?.totalInstallment ? data?.amount * data?.totalInstallment : undefined;
+	const formattedAmount = data?.amount ? formatCurrency(data?.amount) : undefined;
 	const formattedCreatedAt = data?.createdAt ? format(data.createdAt.toDate(), 'dd/MM/yyyy - HH:mm:ss') : null;
 	const formattedLastUpdatedAt = data?.lastUpdatedAt ? format(data.lastUpdatedAt.toDate(), 'dd/MM/yyyy - HH:mm:ss') : null;
 
@@ -54,10 +54,10 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 									}
 								]}
 								>
-								{!isIncomeType && " -"}R${formattedValue}
+								{!isIncomeType && " -"}R${formattedAmount}
 							</Text>
 						</TermValue>
-						{totalValue && (
+						{totalAmount && (
 							<TermValue term="Valor total:">
 								<Text 
 									style={[
@@ -67,7 +67,7 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 										}
 									]}
 									>
-									{!isIncomeType && " -"}R${formatCurrency(totalValue)}
+									{!isIncomeType && " -"}R${formatCurrency(totalAmount)}
 								</Text>
 							</TermValue>
 						)}

@@ -27,8 +27,8 @@ const RegisterTransaction = () => {
 		onConfirmRegister,
 		description,
 		onChangeDescription,
-		value,
-		onChangeValue,
+		amount,
+		onChangeAmount,
 		type,
 		onChangeType,
 		totalInstallment,
@@ -54,8 +54,8 @@ const RegisterTransaction = () => {
 				<View style={styles.areaInput}>
 					<Input
 						placeholder="Valor"
-						value={value}
-						onChangeText={onChangeValue}
+						value={amount}
+						onChangeText={onChangeAmount}
 						keyboardType="numeric"
 						returnKeyType="done"
 						ref={valueRef}

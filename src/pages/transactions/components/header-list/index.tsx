@@ -20,7 +20,7 @@ const HeaderList = ({ onSort }: HeaderListProps) => (
 			<TouchableOpacity onPress={() => onSort('description')}>
 				<Text style={styles.item}>Descrição</Text>
 			</TouchableOpacity>
-			<TouchableOpacity onPress={() => onSort('value')}>
+			<TouchableOpacity onPress={() => onSort('amount')}>
 				<Text style={styles.item}>Valor</Text>
 			</TouchableOpacity>
 		</View>

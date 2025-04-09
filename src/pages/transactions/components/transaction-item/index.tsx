@@ -15,7 +15,7 @@ interface TransactionItemProps {
 
 const TransactionItem = ({ data, onViewDetails }: TransactionItemProps) => {
 	const isIncomeType = data.type === TRANSACTIONS_TYPES.INCOME;
-	const formattedValue = formatCurrency(data.value);
+	const formattedAmount = formatCurrency(data.amount);
 
 	return (
 		<View style={styles.container}>
@@ -29,7 +29,7 @@ const TransactionItem = ({ data, onViewDetails }: TransactionItemProps) => {
 				/>
 				<View style={styles.textContent}>
 					<Text style={[styles.item, { flexShrink: 1 }]} numberOfLines={1}>{data.description}</Text>
-					<Text style={[styles.item, {color: isIncomeType ? "#12A454" : "#E83F5B"}]}>{!isIncomeType && "-"}R${formattedValue}</Text>
+					<Text style={[styles.item, {color: isIncomeType ? "#12A454" : "#E83F5B"}]}>{!isIncomeType && "-"}R${formattedAmount}</Text>
 				</View>
 			</TouchableOpacity>
 		</View>
