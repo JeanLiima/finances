@@ -83,6 +83,7 @@ const useDeleteTransaction = () => {
 				{
 					text: "OK",
 					onPress: () => onSelectDeleteType(id, groupId),
+					style: "destructive",
 				},
 				{
 					text: "Cancelar",
