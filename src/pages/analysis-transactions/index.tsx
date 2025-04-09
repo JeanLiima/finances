@@ -1,61 +1,48 @@
 import { 
-	ActivityIndicator, 
-	Text, 
-	TouchableOpacity, 
-	View 
+	ScrollView,
+	View
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
-import { REGISTER_TRANSACTION } from "@/constants/routes";
+import { EmptyTransactionState } from "@/components/empty-transaction-state";
+import { MonthlyCarousel } from "@/components/monthly-carousel";
+import { AddTransactionFooterButton } from "@/components/add-transaction-footer-button";
+import { Loading } from "@/components/loading";
 
+import { StatusCard } from "./components/status-card";
+import { TypesCard } from "./components/types-card";
+import { TotalCard } from "./components/total-card";
 import { useAnalysisTransactions } from "./hooks/use-analysis-transactions";
 import { styles } from "./styles";
 
 const TransactionAnalysis = () => {
-	const hasTransactions = true;
-
-	const { navigate } = useNavigation();
 	const { 
-		isLoadingAnalysisTransactions, 
-		totalPaidTransactions 
+		isLoadingAnalysisTransactions,
+		analytics,
+		onSelectYearMonth,
+		selectedYearMonth
 	} = useAnalysisTransactions();
 
+	const hasAnalytics = !!analytics;
+
 	if (isLoadingAnalysisTransactions) {
-			return (
-				<View
-					style={{
-						flex: 1,
-						justifyContent: 'center',
-						alignItems: 'center',
-						backgroundColor: '#F0F4FF',
-					}}
-				>
-					<ActivityIndicator size="large" color="#131313" />
-				</View>
-			);
-		}
+		return (
+			<Loading />
+		);
+	}
 
 	return (
 		<View style={styles.container}>
-			{hasTransactions ? (
-				<Text>
-					{totalPaidTransactions}
-				</Text>
+			<MonthlyCarousel onSelect={onSelectYearMonth}/>
+			{hasAnalytics ? (
+				<ScrollView contentContainerStyle={styles.dashboardContainer}>
+					<StatusCard analytics={analytics}/>
+					<TypesCard analytics={analytics}/>
+					<TotalCard analytics={analytics}/>
+				</ScrollView>
 			) : (
-				<View style={styles.emptyContainer}>
-					<Text style={styles.emptyText}>
-						Não há transações registradas.
-					</Text>
-					<TouchableOpacity 
-						onPress={() => navigate(REGISTER_TRANSACTION as never)} 
-						style={styles.emptyButton}
-					>
-						<Text style={styles.emptyButtonText}>
-							Cadastre agora
-						</Text>
-					</TouchableOpacity>
-				</View>
+				<EmptyTransactionState />
 			)}
+			<AddTransactionFooterButton yearMonth={selectedYearMonth} />
 		</View>
 	);
 };
