@@ -123,17 +123,21 @@ const useAnalytics = () => {
 				const statusAgg = analytic.status || {};
 				const total = analytic.total || { count: 0, sum: 0 };
 	
-				const newTypes = {
-					...types,
-					[oldData.type]: Math.max((types[oldData.type] || 0) - oldData.amount, 0),
-					[newData.type]: (types[newData.type] || 0) + newData.amount,
-				};
-	
-				const newStatus = {
-					...statusAgg,
-					[oldData.status]: Math.max((statusAgg[oldData.status] || 0) - oldData.amount, 0),
-					[newData.status]: (statusAgg[newData.status] || 0) + newData.amount,
-				};
+				const newTypes = { ...types };
+				if (oldData.type !== newData.type) {
+					newTypes[oldData.type] = Math.max((types[oldData.type] || 0) - oldData.amount, 0);
+					newTypes[newData.type] = (types[newData.type] || 0) + newData.amount;
+				} else {
+					newTypes[oldData.type] = Math.max((types[oldData.type] || 0) - oldData.amount + newData.amount, 0);
+				}
+				
+				const newStatus = { ...statusAgg };
+				if (oldData.status !== newData.status) {
+					newStatus[oldData.status] = Math.max((statusAgg[oldData.status] || 0) - oldData.amount, 0);
+					newStatus[newData.status] = (statusAgg[newData.status] || 0) + newData.amount;
+				} else {
+					newStatus[oldData.status] = Math.max((statusAgg[oldData.status] || 0) - oldData.amount + newData.amount, 0);
+				}
 	
 				const newTotal = {
 					count: total.count,
