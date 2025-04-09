@@ -16,7 +16,6 @@ const useAnalysisTransactions = () => {
 		const getTotalTransactionValue = async () => {
 			try {
 				const q = query(transactionsCollection, where("status", "==", PAID_STATUS.PAID));
-				// const q = query(transactionsCollection, where("status", "==", PAID_STATUS.UNPAID));
 				const snapshot = await getDocs(q);
 	
 				let totalPaid = 0;

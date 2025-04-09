@@ -4,13 +4,23 @@ import { getDoc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 import { EDIT_TRANSACTION, RootStackParamList, TRANSACTIONS } from "@/constants/routes";
-import { useTransactionsRef } from "@/hooks/use-transactions-ref";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 import { Transaction } from "@/types/transaction";
-import { useDeleteTransaction } from "@/hooks/use-delete-transaction";
-import { useRegisterTransactions } from "@/hooks/use-register-transaction";
+
+import { useTransactionsRef } from "../use-transactions-ref";
+import { useDeleteTransaction } from "../use-delete-transaction";
+import { useRegisterTransactions } from "../use-register-transaction";
+import { useAnalytics } from "../use-analytics";
 
 import { showTransactionWithInstallmentChangeAlert } from "./mappers/show-transaction-with-installment-change-alert";
+
+type OnEditParams = {
+	id: string;
+	newPayload: Partial<Transaction>;
+	oldPayload: Transaction;
+	isIsolatedEdit?: boolean;
+	shouldRedistributeValue?: boolean;
+}
 
 const useEditTransactions = () => {
 	const [description, setDescription] = useState<string>('');
@@ -24,6 +34,7 @@ const useEditTransactions = () => {
 
 	const { transactionsDoc, transactionsQuery } = useTransactionsRef();
 	const { onDelete } = useDeleteTransaction();
+	const { onUpdateAnalytics } = useAnalytics();
 	const { onRegister } = useRegisterTransactions();
 	const { navigate, isFocused } = useNavigation();
 	const route = useRoute<RouteProp<RootStackParamList, typeof EDIT_TRANSACTION>>();
@@ -70,24 +81,40 @@ const useEditTransactions = () => {
 		setRestOfData(null);
 	};
 
-	const onEdit = async (
-		id: string, 
-		partialPayload: Partial<Transaction>, 
-		isIsolatedEdit: boolean = false,
-		shouldRedistributeValue: boolean = false
-	) => {
+	const onEdit = async ({
+		id, 
+		newPayload, 
+		oldPayload,
+		isIsolatedEdit = false,
+		shouldRedistributeValue = false
+	}: OnEditParams) => {
 		const transactionsRef = transactionsDoc(id);
 		if (!transactionsRef) return;
 
 		setIsLoadingSubmitting(true);
 
 		try {
-			const hasGroupId = !!partialPayload.groupId;
-			const hasInstallment = !!partialPayload.totalInstallment && Number(partialPayload.totalInstallment) > 1;
+			const hasGroupId = !!newPayload.groupId;
+			const hasInstallment = !!newPayload.totalInstallment && Number(newPayload.totalInstallment) > 1;
 
 			if (isIsolatedEdit  || (!hasGroupId && !hasInstallment)) {
+				await onUpdateAnalytics(
+					{
+						amount: oldPayload.amount,
+						yearMonth: oldPayload.yearMonth,
+						type: oldPayload.type,
+						status: oldPayload.status,
+					},
+					{
+						amount: newPayload.amount ?? oldPayload.amount,
+						yearMonth: newPayload.yearMonth ?? oldPayload.yearMonth,
+						type: newPayload.type ?? oldPayload.type,
+						status: newPayload.status ?? oldPayload.status,
+					}
+				);
+
 				await updateDoc(transactionsRef, {
-					...partialPayload,
+					...newPayload,
 					totalInstallment: null,
 					currentInstallment: null,
 					groupId: null
@@ -95,12 +122,12 @@ const useEditTransactions = () => {
 				navigate(TRANSACTIONS as never);
 				return;
 			} else {
-				let originalYearMonth = partialPayload.yearMonth;
-				let originalCreatedAt = partialPayload.createdAt;
+				let originalYearMonth = newPayload.yearMonth;
+				let originalCreatedAt = newPayload.createdAt;
 
 				if(hasGroupId) {
 					const transactionsWithGroupIdQuery = transactionsQuery(
-						[["groupId", "==", partialPayload.groupId]],
+						[["groupId", "==", newPayload.groupId]],
 						[["yearMonth", "asc"]],
 						1
 					);
@@ -108,24 +135,24 @@ const useEditTransactions = () => {
 					const snapshot = await getDocs(transactionsWithGroupIdQuery);
 					if (snapshot.empty) return;
 					
-					const originalData = snapshot.docs[0].data();
-					originalYearMonth = originalData.yearMonth;
-					originalCreatedAt = originalData.createdAt;
+					const firstOriginalData = snapshot.docs[0].data();
+					originalYearMonth = firstOriginalData.yearMonth;
+					originalCreatedAt = firstOriginalData.createdAt;
 				}
 
 				const amount = shouldRedistributeValue 
-					? partialPayload.amount ?? 0 
-					: partialPayload.totalAmount ?? 0;
+					? newPayload.amount ?? 0 
+					: newPayload.totalAmount ?? 0;
 
-				await onDelete(id, partialPayload.groupId);
+				await onDelete(oldPayload);
 				await onRegister({
-					...partialPayload,
+					...newPayload,
 					amount,
 					totalAmount: amount,
-					totalInstallment: hasInstallment ? Number(partialPayload.totalInstallment) : null,
+					totalInstallment: hasInstallment ? Number(newPayload.totalInstallment) : null,
 					yearMonth: originalYearMonth,
 					createdAt: originalCreatedAt,
-					groupId: hasGroupId ? partialPayload.groupId : null,
+					groupId: hasGroupId ? newPayload.groupId : null,
 				});
 			}
 
@@ -139,31 +166,35 @@ const useEditTransactions = () => {
 	};
 
 	const onSelectEditType = async () => {
-		if(!id) return;
+		if(!id || !restOfData) return;
 
-		const partialPayload: Partial<Transaction> = {
+		const newPayload: Partial<Transaction> = {
 			description,
 			amount: Number(amount),
 			type,
 			totalInstallment: Number(totalInstallment),
 			lastUpdatedAt: Timestamp.fromDate(new Date()),
-			totalAmount: restOfData?.totalAmount,
-			yearMonth: restOfData?.yearMonth,
-			createdAt: restOfData?.createdAt,
-			groupId: restOfData?.groupId
+			totalAmount: restOfData.totalAmount,
+			yearMonth: restOfData.yearMonth,
+			createdAt: restOfData.createdAt,
+			groupId: restOfData.groupId
 		};
 
-		if (!restOfData?.groupId) {
-			await onEdit(id, partialPayload);
+		if (!restOfData.groupId) {
+			await onEdit({ 
+				id, 
+				newPayload, 
+				oldPayload: restOfData
+			});
 			return;
 		};
 
-		showTransactionWithInstallmentChangeAlert(
+		showTransactionWithInstallmentChangeAlert({
 			id,
-			partialPayload,
-			restOfData,
+			newPayload,
+			originalTransaction: restOfData,
 			onEdit
-		);
+		});
 	};
 
 	const onConfirmeEdit = () => {

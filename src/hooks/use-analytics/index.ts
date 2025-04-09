@@ -98,7 +98,64 @@ const useAnalytics = () => {
 		});
 	};
 
+	const onUpdateAnalytics = async (
+		oldData: Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status'>,
+		newData: Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status'>
+	): Promise<void> => {
+		const changedMonth = oldData.yearMonth !== newData.yearMonth;
+	
+		if (changedMonth) {
+			await Promise.all([
+				onDeleteAnalytics(oldData),
+				onRegisterAnalytics(newData),
+			]);
+		} else {
+			const analyticsRef = analyticsDoc(newData.yearMonth);
+			if (!analyticsRef) return;
+	
+			await runTransaction(db, async (analytics) => {
+				const analyticsSnap = await analytics.get(analyticsRef);
+	
+				if (!analyticsSnap.exists()) return;
+	
+				const analytic = analyticsSnap.data();
+				const types = analytic.types || {};
+				const statusAgg = analytic.status || {};
+				const total = analytic.total || { count: 0, sum: 0 };
+	
+				const newTypes = {
+					...types,
+					[oldData.type]: Math.max((types[oldData.type] || 0) - oldData.amount, 0),
+					[newData.type]: (types[newData.type] || 0) + newData.amount,
+				};
+	
+				const newStatus = {
+					...statusAgg,
+					[oldData.status]: Math.max((statusAgg[oldData.status] || 0) - oldData.amount, 0),
+					[newData.status]: (statusAgg[newData.status] || 0) + newData.amount,
+				};
+	
+				const newTotal = {
+					count: total.count,
+					sum: Math.max(total.sum - oldData.amount + newData.amount, 0),
+				};
+	
+				analytics.set(
+					analyticsRef,
+					{
+						types: newTypes,
+						status: newStatus,
+						total: newTotal,
+						updatedAt: new Date(),
+					},
+					{ merge: true }
+				);
+			});
+		}
+	};
+
 	return {
+		onUpdateAnalytics,
 		onRegisterAnalytics,
 		onDeleteAnalytics
 	};

@@ -48,19 +48,28 @@ const hasAmountChanged = (partial: Partial<Transaction>, original: Transaction) 
 const hasInstallmentCountChanged = (partial: Partial<Transaction>, original: Transaction) =>
 	partial?.totalInstallment !== original?.totalInstallment;
 
-const showTransactionWithInstallmentChangeAlert = (
+type OnEditParams = {
+	id: string;
+	newPayload: Partial<Transaction>;
+	oldPayload: Transaction;
+	isIsolatedEdit?: boolean;
+	shouldRedistributeValue?: boolean;
+}
+interface ShowTransactionWithInstallmentChangeAlertParams {
 	id: string,
-	partialPayload: Partial<Transaction>,
+	newPayload: Partial<Transaction>,
 	originalTransaction: Transaction,
-	onEdit: (
-		id: string,
-		partialPayload: Partial<Transaction>,
-		isIsolatedEdit: boolean,
-		shouldRedistributeValue: boolean
-	) => Promise<void>
-) => {
-	const valueChanged = hasAmountChanged(partialPayload, originalTransaction);
-	const installmentChanged = hasInstallmentCountChanged(partialPayload, originalTransaction);
+	onEdit: (params: OnEditParams) => Promise<void>
+}
+
+const showTransactionWithInstallmentChangeAlert = ({
+	id,
+	newPayload,
+	originalTransaction,
+	onEdit
+}: ShowTransactionWithInstallmentChangeAlertParams) => {
+	const valueChanged = hasAmountChanged(newPayload, originalTransaction);
+	const installmentChanged = hasInstallmentCountChanged(newPayload, originalTransaction);
 
 	Alert.alert(
 		"Editar transação",
@@ -71,11 +80,27 @@ const showTransactionWithInstallmentChangeAlert = (
 				style: "default",
 				onPress: () => {
 					if (valueChanged) {
-						showValueChangeSingleAlert(() => onEdit(id, partialPayload, true, false));
+						showValueChangeSingleAlert(() => onEdit({ 
+							id, 
+							newPayload, 
+							oldPayload: originalTransaction, 
+							isIsolatedEdit: true
+						}));
 					} else if (installmentChanged) {
-						showInstallmentChangeAlert((divideValue) => onEdit(id, partialPayload, true, divideValue));
+						showInstallmentChangeAlert((divideValue) => onEdit({ 
+							id, 
+							newPayload, 
+							oldPayload: originalTransaction, 
+							isIsolatedEdit: true, 
+							shouldRedistributeValue: divideValue
+						}));
 					} else {
-						showBreakLinkAlert(() => onEdit(id, partialPayload, true, false));
+						showBreakLinkAlert(() => onEdit({
+							id, 
+							newPayload, 
+							oldPayload: originalTransaction,
+							isIsolatedEdit: true
+						}));
 					}
 				}
 			},
@@ -85,14 +110,28 @@ const showTransactionWithInstallmentChangeAlert = (
 				onPress: () => {
 					if (valueChanged) {
 						showValueChangeForAllInstallmentsAlert(() =>
-							onEdit(id, partialPayload, false, true)
+							onEdit({
+								id, 
+								newPayload, 
+								oldPayload: originalTransaction,
+								shouldRedistributeValue: true
+							})
 						);
 					} else if (installmentChanged) {
 						showInstallmentChangeAlert((divideValue) =>
-							onEdit(id, partialPayload, false, divideValue)
+							onEdit({ 
+								id, 
+								newPayload, 
+								oldPayload: originalTransaction, 
+								shouldRedistributeValue: divideValue
+							})
 						);
 					} else {
-						onEdit(id, partialPayload, false, false);
+						onEdit({ 
+							id, 
+							newPayload, 
+							oldPayload: originalTransaction
+						});
 					}
 				}
 			},
