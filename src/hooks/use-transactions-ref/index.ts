@@ -14,7 +14,7 @@ import { db } from "@/services/firebase-connection";
 
 import { useAuth } from "../auth";
 
-function useTransactionsRef() {
+const useTransactionsRef = () => {
 	const { loggedUser } = useAuth();
 
 	const transactionsCollection = loggedUser
