@@ -29,7 +29,7 @@ const useRegisterTransactions = () => {
 		setDescription('');
 		setAmount('');
 		setType(TRANSACTIONS_TYPES.EXPENSE);
-		setTotalInstallment('')
+		setTotalInstallment('');
 	};
 
 	useEffect(() => {

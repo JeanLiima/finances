@@ -95,10 +95,7 @@ const useEditTransactions = () => {
 		setIsLoadingSubmitting(true);
 
 		try {
-			const { 
-				installment, 
-				groupId,
-			} = newPayload;
+			const { installment, groupId } = newPayload;
 
 			const hasGroupId = !!groupId;
 			const hasInstallment = !!installment?.totalInstallment && Number(installment.totalInstallment) > 1;
@@ -108,7 +105,7 @@ const useEditTransactions = () => {
 					{
 						amount: oldPayload.amount,
 						yearMonth: oldPayload.yearMonth,
-						type: oldPayload.type,
+						type: oldPayload?.type,
 						status: oldPayload.status,
 					},
 					{
@@ -121,8 +118,7 @@ const useEditTransactions = () => {
 
 				await updateDoc(transactionsRef, {
 					...newPayload,
-					totalInstallment: null,
-					currentInstallment: null,
+					installment: null,
 					groupId: null
 				});
 				navigate(TRANSACTIONS as never);
@@ -150,13 +146,13 @@ const useEditTransactions = () => {
 					? newPayload.amount ?? 0 
 					: newPayload.totalAmount ?? 0;
 
-				await onDelete(oldPayload);
+				await onDelete({...oldPayload, id});
 				await onRegister({
 					...newPayload,
 					amount,
 					totalAmount: amount,
 					installment: hasInstallment ? {
-						totalInstallment: Number(newPayload.installment?.totalInstallment),
+						totalInstallment: Number(installment?.totalInstallment),
 						currentInstallment: 0
 					} : null,
 					yearMonth: originalYearMonth,
@@ -196,7 +192,8 @@ const useEditTransactions = () => {
 			await onEdit({ 
 				id, 
 				newPayload, 
-				oldPayload: restOfData
+				oldPayload: restOfData,
+				shouldRedistributeValue: true
 			});
 			return;
 		};
