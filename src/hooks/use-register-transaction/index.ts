@@ -10,6 +10,8 @@ import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 import { formatYearMonth } from "@/utils/format-to-year-month";
 import { Transaction } from "@/types/transaction";
 
+import { useAnalytics } from "../use-analytics";
+
 const useRegisterTransactions = () => {
 	const [description, setDescription] = useState<string>('');
 	const [amount, setAmount] = useState<string>('');
@@ -18,6 +20,7 @@ const useRegisterTransactions = () => {
 	const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
 
 	const { transactionsCollection } = useTransactionsRef();
+	const { onRegisterAnalytics } = useAnalytics()
 	const { navigate, isFocused } = useNavigation();
 	const route = useRoute<RouteProp<RootStackParamList, typeof REGISTER_TRANSACTION>>();
 	const yearMonth = route.params?.yearMonth;
@@ -70,6 +73,12 @@ const useRegisterTransactions = () => {
 				};
 
 				await addDoc(transactionsCollection, payload);
+				await onRegisterAnalytics({
+					amount: payload.amount,
+					yearMonth: payload.yearMonth,
+					type: payload.type,
+					status: payload.status,
+				});
 			}
 
 			onCleanUp();

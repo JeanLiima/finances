@@ -1,10 +1,14 @@
-import { deleteDoc, getDocs } from "firebase/firestore";
+import { deleteDoc, getDoc, getDocs } from "firebase/firestore";
 import { Alert } from "react-native";
 
 import { useTransactionsRef } from "@/hooks/use-transactions-ref";
+import { Transaction } from "@/types/transaction";
+
+import { useAnalytics } from "../use-analytics";
 
 const useDeleteTransaction = () => {
 	const { transactionsDoc, transactionsQuery } = useTransactionsRef();
+	const { onDeleteAnalytics } = useAnalytics();
 
 	const onDelete = async (id: string, groupId?: string | null) => {
 		const transactionsRef = transactionsDoc(id);
@@ -12,7 +16,16 @@ const useDeleteTransaction = () => {
 
 		try {
 			if (!groupId) {
-				await deleteDoc(transactionsRef);
+				const snapshot = await getDoc(transactionsRef);
+				if (!snapshot.exists()) return;
+
+				const data = snapshot.data();
+				await onDeleteAnalytics({
+					amount: data.amount,
+					yearMonth: data.yearMonth,
+					type: data.type,
+					status: data.status,
+				});
 				return;
 			} else {
 				const transactionsWithGroupIdQuery = transactionsQuery(
@@ -23,7 +36,16 @@ const useDeleteTransaction = () => {
 				if(!transactionsWithGroupIdQuery) return;
 				const snapshot = await getDocs(transactionsWithGroupIdQuery);
 
-				const batchDeletes = snapshot.docs.map((doc) => deleteDoc(doc.ref));
+				const batchDeletes = snapshot.docs.map(async (doc) => {
+					const data = doc.data() as Transaction;
+					await deleteDoc(doc.ref);
+					await onDeleteAnalytics({
+						amount: data.amount,
+						yearMonth: data.yearMonth,
+						type: data.type,
+						status: data.status,
+					});
+				});
 				await Promise.all(batchDeletes);
 			}
 		} catch(error) {
