@@ -41,35 +41,48 @@ const useRegisterTransactions = () => {
 
 		setIsLoadingRegister(true);
 		try {
-			const baseDate = partialPayload.yearMonth
-			? new Date(`${partialPayload.yearMonth}-01T00:00:00`)
+			const { 
+				yearMonth,
+				installment,
+				groupId,
+				amount,
+				type = TRANSACTIONS_TYPES.EXPENSE,
+				description = '',
+				createdAt = Timestamp.fromDate(new Date()),
+				lastUpdatedAt = null
+			} = partialPayload;
+
+			const baseDate = yearMonth
+			? new Date(`${yearMonth}-01T00:00:00`)
 			: new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
-			const parsedInstallments = partialPayload?.totalInstallment ? Number(partialPayload.totalInstallment) : 1;
-			const groupId = partialPayload?.groupId || doc(transactionsCollection).id;
+			const parsedInstallments = installment?.totalInstallment ? Number(installment.totalInstallment) : 1;
+			const parsedGroupId = groupId || doc(transactionsCollection).id;
 			const hasInstallmentAndGroupId = parsedInstallments > 1;
 
 			for (let i = 0; i < parsedInstallments; i++) {
 				const installmentDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
 
-				const parsedAmount = Number(Number(partialPayload.amount).toFixed(2));
+				const parsedAmount = Number(Number(amount).toFixed(2));
 				const installmentAmount = Number((parsedAmount / parsedInstallments).toFixed(2));
 
 				const payload: Omit<Transaction, 'id'> = {
 					...partialPayload,
 
-					description: partialPayload.description || '',
+					description,
 					amount: installmentAmount,
-					type: partialPayload.type || TRANSACTIONS_TYPES.EXPENSE,
-					createdAt: partialPayload.createdAt || Timestamp.fromDate(new Date()),
-					lastUpdatedAt: partialPayload.lastUpdatedAt || null,
+					type,
+					createdAt,
+					lastUpdatedAt,
 					
 					status: PAID_STATUS.UNPAID,
 					yearMonth: formatYearMonth(installmentDate),
 					totalAmount: hasInstallmentAndGroupId ? parsedAmount : null,
-					totalInstallment: hasInstallmentAndGroupId ? parsedInstallments : null,
-					currentInstallment: hasInstallmentAndGroupId ? i + 1 : null,
-					groupId: hasInstallmentAndGroupId ? groupId : null,
+					installment: hasInstallmentAndGroupId ? {
+						totalInstallment: parsedInstallments,
+						currentInstallment: i + 1,
+					} : null,
+					groupId: hasInstallmentAndGroupId ? parsedGroupId : null,
 				};
 
 				await addDoc(transactionsCollection, payload);
@@ -107,7 +120,10 @@ const useRegisterTransactions = () => {
 			description,
 			amount: Number(amount),
 			type,
-			totalInstallment: Number(totalInstallment),
+			installment: {
+				totalInstallment: Number(totalInstallment),
+				currentInstallment: 0
+			},
 			yearMonth
 		};
 

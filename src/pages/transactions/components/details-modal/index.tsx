@@ -39,9 +39,9 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 					<Divider />
 					<View style={styles.modalDescriptionContent}>
 						<TermValue term={"Descrição: "}>{data?.description}</TermValue>
-						{data?.totalInstallment && (
+						{data?.installment?.totalInstallment && (
 							<TermValue term={"Quantidade de vezes: "}>
-								{data?.totalInstallment}
+								{data?.installment?.totalInstallment}
 							</TermValue>
 						)}
 						<TermValue term={"Valor: "}>

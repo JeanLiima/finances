@@ -54,10 +54,11 @@ const useEditTransactions = () => {
 	
 			if (docSnap.exists()) {
 				const data = docSnap.data() as Transaction;
-				setDescription(data.description);
-				setAmount(data.amount.toString());
-				setType(data.type);
-				setTotalInstallment(data.totalInstallment ? data.totalInstallment.toString() : null);
+				const { description, amount, installment, type } = data; 
+				setDescription(description);
+				setAmount(amount.toString());
+				setType(type);
+				setTotalInstallment(installment?.totalInstallment ? installment.totalInstallment.toString() : null);
 				setRestOfData(data);
 			} else {
 				alert('Documento não encontrado!');
@@ -94,8 +95,13 @@ const useEditTransactions = () => {
 		setIsLoadingSubmitting(true);
 
 		try {
-			const hasGroupId = !!newPayload.groupId;
-			const hasInstallment = !!newPayload.totalInstallment && Number(newPayload.totalInstallment) > 1;
+			const { 
+				installment, 
+				groupId,
+			} = newPayload;
+
+			const hasGroupId = !!groupId;
+			const hasInstallment = !!installment?.totalInstallment && Number(installment.totalInstallment) > 1;
 
 			if (isIsolatedEdit  || (!hasGroupId && !hasInstallment)) {
 				await onUpdateAnalytics(
@@ -149,7 +155,10 @@ const useEditTransactions = () => {
 					...newPayload,
 					amount,
 					totalAmount: amount,
-					totalInstallment: hasInstallment ? Number(newPayload.totalInstallment) : null,
+					installment: hasInstallment ? {
+						totalInstallment: Number(newPayload.installment?.totalInstallment),
+						currentInstallment: 0
+					} : null,
 					yearMonth: originalYearMonth,
 					createdAt: originalCreatedAt,
 					groupId: hasGroupId ? newPayload.groupId : null,
@@ -172,7 +181,10 @@ const useEditTransactions = () => {
 			description,
 			amount: Number(amount),
 			type,
-			totalInstallment: Number(totalInstallment),
+			installment: {
+				totalInstallment: Number(totalInstallment),
+				currentInstallment: 0
+			},
 			lastUpdatedAt: Timestamp.fromDate(new Date()),
 			totalAmount: restOfData.totalAmount,
 			yearMonth: restOfData.yearMonth,
