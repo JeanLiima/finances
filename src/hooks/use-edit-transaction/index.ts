@@ -25,7 +25,7 @@ const useEditTransactions = () => {
 	const { transactionsDoc, transactionsQuery } = useTransactionsRef();
 	const { onDelete } = useDeleteTransaction();
 	const { onRegister } = useRegisterTransactions();
-	const { navigate } = useNavigation();
+	const { navigate, isFocused } = useNavigation();
 	const route = useRoute<RouteProp<RootStackParamList, typeof EDIT_TRANSACTION>>();
 	const id = route.params?.id;
 
@@ -33,10 +33,14 @@ const useEditTransactions = () => {
 		if(!id) return;
 		const transactionsRef = transactionsDoc(id);
 		if (!transactionsRef) return;
+
+		let isActive = true;
 		setIsLoadingEdit(true);
 
 		const getSpecificTransaction = async () => {
 			const docSnap = await getDoc(transactionsRef);
+			if (!isActive) return;
+	
 			if (docSnap.exists()) {
 				const data = docSnap.data() as Transaction;
 				setDescription(data.description);
@@ -50,8 +54,13 @@ const useEditTransactions = () => {
 			}
 			setIsLoadingEdit(false);
 		};
+
 		getSpecificTransaction();
-	}, [id]);
+
+		return () => {
+			isActive = false;
+		};
+	}, [id, isFocused]);
 
 	const onCleanUp = () => {
 		setDescription('');
