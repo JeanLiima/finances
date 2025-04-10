@@ -1,39 +1,44 @@
 import { View, Text } from 'react-native';
 import { DrawerItemList, DrawerContentScrollView, DrawerItem, DrawerContentComponentProps } from '@react-navigation/drawer';
+import { Feather } from '@expo/vector-icons';
 
 import { useAuth } from '@/hooks/auth';
 
+import { styles } from './styles';
+
 const NavigationDrawer = (props: DrawerContentComponentProps) => {
-  const { loggedUser, onSignOut } = useAuth();
+	const { loggedUser, onSignOut } = useAuth();
 
-  return(
-	<>
-		<DrawerContentScrollView {...props}>
-			<View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 25 }}>
-				<Text style={{ fontSize: 18, marginTop: 14 }}>
-					Bem-vindo
-				</Text>
-				<Text 
-					style={{ fontSize: 17, fontWeight: 'bold', marginBottom: 14, paddingHorizontal: 20 }}
-					numberOfLines={1}
-				>
-					{loggedUser && loggedUser.name}
-				</Text>
+	return (
+		<>
+			<DrawerContentScrollView {...props} contentContainerStyle={styles.scrollContainer}>
+				<View style={styles.header}>
+					<Text style={styles.welcome}>Bem-vindo</Text>
+					<Text
+						style={styles.username}
+						numberOfLines={1}
+					>
+						{loggedUser?.name}
+					</Text>
+				</View>
+
+				<DrawerItemList {...props} />
+			</DrawerContentScrollView>
+
+			<View style={styles.footer}>
+				<DrawerItem
+					{...props}
+					label="Sair"
+					onPress={onSignOut}
+					icon={({ color, size }) => (
+						<Feather name="log-out" size={size} color="#E63946" />
+					)}
+					labelStyle={[styles.logoutLabel]}
+					style={styles.logoutButton}
+				/>
 			</View>
-
-			<DrawerItemList {...props} />
-
-		</DrawerContentScrollView>
-		<View style={{ marginBottom: 20, marginTop: 10 }}>
-			<DrawerItem
-				{...props}
-				label="Sair"
-				onPress={onSignOut}
-				labelStyle={{ alignSelf: 'center' }}
-			/>
-		</View>
-	</>
-  )
+		</>
+	);
 };
 
 export { NavigationDrawer };
