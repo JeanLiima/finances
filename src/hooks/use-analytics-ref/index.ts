@@ -1,8 +1,6 @@
 import { 
 	collection, 
-	CollectionReference, 
 	doc, 
-	DocumentReference, 
 	limit, 
 	orderBy, 
 	query, 
@@ -18,11 +16,11 @@ const useAnalyticsRef = () => {
 	const { loggedUser } = useAuth();
 
 	const analyticsCollection = loggedUser
-		? (collection(db, "users", loggedUser.id, "analytics") as CollectionReference)
+		? collection(db, "users", loggedUser.id, "analytics")
 		: undefined;
 
 	const analyticsDoc = (id: string) => loggedUser && id
-		? (doc(db, "users", loggedUser.id, "analytics", id) as DocumentReference)
+		? doc(db, "users", loggedUser.id, "analytics", id)
 		: undefined;
 
 	const analyticsQuery = (

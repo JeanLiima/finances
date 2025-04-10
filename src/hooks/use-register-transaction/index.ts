@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Alert } from "react-native";
 import { addDoc, doc, Timestamp } from "firebase/firestore";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
@@ -59,7 +58,7 @@ const useRegisterTransactions = () => {
 			: new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
 			const parsedInstallments = installment?.totalInstallment ? Number(installment.totalInstallment) : 1;
-			const parsedGroupId = groupId || doc(transactionsCollection).id;
+			const parsedGroupId = groupId ?? doc(transactionsCollection).id;
 			const hasInstallmentAndGroupId = parsedInstallments > 1;
 
 			for (let i = 0; i < parsedInstallments; i++) {

@@ -12,25 +12,25 @@ import { db } from "@/services/firebase-connection";
 
 import { useAuth } from "../auth";
 
-const useTransactionsRef = () => {
+const useCategoriesRef = () => {
 	const { loggedUser } = useAuth();
 
-	const transactionsCollection = loggedUser
-		? collection(db, "users", loggedUser.id, "transactions")
+	const categoriesCollection = loggedUser
+		? collection(db, "users", loggedUser.id, "categories")
 		: undefined;
 
-	const transactionsDoc = (id: string) => loggedUser && id
-		? doc(db, "users", loggedUser.id, "transactions", id)
+	const categoriesDoc = (id: string) => loggedUser && id
+		? doc(db, "users", loggedUser.id, "categories", id)
 		: undefined;
 
-	const transactionsQuery = (
+	const categoriesQuery = (
 		whereClauses: [string, WhereFilterOp, any][],
 		orderClauses: [string, "asc" | "desc"][] = [],
 		limitCount?: number
 		) =>
 		loggedUser
 			? query(
-				collection(db, "users", loggedUser.id, "transactions"),
+				collection(db, "users", loggedUser.id, "categories"),
 				...[
 					...whereClauses.map((clause) => where(...clause)),
 					...orderClauses.map(([field, direction]) => orderBy(field, direction)),
@@ -40,10 +40,10 @@ const useTransactionsRef = () => {
 			: undefined;
 
 	return {
-		transactionsDoc,
-		transactionsQuery,
-		transactionsCollection
+		categoriesDoc,
+		categoriesQuery,
+		categoriesCollection
 	}
 };
 
-export { useTransactionsRef };
+export { useCategoriesRef };

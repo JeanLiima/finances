@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Alert } from "react-native";
 import { getDoc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
 import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
@@ -80,6 +79,83 @@ const useEditTransactions = () => {
 		setRestOfData(null);
 	};
 
+	const fetchOriginalTransactionData = async (groupId: string) => {
+		const transactionsWithGroupIdQuery = transactionsQuery(
+			[["groupId", "==", groupId]],
+			[["yearMonth", "asc"]],
+			1
+		);
+		if (!transactionsWithGroupIdQuery) throw new Error("Query not found");
+
+		const snapshot = await getDocs(transactionsWithGroupIdQuery);
+		if (snapshot.empty) throw new Error("No transactions found");
+
+		const firstOriginalData = snapshot.docs[0].data();
+		return {
+			yearMonth: firstOriginalData.yearMonth,
+			createdAt: firstOriginalData.createdAt,
+		};
+	};
+
+	const handleDeleteAndRegister = async (
+		newPayload: Partial<Transaction>, 
+		oldPayload: Transaction, 
+		id: string, 
+		hasGroupId: boolean, 
+		hasInstallment: boolean, 
+		shouldRedistributeValue: boolean
+	) => {
+		let originalYearMonth = newPayload.yearMonth;
+		let originalCreatedAt = newPayload.createdAt;
+
+		if (hasGroupId) {
+			const { yearMonth, createdAt } = await fetchOriginalTransactionData(newPayload.groupId!);
+			originalYearMonth = yearMonth;
+			originalCreatedAt = createdAt;
+		}
+
+		const amount = shouldRedistributeValue 
+			? newPayload.amount ?? 0 
+			: newPayload.totalAmount ?? 0;
+
+		await onDelete({ ...oldPayload, id });
+		await onRegister({
+			...newPayload,
+			amount,
+			totalAmount: amount,
+			installment: hasInstallment ? {
+				totalInstallment: Number(newPayload.installment?.totalInstallment),
+				currentInstallment: 0
+			} : null,
+			yearMonth: originalYearMonth,
+			createdAt: originalCreatedAt,
+			groupId: hasGroupId ? newPayload.groupId : null,
+		});
+	};
+
+	const handleUpdate = async (transactionsRef: any, newPayload: Partial<Transaction>, oldPayload: Transaction) => {
+		await onUpdateAnalytics(
+			{
+				amount: oldPayload.amount,
+				yearMonth: oldPayload.yearMonth,
+				type: oldPayload?.type,
+				status: oldPayload.status,
+			},
+			{
+				amount: newPayload.amount ?? oldPayload.amount,
+				yearMonth: newPayload.yearMonth ?? oldPayload.yearMonth,
+				type: newPayload.type ?? oldPayload.type,
+				status: newPayload.status ?? oldPayload.status,
+			}
+		);
+
+		await updateDoc(transactionsRef, {
+			...newPayload,
+			installment: null,
+			groupId: null
+		});
+	};
+
 	const onEdit = async ({
 		id, 
 		newPayload, 
@@ -98,65 +174,17 @@ const useEditTransactions = () => {
 			const hasGroupId = !!groupId;
 			const hasInstallment = !!installment?.totalInstallment && Number(installment.totalInstallment) > 1;
 
-			if (isIsolatedEdit  || (!hasGroupId && !hasInstallment)) {
-				await onUpdateAnalytics(
-					{
-						amount: oldPayload.amount,
-						yearMonth: oldPayload.yearMonth,
-						type: oldPayload?.type,
-						status: oldPayload.status,
-					},
-					{
-						amount: newPayload.amount ?? oldPayload.amount,
-						yearMonth: newPayload.yearMonth ?? oldPayload.yearMonth,
-						type: newPayload.type ?? oldPayload.type,
-						status: newPayload.status ?? oldPayload.status,
-					}
-				);
-
-				await updateDoc(transactionsRef, {
-					...newPayload,
-					installment: null,
-					groupId: null
-				});
-				navigate(TRANSACTIONS);
-				return;
+			if (isIsolatedEdit || (!hasGroupId && !hasInstallment)) {
+				await handleUpdate(transactionsRef, newPayload, oldPayload);
 			} else {
-				let originalYearMonth = newPayload.yearMonth;
-				let originalCreatedAt = newPayload.createdAt;
-
-				if(hasGroupId) {
-					const transactionsWithGroupIdQuery = transactionsQuery(
-						[["groupId", "==", newPayload.groupId]],
-						[["yearMonth", "asc"]],
-						1
-					);
-					if(!transactionsWithGroupIdQuery) return;
-					const snapshot = await getDocs(transactionsWithGroupIdQuery);
-					if (snapshot.empty) return;
-					
-					const firstOriginalData = snapshot.docs[0].data();
-					originalYearMonth = firstOriginalData.yearMonth;
-					originalCreatedAt = firstOriginalData.createdAt;
-				}
-
-				const amount = shouldRedistributeValue 
-					? newPayload.amount ?? 0 
-					: newPayload.totalAmount ?? 0;
-
-				await onDelete({...oldPayload, id});
-				await onRegister({
-					...newPayload,
-					amount,
-					totalAmount: amount,
-					installment: hasInstallment ? {
-						totalInstallment: Number(installment?.totalInstallment),
-						currentInstallment: 0
-					} : null,
-					yearMonth: originalYearMonth,
-					createdAt: originalCreatedAt,
-					groupId: hasGroupId ? newPayload.groupId : null,
-				});
+				await handleDeleteAndRegister(
+					newPayload, 
+					oldPayload, 
+					id, 
+					hasGroupId, 
+					hasInstallment, 
+					shouldRedistributeValue
+				);
 			}
 
 			onCleanUp();
