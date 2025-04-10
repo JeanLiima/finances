@@ -205,18 +205,6 @@ const useEditTransactions = () => {
 	};
 
 	const onConfirmeEdit = () => {
-		if(description === '' || isNaN(parseFloat(amount))) {
-			Alert.alert(
-				"Atenção",
-				"Preencha todos os campos antes de cadastrar.",
-				[{
-					text: "OK"
-				}],
-				{ cancelable: false }
-			);
-			return;
-		}
-
 		onSelectEditType();
 	};
 

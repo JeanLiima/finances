@@ -41,6 +41,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#3b3dbf',
     },
+	disabled: {
+		opacity: 0.4,
+	},
 });
 
 export { styles };

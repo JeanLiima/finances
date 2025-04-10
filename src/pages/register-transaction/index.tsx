@@ -35,6 +35,8 @@ const RegisterTransaction = () => {
 		onChangeTotalInstallment,
 	}= useRegisterTransactions();
 
+	const isDisabled = description === '' || isNaN(parseFloat(amount))
+
 	return (
 		<View style={styles.background}>
 			<KeyboardAvoidingView
@@ -74,7 +76,11 @@ const RegisterTransaction = () => {
 				/>
 				<TouchableOpacity
                     activeOpacity={0.8}
-                    style={styles.submitButton}
+                    style={[
+						styles.submitButton,
+						isDisabled && styles.disabled
+					]}
+					disabled={isDisabled || isLoadingRegister}
                     onPress={onConfirmRegister}
                 >
                     {isLoadingRegister ? (

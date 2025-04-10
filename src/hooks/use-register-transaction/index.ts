@@ -106,18 +106,6 @@ const useRegisterTransactions = () => {
 	};
 
 	const onConfirmRegister = () => {
-		if(description === '' || isNaN(parseFloat(amount))) {
-			Alert.alert(
-				"Atenção",
-				"Preencha todos os campos antes de cadastrar.",
-				[{
-					text: "OK",
-				}],
-				{ cancelable: false }
-			);
-			return;
-		};
-
 		const partialPayload: Partial<Transaction> = {
 			description,
 			amount: Number(amount),

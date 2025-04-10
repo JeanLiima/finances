@@ -36,6 +36,8 @@ const EditTransaction = () => {
 		isLoadingSubmitting
 	} = useEditTransactions();
 
+	const isDisabled = description === '' || isNaN(parseFloat(amount))
+
 	if (isLoadingEdit) {
 		return (
 			<View
@@ -90,8 +92,12 @@ const EditTransaction = () => {
 				/>
 				<TouchableOpacity
                     activeOpacity={0.8}
-                    style={styles.submitButton}
+                    style={[
+						styles.submitButton,
+						isDisabled && styles.disabled
+					]}
                     onPress={onConfirmeEdit}
+					disabled={isDisabled || isLoadingSubmitting}
                 >
                     {isLoadingSubmitting ? (
                         <ActivityIndicator size={20} color="#FFF" />
