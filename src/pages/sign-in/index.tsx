@@ -9,11 +9,11 @@ import {
 	Alert,
 	TextInput,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 import { Input } from '@/design-system/input';
 import { useAuth } from '@/hooks/auth';
-import { SIGN_UP } from '@/constants/routes';
+import { RootStackParamList, SIGN_UP } from '@/constants/routes';
 
 import { styles } from './styles';
 
@@ -23,7 +23,7 @@ const SignIn = () => {
 
 	const passwordRef = useRef<TextInput>(null);
 
-    const navigation = useNavigation();
+    const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
     const { onSignIn, isLoadingAuth } = useAuth();
 
 	const handleSignIn = () => {
@@ -84,7 +84,7 @@ const SignIn = () => {
                     )}
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate(SIGN_UP as never)}
+                    onPress={() => navigate(SIGN_UP)}
                     style={styles.link}
                 >
                     <Text style={styles.linkText}>

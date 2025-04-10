@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { getDoc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 import { EDIT_TRANSACTION, RootStackParamList, TRANSACTIONS } from "@/constants/routes";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
@@ -36,7 +36,7 @@ const useEditTransactions = () => {
 	const { onDelete } = useDeleteTransaction();
 	const { onUpdateAnalytics } = useAnalytics();
 	const { onRegister } = useRegisterTransactions();
-	const { navigate, isFocused } = useNavigation();
+	const { navigate, isFocused } = useNavigation<NavigationProp<RootStackParamList>>();
 	const route = useRoute<RouteProp<RootStackParamList, typeof EDIT_TRANSACTION>>();
 	const id = route.params?.id;
 
@@ -62,7 +62,7 @@ const useEditTransactions = () => {
 				setRestOfData(data);
 			} else {
 				alert('Documento não encontrado!');
-				navigate(TRANSACTIONS as never);
+				navigate(TRANSACTIONS);
 			}
 			setIsLoadingEdit(false);
 		};
@@ -119,7 +119,7 @@ const useEditTransactions = () => {
 					installment: null,
 					groupId: null
 				});
-				navigate(TRANSACTIONS as never);
+				navigate(TRANSACTIONS);
 				return;
 			} else {
 				let originalYearMonth = newPayload.yearMonth;
@@ -160,7 +160,7 @@ const useEditTransactions = () => {
 			}
 
 			onCleanUp();
-			navigate(TRANSACTIONS as never);
+			navigate(TRANSACTIONS);
 		} catch (error) {
 			console.error(error);
 		} finally {

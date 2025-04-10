@@ -16,7 +16,7 @@ const AddTransactionFooterButton = ({ yearMonth }: FooterListProps) => {
 	const onNew = async () => {
 		navigate(REGISTER_TRANSACTION, {
 			yearMonth: yearMonth,
-		} as RootStackParamList[typeof REGISTER_TRANSACTION]);
+		});
 	};
 
 	return (

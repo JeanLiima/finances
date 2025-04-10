@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { deleteDoc, onSnapshot } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 
 import { EDIT_TRANSACTION, RootStackParamList } from "@/constants/routes";
@@ -55,7 +55,7 @@ const useTransactions = () => {
 	const onEdit = async (id: string) => {
 		navigate(EDIT_TRANSACTION, {
 			id: id,
-		} as RootStackParamList[typeof EDIT_TRANSACTION]);
+		});
 	};
 	  
 	const onSort = (column: keyof Transaction) => {
