@@ -133,7 +133,14 @@ const useEditTransactions = () => {
 		});
 	};
 
-	const handleUpdate = async (transactionsRef: any, newPayload: Partial<Transaction>, oldPayload: Transaction) => {
+	const handleUpdate = async (
+		id: string, 
+		newPayload: Partial<Transaction>,
+		oldPayload: Transaction
+	) => {
+		const transactionsRef = transactionsDoc(id);
+		if (!transactionsRef) return;
+		
 		await onUpdateAnalytics(
 			{
 				amount: oldPayload.amount,
@@ -163,9 +170,6 @@ const useEditTransactions = () => {
 		isIsolatedEdit = false,
 		shouldRedistributeValue = false
 	}: OnEditParams) => {
-		const transactionsRef = transactionsDoc(id);
-		if (!transactionsRef) return;
-
 		setIsLoadingSubmitting(true);
 
 		try {
@@ -175,7 +179,7 @@ const useEditTransactions = () => {
 			const hasInstallment = !!installment?.totalInstallment && Number(installment.totalInstallment) > 1;
 
 			if (isIsolatedEdit || (!hasGroupId && !hasInstallment)) {
-				await handleUpdate(transactionsRef, newPayload, oldPayload);
+				await handleUpdate(id, newPayload, oldPayload);
 			} else {
 				await handleDeleteAndRegister(
 					newPayload, 

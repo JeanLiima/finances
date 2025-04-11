@@ -5,11 +5,12 @@ import { db } from "@/services/firebase-connection";
 
 import { useAnalyticsRef } from "../use-analytics-ref";
 
+type AnalyticsData = Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status'>;
+
 const useAnalytics = () => {
 	const { analyticsDoc } = useAnalyticsRef();
-
 	const onDeleteAnalytics = async (
-		data: Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status'>
+		data: AnalyticsData
 	): Promise<void> => {
 		const { yearMonth, amount, type, status } = data;
 		const analyticsRef = analyticsDoc(yearMonth);
@@ -55,7 +56,7 @@ const useAnalytics = () => {
 	};
 
 	const onRegisterAnalytics = async (
-		data: Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status'>
+		data: AnalyticsData
 	): Promise<void> => {
 		const { yearMonth, amount, type, status } = data;
 		const analyticsRef = analyticsDoc(yearMonth);
@@ -99,8 +100,8 @@ const useAnalytics = () => {
 	};
 
 	const onUpdateAnalytics = async (
-		oldData: Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status'>,
-		newData: Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status'>
+		oldData: AnalyticsData,
+		newData: AnalyticsData
 	): Promise<void> => {
 		const changedMonth = oldData.yearMonth !== newData.yearMonth;
 	

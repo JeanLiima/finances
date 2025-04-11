@@ -1,4 +1,4 @@
-import { deleteDoc, getDoc, getDocs } from "firebase/firestore";
+import { deleteDoc, getDocs } from "firebase/firestore";
 import { Alert } from "react-native";
 
 import { useTransactionsRef } from "@/hooks/use-transactions-ref";
@@ -16,15 +16,11 @@ const useDeleteTransaction = () => {
 
 		try {
 			if (!item.groupId) {
-				const snapshot = await getDoc(transactionsRef);
-				if (!snapshot.exists()) return;
-
-				const data = snapshot.data();
 				await onDeleteAnalytics({
-					amount: data.amount,
-					yearMonth: data.yearMonth,
-					type: data.type,
-					status: data.status,
+					amount: item.amount,
+					yearMonth: item.yearMonth,
+					type: item.type,
+					status: item.status,
 				});
 				await deleteDoc(transactionsRef);
 				return;
@@ -72,7 +68,7 @@ const useDeleteTransaction = () => {
 						[
 							{
 								text: "Continuar",
-								onPress: () => onDelete(item),
+								onPress: () => {onDelete(item)},
 								style: "destructive",
 							},
 							{
@@ -85,7 +81,7 @@ const useDeleteTransaction = () => {
 				},
 				{
 					text: "Todas",
-					onPress:() => onDelete(item),
+					onPress: () => {onDelete(item)},
 					style: "destructive",
 				},
 				{
@@ -105,7 +101,7 @@ const useDeleteTransaction = () => {
 			[
 				{
 					text: "OK",
-					onPress: () => onSelectDeleteType(item),
+					onPress: () => {onSelectDeleteType(item)},
 					style: "destructive",
 				},
 				{

@@ -33,7 +33,6 @@ const useRegisterTransactions = () => {
 
 	useEffect(() => {
 		onCleanUp();
-
 		return () => onCleanUp();
 	}, [isFocused]);
 
