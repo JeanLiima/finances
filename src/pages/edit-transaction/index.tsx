@@ -15,6 +15,7 @@ import { Select } from "@/design-system/select";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
 import { useEditTransactions } from "@/hooks/use-edit-transaction";
 import { useCategories } from "@/hooks/use-categories";
+import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 
 import { styles } from "./styles";
 
@@ -43,7 +44,8 @@ const EditTransaction = () => {
 		categories
 	} = useCategories();
 
-	const isDisabled = description === '' || isNaN(parseFloat(amount)) || !categoryId
+	const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
+	const isDisabled = description === '' || isNaN(parseFloat(amount)) || (isExpense && !categoryId);
 
 	if (isLoadingEdit) {
 		return (
@@ -84,16 +86,18 @@ const EditTransaction = () => {
 					onSubmitEditing={onConfirmeEdit}
 				/>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
-				<Select 
-					value={categoryId} 
-					onChangeValue={onChangeCategory}
-					label="Categoria:"
-					options={categories.map(({id, name}) => ({
-						label: name,
-						value: id
-					}))}
-					optional={false}
-				/>
+				{isExpense && (
+					<Select 
+						value={categoryId} 
+						onChangeValue={onChangeCategory}
+						label="Categoria:"
+						options={categories.map(({id, name}) => ({
+							label: name,
+							value: id
+						}))}
+						optional={false}
+					/>
+				)}
 				<Select 
 					value={totalInstallment} 
 					onChangeValue={onChangeTotalInstallment}

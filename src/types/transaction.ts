@@ -7,18 +7,18 @@ type Transaction = {
 	id: string;
 	description: string;
 	amount: number;
-	categoryId: string;
-	totalAmount: number | null
 	status: PAID_STATUS,
 	type: TRANSACTIONS_TYPES,
 	createdAt: Timestamp,
 	yearMonth: string,
-	lastUpdatedAt: Timestamp | null,
-	groupId: string | null,
-	installment: {
+	categoryId?: string;
+	totalAmount?: number,
+	lastUpdatedAt?: Timestamp,
+	groupId?: string,
+	installment?: {
 		totalInstallment: number,
 		currentInstallment: number,
-	} | null
+	}
 }
 
 export type { Transaction }

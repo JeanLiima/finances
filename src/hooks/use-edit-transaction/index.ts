@@ -129,10 +129,10 @@ const useEditTransactions = () => {
 			installment: hasInstallment ? {
 				totalInstallment: Number(newPayload.installment?.totalInstallment),
 				currentInstallment: 0
-			} : null,
+			} : undefined,
 			yearMonth: originalYearMonth,
 			createdAt: originalCreatedAt,
-			groupId: hasGroupId ? newPayload.groupId : null,
+			groupId: hasGroupId ? newPayload.groupId : undefined,
 		});
 	};
 
@@ -163,8 +163,8 @@ const useEditTransactions = () => {
 
 		await updateDoc(transactionsRef, {
 			...newPayload,
-			installment: null,
-			groupId: null
+			installment: undefined,
+			groupId: undefined
 		});
 	};
 
@@ -208,11 +208,12 @@ const useEditTransactions = () => {
 	const onSelectEditType = async () => {
 		if(!id || !restOfData) return;
 
+		const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
 		const newPayload: Partial<Transaction> = {
 			description,
 			amount: Number(amount),
 			type,
-			categoryId,
+			categoryId: isExpense ? categoryId : undefined,
 			installment: {
 				totalInstallment: Number(totalInstallment),
 				currentInstallment: 0

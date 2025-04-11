@@ -17,6 +17,7 @@ import { useRegisterTransactions } from "@/hooks/use-register-transaction";
 import { useCategories } from "@/hooks/use-categories";
 
 import { styles } from "./styles";
+import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 
 const RegisterTransaction = () => {
   	const valueRef = useRef<TextInput>(null);
@@ -42,7 +43,8 @@ const RegisterTransaction = () => {
 		categories
 	} = useCategories();
 
-	const isDisabled = description === '' || isNaN(parseFloat(amount)) || !categoryId;
+	const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
+	const isDisabled = description === '' || isNaN(parseFloat(amount)) || (isExpense && !categoryId);
 
 	return (
 		<View style={styles.background}>
@@ -68,16 +70,18 @@ const RegisterTransaction = () => {
 					onSubmitEditing={onConfirmRegister}
 				/>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
-				<Select 
-					value={categoryId} 
-					onChangeValue={onChangeCategory}
-					label="Categoria:"
-					options={categories.map(({id, name}) => ({
-						label: name,
-						value: id
-					}))}
-					optional={false}
-				/>
+				{isExpense && (
+					<Select 
+						value={categoryId} 
+						onChangeValue={onChangeCategory}
+						label="Categoria:"
+						options={categories.map(({id, name}) => ({
+							label: name,
+							value: id
+						}))}
+						optional={false}
+					/>
+				)}
 				<Select 
 					value={totalInstallment} 
 					onChangeValue={onChangeTotalInstallment}

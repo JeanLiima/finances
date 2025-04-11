@@ -10,7 +10,7 @@ const useAnalysisTransactions = () => {
 	const [selectedYearMonth, setSelectedYearMonth] = useState<string>(formatYearMonth(new Date()));
 	const [isLoadingAnalysisTransactions, setIsLoadingAnalysisTransactions] = useState<boolean>(true);
 
-	const { analyticsDoc } = useAnalyticsRef()
+	const { analyticsDoc } = useAnalyticsRef();
 
 	useEffect(() => {
 		const transactionsRef = analyticsDoc(selectedYearMonth);
