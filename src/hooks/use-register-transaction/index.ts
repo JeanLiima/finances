@@ -51,8 +51,8 @@ const useRegisterTransactions = () => {
 				type = TRANSACTIONS_TYPES.EXPENSE,
 				description = '',
 				createdAt = Timestamp.fromDate(new Date()),
-				lastUpdatedAt,
-				categoryId,
+				lastUpdatedAt = null,
+				categoryId = null,
 			} = partialPayload;
 
 			const baseDate = yearMonth
@@ -74,7 +74,7 @@ const useRegisterTransactions = () => {
 					...partialPayload,
 
 					description,
-					categoryId: isExpense ? categoryId : undefined,
+					categoryId: isExpense ? categoryId : null,
 					type,
 					createdAt,
 					lastUpdatedAt,
@@ -82,12 +82,12 @@ const useRegisterTransactions = () => {
 					
 					status: PAID_STATUS.UNPAID,
 					yearMonth: formatYearMonth(installmentDate),
-					totalAmount: hasInstallmentAndGroupId ? parsedAmount : undefined,
+					totalAmount: hasInstallmentAndGroupId ? parsedAmount : null,
 					installment: hasInstallmentAndGroupId ? {
 						totalInstallment: parsedInstallments,
 						currentInstallment: i + 1,
-					} : undefined,
-					groupId: hasInstallmentAndGroupId ? parsedGroupId : undefined,
+					} : null,
+					groupId: hasInstallmentAndGroupId ? parsedGroupId : null,
 				};
 
 				await addDoc(transactionsCollection, payload);

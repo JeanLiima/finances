@@ -7,10 +7,12 @@ import { EmptyTransactionState } from "@/components/empty-transaction-state";
 import { MonthlyCarousel } from "@/components/monthly-carousel";
 import { AddTransactionFooterButton } from "@/components/add-transaction-footer-button";
 import { Loading } from "@/components/loading";
+import { useCategories } from "@/hooks/use-categories";
 
 import { StatusCard } from "./components/status-card";
 import { TypesCard } from "./components/types-card";
 import { TotalCard } from "./components/total-card";
+import { CategoryCard } from "./components/catgories-card";
 import { useAnalysisTransactions } from "./hooks/use-analysis-transactions";
 import { styles } from "./styles";
 
@@ -21,6 +23,8 @@ const TransactionAnalysis = () => {
 		onSelectYearMonth,
 		selectedYearMonth
 	} = useAnalysisTransactions();
+
+	const { categories } = useCategories();
 
 	const hasAnalytics = !!analytics;
 
@@ -37,6 +41,10 @@ const TransactionAnalysis = () => {
 				<ScrollView contentContainerStyle={styles.dashboardContainer}>
 					<StatusCard analytics={analytics}/>
 					<TypesCard analytics={analytics}/>
+					<CategoryCard 
+						analytics={analytics}
+						categories={categories}
+					/>
 					<TotalCard analytics={analytics}/>
 				</ScrollView>
 			) : (

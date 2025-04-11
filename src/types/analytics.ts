@@ -10,6 +10,7 @@ type Analytics = {
 		count?: number,
 		sum?: number,
 	},
+	categories: Record<string, number>
 	types: {
 		[TRANSACTIONS_TYPES.EXPENSE]?: number,
 		[TRANSACTIONS_TYPES.INCOME]?: number,

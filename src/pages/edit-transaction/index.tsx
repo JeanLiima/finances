@@ -40,9 +40,7 @@ const EditTransaction = () => {
 		isLoadingSubmitting
 	} = useEditTransactions();
 
-	const {
-		categories
-	} = useCategories();
+	const { categories } = useCategories();
 
 	const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
 	const isDisabled = description === '' || isNaN(parseFloat(amount)) || (isExpense && !categoryId);

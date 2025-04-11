@@ -58,7 +58,7 @@ const useEditTransactions = () => {
 				setDescription(description);
 				setAmount(amount.toString());
 				setType(type);
-				setCategoryId(categoryId);
+				setCategoryId(categoryId ?? undefined);
 				setTotalInstallment(installment?.totalInstallment.toString());
 				setRestOfData(data);
 			} else {
@@ -163,8 +163,8 @@ const useEditTransactions = () => {
 
 		await updateDoc(transactionsRef, {
 			...newPayload,
-			installment: undefined,
-			groupId: undefined
+			installment: null,
+			groupId: null
 		});
 	};
 

@@ -11,14 +11,14 @@ type Transaction = {
 	type: TRANSACTIONS_TYPES,
 	createdAt: Timestamp,
 	yearMonth: string,
-	categoryId?: string;
-	totalAmount?: number,
-	lastUpdatedAt?: Timestamp,
-	groupId?: string,
-	installment?: {
+	categoryId: string | null;
+	totalAmount: number | null,
+	lastUpdatedAt: Timestamp | null,
+	groupId: string | null,
+	installment: {
 		totalInstallment: number,
 		currentInstallment: number,
-	}
+	} | null
 }
 
 export type { Transaction }
