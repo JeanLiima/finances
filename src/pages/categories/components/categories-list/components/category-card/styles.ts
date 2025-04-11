@@ -11,33 +11,11 @@ export const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		borderWidth: 1,
 		borderColor: "#3b3dbf",
-		height: 75,
-		gap: 8
+		height: 75
 	},
-	name: {
-		flex: 1,
+	label: {
 		fontSize: 16,
 		color: "#333",
-		fontWeight: "500",
-	},
-	control: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between"
-	},
-	button: {
-		backgroundColor: "#3b3dbf",
-		padding: 16,
-		borderRadius: 10,
-		alignItems: "center",
-	},
-	disabledButton: {
-		opacity: 0.3,
-	},
-	percent: {
-		fontSize: 14,
-		color: "#3b3dbf",
 		fontWeight: "500",
 	},
 });

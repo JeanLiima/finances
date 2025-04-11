@@ -5,10 +5,11 @@ import { styles } from "./styles";
 
 type FooterProps = {
 	total: number,
-	onBack: () => void;
+	onBack: VoidFunction,
+	onSave: VoidFunction
 }
 
-const Footer = ({ total, onBack }: FooterProps) => {
+const Footer = ({ total, onBack, onSave }: FooterProps) => {
 	return (
 		<View style={styles.footer}>
 			<View
@@ -40,6 +41,7 @@ const Footer = ({ total, onBack }: FooterProps) => {
 					total !== 100 && styles.disabled
 				]}
 				disabled={total !== 100}
+				onPress={onSave}
 			>
 				<Text style={styles.saveButtonText}>Salvar</Text>
 			</TouchableOpacity>
