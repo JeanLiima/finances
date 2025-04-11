@@ -14,7 +14,8 @@ import { useAnalytics } from "../use-analytics";
 const useRegisterTransactions = () => {
 	const [description, setDescription] = useState<string>('');
 	const [amount, setAmount] = useState<string>('');
-	const [totalInstallment, setTotalInstallment] = useState<string | null>(null);
+	const [totalInstallment, setTotalInstallment] = useState<string | undefined>(undefined);
+	const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
 	const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
 
@@ -28,7 +29,8 @@ const useRegisterTransactions = () => {
 		setDescription('');
 		setAmount('');
 		setType(TRANSACTIONS_TYPES.EXPENSE);
-		setTotalInstallment('');
+		setTotalInstallment(undefined);
+		setCategoryId(undefined);
 	};
 
 	useEffect(() => {
@@ -49,7 +51,8 @@ const useRegisterTransactions = () => {
 				type = TRANSACTIONS_TYPES.EXPENSE,
 				description = '',
 				createdAt = Timestamp.fromDate(new Date()),
-				lastUpdatedAt = null
+				lastUpdatedAt = null,
+				categoryId = ''
 			} = partialPayload;
 
 			const baseDate = yearMonth
@@ -70,10 +73,11 @@ const useRegisterTransactions = () => {
 					...partialPayload,
 
 					description,
-					amount: installmentAmount,
+					categoryId,
 					type,
 					createdAt,
 					lastUpdatedAt,
+					amount: installmentAmount,
 					
 					status: PAID_STATUS.UNPAID,
 					yearMonth: formatYearMonth(installmentDate),
@@ -107,6 +111,7 @@ const useRegisterTransactions = () => {
 		const partialPayload: Partial<Transaction> = {
 			description,
 			amount: Number(amount),
+			categoryId,
 			type,
 			installment: {
 				totalInstallment: Number(totalInstallment),
@@ -130,10 +135,12 @@ const useRegisterTransactions = () => {
 		amount,
 		type,
 		totalInstallment,
+		categoryId,
 		onChangeDescription: setDescription,
 		onChangeAmount: handleAmount,
 		onChangeType: setType,
 		onChangeTotalInstallment: setTotalInstallment,
+		onChangeCategory: setCategoryId,
 		onRegister,
 		onConfirmRegister,
 		isLoadingRegister

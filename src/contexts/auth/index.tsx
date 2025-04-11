@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useMemo } from 'react';
 import { 
 	createUserWithEmailAndPassword, 
 	onAuthStateChanged, 
@@ -23,8 +23,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 		const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
 			if (user) {
 				setLoggedUser({
-					name: user.displayName || '',
-					email: user.email || '',
+					name: user.displayName ?? '',
+					email: user.email ?? '',
 					id: user.uid
 				});
 			} else {
@@ -132,19 +132,21 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 		setLoggedUser(null);
 	};
 
-    return (
-        <AuthContext.Provider value={{
-           	isSigned: !!loggedUser,
-            loggedUser,
-            isLoadingAuth,
-            isLoading,
-			onSignUp,
-			onSignOut,
-            onSignIn
-        }}>
-            {children}
-        </AuthContext.Provider>
-    )
+	const contextValue = useMemo(() => ({
+		isSigned: !!loggedUser,
+		loggedUser,
+		isLoadingAuth,
+		isLoading,
+		onSignUp,
+		onSignOut,
+		onSignIn
+	}), [loggedUser, isLoadingAuth, isLoading, onSignUp, onSignOut, onSignIn]);
+
+	return (
+		<AuthContext.Provider value={contextValue}>
+			{children}
+		</AuthContext.Provider>
+	)
 };
 
 export { AuthProvider };

@@ -10,9 +10,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
 		paddingTop: 20
     },
-    areaInput: {
-        flexDirection: 'row'
-    },
     submitButton: {
         width: '89%',
         height: 45,

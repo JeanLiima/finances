@@ -7,6 +7,7 @@ type Transaction = {
 	id: string;
 	description: string;
 	amount: number;
+	categoryId: string;
 	totalAmount: number | null
 	status: PAID_STATUS,
 	type: TRANSACTIONS_TYPES,

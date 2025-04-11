@@ -1,14 +1,16 @@
-import { TextInput, TextInputProps } from "react-native";
+import { TextInput, TextInputProps, View } from "react-native";
 
 import { styles } from "./styles";
 import { forwardRef } from "react";
 
 const Input = forwardRef<TextInput, TextInputProps>((props: TextInputProps, ref) => (
-	<TextInput
-		style={styles.input}
-		ref={ref}
-		{...props}
-	/>	
+	<View style={styles.container}>
+		<TextInput
+			style={styles.input}
+			ref={ref}
+			{...props}
+		/>	
+	</View>
 ));
 
 export { Input };

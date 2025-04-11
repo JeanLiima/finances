@@ -14,6 +14,7 @@ import { Input } from "@/design-system/input";
 import { Select } from "@/design-system/select";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
 import { useRegisterTransactions } from "@/hooks/use-register-transaction";
+import { useCategories } from "@/hooks/use-categories";
 
 import { styles } from "./styles";
 
@@ -33,9 +34,15 @@ const RegisterTransaction = () => {
 		onChangeType,
 		totalInstallment,
 		onChangeTotalInstallment,
+		categoryId,
+		onChangeCategory,
 	}= useRegisterTransactions();
 
-	const isDisabled = description === '' || isNaN(parseFloat(amount))
+	const {
+		categories
+	} = useCategories();
+
+	const isDisabled = description === '' || isNaN(parseFloat(amount)) || !categoryId;
 
 	return (
 		<View style={styles.background}>
@@ -44,35 +51,41 @@ const RegisterTransaction = () => {
 				behavior={Platform.OS === 'ios' ? 'padding' : undefined}
 				enabled
 			>
-				<View style={styles.areaInput}>
-					<Input
-						placeholder="Descrição"
-						value={description}
-						onChangeText={onChangeDescription}
-						returnKeyType="next"
-						onSubmitEditing={() => valueRef.current?.focus()}
-					/>
-				</View>
-				<View style={styles.areaInput}>
-					<Input
-						placeholder="Valor"
-						value={amount}
-						onChangeText={onChangeAmount}
-						keyboardType="numeric"
-						returnKeyType="done"
-						ref={valueRef}
-						onSubmitEditing={onConfirmRegister}
-					/>
-				</View>
+				<Input
+					placeholder="Descrição"
+					value={description}
+					onChangeText={onChangeDescription}
+					returnKeyType="next"
+					onSubmitEditing={() => valueRef.current?.focus()}
+				/>
+				<Input
+					placeholder="Valor"
+					value={amount}
+					onChangeText={onChangeAmount}
+					keyboardType="numeric"
+					returnKeyType="done"
+					ref={valueRef}
+					onSubmitEditing={onConfirmRegister}
+				/>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
+				<Select 
+					value={categoryId} 
+					onChangeValue={onChangeCategory}
+					label="Categoria:"
+					options={categories.map(({id, name}) => ({
+						label: name,
+						value: id
+					}))}
+					optional={false}
+				/>
 				<Select 
 					value={totalInstallment} 
 					onChangeValue={onChangeTotalInstallment}
+					label="Parcelamento: (Opcional)"
 					options={Array.from({ length: 12 }, (_, i) => ({
 						label: `${i + 1}x`,
 						value: `${i + 1}`,
 					}))}
-					label="Escolha o parcelamento: (Opcional)"
 				/>
 				<TouchableOpacity
                     activeOpacity={0.8}

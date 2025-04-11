@@ -50,36 +50,30 @@ const SignUp = () => {
 				behavior={Platform.OS === 'ios' ? 'padding' : undefined}
 				enabled
 			>
-				<View style={styles.areaInput}>
-					<Input
-						placeholder="Digite seu nome"
-						value={name}
-						onChangeText={setName}
-						returnKeyType="next"
-						onSubmitEditing={() => emailRef.current?.focus()}
-					/>
-				</View>
-				<View style={styles.areaInput}>
-					<Input
-						placeholder="Digite seu email"
-						value={email}
-						onChangeText={setEmail}
-						ref={emailRef}
-						returnKeyType="next"
-						onSubmitEditing={() => passwordRef.current?.focus()}
-					/>
-				</View>
-				<View style={styles.areaInput}>
-					<Input
-						placeholder="Sua senha"
-						value={password}
-						onChangeText={setPassword}
-						secureTextEntry={true}
-						ref={passwordRef}
-						returnKeyType="done"
-						onSubmitEditing={handleSignUp}
-					/>
-				</View>
+				<Input
+					placeholder="Digite seu nome"
+					value={name}
+					onChangeText={setName}
+					returnKeyType="next"
+					onSubmitEditing={() => emailRef.current?.focus()}
+				/>
+				<Input
+					placeholder="Digite seu email"
+					value={email}
+					onChangeText={setEmail}
+					ref={emailRef}
+					returnKeyType="next"
+					onSubmitEditing={() => passwordRef.current?.focus()}
+				/>
+				<Input
+					placeholder="Sua senha"
+					value={password}
+					onChangeText={setPassword}
+					secureTextEntry={true}
+					ref={passwordRef}
+					returnKeyType="done"
+					onSubmitEditing={handleSignUp}
+				/>
 				<TouchableOpacity 
 					activeOpacity={0.8}
 					style={styles.submitButton}

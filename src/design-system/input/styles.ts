@@ -1,14 +1,17 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+	container: {
+		width: "100%",
+		paddingHorizontal: 20,
+		marginBottom: 15,
+	},
 	input: {
 		backgroundColor: '#FFF',
-		width: '90%',
-		fontSize: 17,
 		padding: 10,
 		borderRadius: 8,
+		fontSize: 17,
 		color: '#121212',
-		marginBottom: 15,
 	}
 });
 

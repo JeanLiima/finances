@@ -50,26 +50,23 @@ const SignIn = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 enabled
             >
-                <View style={styles.areaInput}>
-                    <Input
-                        placeholder="Digite seu email"
-                        value={email}
-                        onChangeText={setEmail}
-						returnKeyType="next"
-						onSubmitEditing={() => passwordRef.current?.focus()}
-                    />
-                </View>
-                <View style={styles.areaInput}>
-                    <Input
-                        placeholder="Digite sua senha"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry={true}
-						ref={passwordRef}
-						returnKeyType="done"
-						onSubmitEditing={handleSignIn}
-                    />
-                </View>
+				<Input
+					placeholder="Digite seu email"
+					value={email}
+					onChangeText={setEmail}
+					returnKeyType="next"
+					onSubmitEditing={() => passwordRef.current?.focus()}
+				/>
+			
+				<Input
+					placeholder="Digite sua senha"
+					value={password}
+					onChangeText={setPassword}
+					secureTextEntry={true}
+					ref={passwordRef}
+					returnKeyType="done"
+					onSubmitEditing={handleSignIn}
+				/>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.submitButton}

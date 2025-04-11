@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		gap: 12,
 		marginHorizontal: 20,
+		marginBottom: 20,
 	},
 	button: {
 		flex: 1,

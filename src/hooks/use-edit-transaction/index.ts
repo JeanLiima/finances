@@ -25,8 +25,9 @@ const useEditTransactions = () => {
 	const [description, setDescription] = useState<string>('');
 	const [amount, setAmount] = useState<string>('');
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
-	const [totalInstallment, setTotalInstallment] = useState<string | null>(null);
-	const [restOfData, setRestOfData] = useState<Transaction | null>(null);
+	const [totalInstallment, setTotalInstallment] = useState<string | undefined>(undefined);
+	const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
+	const [restOfData, setRestOfData] = useState<Transaction | undefined>(undefined);
 
 	const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(true);
 	const [isLoadingSubmitting, setIsLoadingSubmitting] = useState<boolean>(false);
@@ -53,11 +54,12 @@ const useEditTransactions = () => {
 	
 			if (docSnap.exists()) {
 				const data = docSnap.data() as Transaction;
-				const { description, amount, installment, type } = data; 
+				const { description, amount, installment, type, categoryId } = data; 
 				setDescription(description);
 				setAmount(amount.toString());
 				setType(type);
-				setTotalInstallment(installment?.totalInstallment ? installment.totalInstallment.toString() : null);
+				setCategoryId(categoryId);
+				setTotalInstallment(installment?.totalInstallment.toString());
 				setRestOfData(data);
 			} else {
 				alert('Documento não encontrado!');
@@ -75,8 +77,9 @@ const useEditTransactions = () => {
 		setDescription('');
 		setAmount('');
 		setType(TRANSACTIONS_TYPES.EXPENSE);
-		setTotalInstallment('');
-		setRestOfData(null);
+		setTotalInstallment(undefined);
+		setCategoryId(undefined);
+		setRestOfData(undefined);
 	};
 
 	const fetchOriginalTransactionData = async (groupId: string) => {
@@ -207,6 +210,7 @@ const useEditTransactions = () => {
 			description,
 			amount: Number(amount),
 			type,
+			categoryId,
 			installment: {
 				totalInstallment: Number(totalInstallment),
 				currentInstallment: 0
@@ -254,10 +258,12 @@ const useEditTransactions = () => {
 		amount,
 		type,
 		totalInstallment,
+		categoryId,
 		onChangeDescription: setDescription,
 		onChangeAmount: handleAmount,
 		onChangeType: setType,
 		onChangeTotalInstallment: setTotalInstallment,
+		onChangeCategory: setCategoryId,
 		onConfirmeEdit,
 		isLoadingEdit,
 		isLoadingSubmitting,

@@ -1,35 +1,39 @@
 import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
 	container: {
-		margin: 20,
-		zIndex: 1000,
+		width: "100%",
+		paddingHorizontal: 20,
+		marginBottom: 15,
+	},
+	closeContainer: {
+		flex: 1,
+		backgroundColor: 'rgba(34, 34, 34, 0.4)',
+	},
+	trigger: {
+		padding: 10,
+		backgroundColor: '#FFF',
+		borderRadius: 8,
+	},
+	triggerText: {
+		fontSize: 17,
+		color: '#121212',
 	},
 	label: {
-		marginBottom: 8,
+		fontSize: 18,
+		marginBottom: 10,
+	},
+	pickerContainer: {
+		flex: 0.4,
+		backgroundColor: '#fff',
+		borderRadius: 8,
+		overflow: 'hidden',
+	},
+	picker: {
+		justifyContent: "flex-start",
+	},
+	pickerItem: {
 		fontSize: 16,
-	},
-	dropdown: {
-		borderWidth: 2,
-		borderColor: '#FFF'
-	},
-	dropdownContainer: {
-		borderWidth: 2,
-		borderColor: '#FFF'
-	},
-	text: {         
-		fontSize: 16,
-		color: '#333',
-	},
-	placeholder: {
-		color: '#ccc',
-	},
-	selectedItemLabel: {
-		fontWeight: 'bold',
-	},
-	listItemLabel: {
 		color: '#333',
 	}
 });
-
-export { styles };
