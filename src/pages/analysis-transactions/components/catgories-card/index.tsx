@@ -16,7 +16,6 @@ const CategoryCard = ({
 	categories,
 }: CategoryCardProps) => {
 	const totalIncome = analytics.types.income ?? 0;
-	console.log(analytics);
 
 	return (
 		<View style={styles.card}>
