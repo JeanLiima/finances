@@ -148,14 +148,16 @@ const useEditTransactions = () => {
 			{
 				amount: oldPayload.amount,
 				yearMonth: oldPayload.yearMonth,
-				type: oldPayload?.type,
+				type: oldPayload.type,
 				status: oldPayload.status,
+				categoryId : oldPayload.categoryId
 			},
 			{
 				amount: newPayload.amount ?? oldPayload.amount,
 				yearMonth: newPayload.yearMonth ?? oldPayload.yearMonth,
 				type: newPayload.type ?? oldPayload.type,
 				status: newPayload.status ?? oldPayload.status,
+				categoryId : newPayload.categoryId ?? oldPayload.categoryId,
 			}
 		);
 

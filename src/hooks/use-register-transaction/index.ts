@@ -95,6 +95,7 @@ const useRegisterTransactions = () => {
 					yearMonth: payload.yearMonth,
 					type: payload.type,
 					status: payload.status,
+					categoryId: payload.categoryId
 				});
 			}
 

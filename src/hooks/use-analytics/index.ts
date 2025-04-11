@@ -5,14 +5,15 @@ import { db } from "@/services/firebase-connection";
 
 import { useAnalyticsRef } from "../use-analytics-ref";
 
-type AnalyticsData = Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status'>;
+type AnalyticsData = Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status' | 'categoryId'>;
 
 const useAnalytics = () => {
 	const { analyticsDoc } = useAnalyticsRef();
+	
 	const onDeleteAnalytics = async (
 		data: AnalyticsData
 	): Promise<void> => {
-		const { yearMonth, amount, type, status } = data;
+		const { yearMonth, amount, type, status, categoryId } = data;
 		const analyticsRef = analyticsDoc(yearMonth);
 		if (!analyticsRef) return;
 	
@@ -26,17 +27,30 @@ const useAnalytics = () => {
 			const types = analytic.types || {};
 			const statusAgg = analytic.status || {};
 			const total = analytic.total || { count: 0, sum: 0 };
+			const categoryAgg = analytic.categories || {};
 	
+			// TYPES
 			const newTypes = {
 				...types,
 				[type]: Math.max((types[type] || 0) - amount, 0),
 			};
 	
+			//STATUS
 			const newStatus = {
 				...statusAgg,
 				[status]: Math.max((statusAgg[status] || 0) - amount, 0),
 			};
+
+			// CATEGORIES
+			const newCategories = { ...categoryAgg };
+			if (categoryId) {
+				newCategories[categoryId] = Math.max(
+					(categoryAgg[categoryId] || 0) - amount,
+					0
+				);
+			}
 	
+			//TOTAL
 			const newTotal = {
 				count: Math.max(total.count - 1, 0),
 				sum: Math.max(total.sum - amount, 0),
@@ -47,6 +61,7 @@ const useAnalytics = () => {
 				{
 					types: newTypes,
 					status: newStatus,
+					categories: newCategories,
 					total: newTotal,
 					updatedAt: new Date(),
 				},
@@ -58,7 +73,7 @@ const useAnalytics = () => {
 	const onRegisterAnalytics = async (
 		data: AnalyticsData
 	): Promise<void> => {
-		const { yearMonth, amount, type, status } = data;
+		const { yearMonth, amount, type, status, categoryId  } = data;
 		const analyticsRef = analyticsDoc(yearMonth);
 		if (!analyticsRef) return;
 	
@@ -70,21 +85,33 @@ const useAnalytics = () => {
 			const types = analytic.types || {};
 			const statusAgg = analytic.status || {};
 			const total = analytic.total || { count: 0, sum: 0 };
+			const categoryAgg = analytic.categories || {};
 	
+			//TYPES
 			const newTypes = {
 				...types,
 				[type]: (types[type] || 0) + amount,
 			};
 	
+			//STATUS
 			const newStatus = {
 				...statusAgg,
 				[status]: (statusAgg[status] || 0) + amount,
 			};
 	
+			//TOTAL
 			const newTotal = {
 				count: total.count + 1,
 				sum: total.sum + amount,
 			};
+
+			//CATEGORIES
+			const newCategories = categoryId
+			? {
+					...categoryAgg,
+					[categoryId]: (categoryAgg[categoryId] || 0) + amount,
+				}
+			: categoryAgg;
 	
 			analytics.set(
 				analyticsRef,
@@ -92,6 +119,7 @@ const useAnalytics = () => {
 					types: newTypes,
 					status: newStatus,
 					total: newTotal,
+					categories: newCategories,
 					updatedAt: new Date(),
 				},
 				{ merge: true }
@@ -123,7 +151,9 @@ const useAnalytics = () => {
 				const types = analytic.types || {};
 				const statusAgg = analytic.status || {};
 				const total = analytic.total || { count: 0, sum: 0 };
+				const categoryAgg = analytic.categories || {};
 	
+				// TYPES
 				const newTypes = { ...types };
 				if (oldData.type !== newData.type) {
 					newTypes[oldData.type] = Math.max((types[oldData.type] || 0) - oldData.amount, 0);
@@ -132,6 +162,7 @@ const useAnalytics = () => {
 					newTypes[oldData.type] = Math.max((types[oldData.type] || 0) - oldData.amount + newData.amount, 0);
 				}
 				
+				// STATUS
 				const newStatus = { ...statusAgg };
 				if (oldData.status !== newData.status) {
 					newStatus[oldData.status] = Math.max((statusAgg[oldData.status] || 0) - oldData.amount, 0);
@@ -139,7 +170,21 @@ const useAnalytics = () => {
 				} else {
 					newStatus[oldData.status] = Math.max((statusAgg[oldData.status] || 0) - oldData.amount + newData.amount, 0);
 				}
+
+				// CATEGORIES
+				const newCategories = { ...categoryAgg };
+				if (oldData.categoryId) {
+					newCategories[oldData.categoryId] = Math.max(
+						(categoryAgg[oldData.categoryId] || 0) - oldData.amount,
+						0
+					);
+				}
+				if (newData.categoryId) {
+					newCategories[newData.categoryId] = 
+						(newCategories[newData.categoryId] || 0) + newData.amount;
+				}
 	
+				// TOTAL
 				const newTotal = {
 					count: total.count,
 					sum: Math.max(total.sum - oldData.amount + newData.amount, 0),
@@ -150,6 +195,7 @@ const useAnalytics = () => {
 					{
 						types: newTypes,
 						status: newStatus,
+						categories: newCategories,
 						total: newTotal,
 						updatedAt: new Date(),
 					},
