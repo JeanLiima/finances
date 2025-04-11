@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		borderWidth: 1,
 		borderColor: "#3b3dbf",
-		height: 75
+		height: 60,
 	},
 	label: {
 		flex: 1,

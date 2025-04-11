@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		borderRadius: 6,
 		width: "100%",
+		borderWidth: 1,
 	},
 	totalText: {
 		fontWeight: "600",

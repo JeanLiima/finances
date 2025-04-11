@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		borderWidth: 1,
 		borderColor: "#3b3dbf",
-		height: 75,
+		height: 60,
 		gap: 8
 	},
 	name: {
@@ -21,14 +21,15 @@ export const styles = StyleSheet.create({
 		fontWeight: "500",
 	},
 	control: {
-		flex: 1,
+		flex: 0.5,
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-between"
+		justifyContent: "flex-end",
+		gap: 8
 	},
 	button: {
 		backgroundColor: "#3b3dbf",
-		padding: 16,
+		padding: 12,
 		borderRadius: 10,
 		alignItems: "center",
 	},
@@ -39,5 +40,7 @@ export const styles = StyleSheet.create({
 		fontSize: 14,
 		color: "#3b3dbf",
 		fontWeight: "500",
+		width: 40,
+		textAlign: "center"
 	},
 });

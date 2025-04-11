@@ -43,7 +43,7 @@ const CategoryAllocation = ({ selectedCategories, onBack, onSave }: CategoryAllo
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.label}>Selecione as categorias</Text>
+			<Text style={styles.label}>Distribua entre as categorias</Text>
 			<FlatList
 				data={selectedCategories}
 				keyExtractor={(item) => item.id}

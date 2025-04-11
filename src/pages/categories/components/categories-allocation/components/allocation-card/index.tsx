@@ -30,10 +30,9 @@ const AllocationCard = ({
 					disabledRemove && styles.disabledButton,
 				]}
 			>
-				<Feather name="minus" size={16} color="#FFF" />
+				<Feather name="minus" size={12} color="#FFF" />
 			</TouchableOpacity>
-				<Text style={styles.percent}>{percentage}%</Text>
-
+			<Text style={styles.percent}>{percentage}%</Text>
 			<TouchableOpacity
 				onPress={() => onChange(category.id, 5)}
 				disabled={disabledAdd}
@@ -42,7 +41,7 @@ const AllocationCard = ({
 					disabledAdd && styles.disabledButton,
 				]}
 			>
-				<Feather name="plus" size={16} color="#FFF" />
+				<Feather name="plus" size={12} color="#FFF" />
 			</TouchableOpacity>
 		</View>
 	</View>
