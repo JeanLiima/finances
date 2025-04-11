@@ -14,9 +14,17 @@ type CategoryAllocationProps = {
 };
 
 const CategoryAllocation = ({ selectedCategories, onBack, onSave }: CategoryAllocationProps) => {
-	const [percentages, setPercentages] = useState<Record<string, number>>(
-		() => selectedCategories.reduce((acc, cat) => ({ ...acc, [cat.id]: cat.percentage }), {})
-	);
+	const [percentages, setPercentages] = useState<Record<string, number>>(() => {
+		if (selectedCategories.length === 1) {
+		  const only = selectedCategories[0];
+		  return { [only.id]: 100 };
+		}
+	  
+		return selectedCategories.reduce(
+		  (acc, cat) => ({ ...acc, [cat.id]: cat.percentage }),
+		  {}
+		);
+	  });
 
 	const handleChange = (id: string, amount: number) => {
 		setPercentages((prev) => {
