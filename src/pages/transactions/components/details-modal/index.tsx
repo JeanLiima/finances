@@ -53,7 +53,7 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 									}
 								]}
 								>
-								{!isIncomeType && " -"}R${formattedAmount}
+								R$ {!isIncomeType && " -"}{formattedAmount}
 							</Text>
 						</TermValue>
 						{data?.totalAmount && (
@@ -66,7 +66,7 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 										}
 									]}
 									>
-									{!isIncomeType && " -"}R${formatCurrency(data?.totalAmount)}
+									R$ {!isIncomeType && " -"}{formatCurrency(data?.totalAmount)}
 								</Text>
 							</TermValue>
 						)}
