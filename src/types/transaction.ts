@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 import { PAID_STATUS } from "@/constants/paid-status";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 
-interface Transaction {
+type Transaction = {
 	id: string;
 	description: string;
 	amount: number;

@@ -1,7 +1,7 @@
 import { PAID_STATUS } from "@/constants/paid-status"
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types"
 
-interface Analytics {
+type Analytics = {
 	status: {
 		[PAID_STATUS.PAID]?: number,
 		[PAID_STATUS.UNPAID]?: number
