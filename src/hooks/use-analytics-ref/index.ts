@@ -19,8 +19,8 @@ const useAnalyticsRef = () => {
 		? collection(db, "users", loggedUser.id, "analytics")
 		: undefined;
 
-	const analyticsDoc = (id: string) => loggedUser && id
-		? doc(db, "users", loggedUser.id, "analytics", id)
+	const analyticsDoc = (analyticId: string) => loggedUser
+		? doc(db, "users", loggedUser.id, "analytics", analyticId)
 		: undefined;
 
 	const analyticsQuery = (

@@ -11,7 +11,7 @@ import { Transaction } from "@/types/transaction";
 
 import { useAnalytics } from "../use-analytics";
 
-const useRegisterTransactions = () => {
+const useRegisterTransaction = () => {
 	const [description, setDescription] = useState<string>('');
 	const [amount, setAmount] = useState<string>('');
 	const [totalInstallment, setTotalInstallment] = useState<string | undefined>(undefined);
@@ -149,4 +149,4 @@ const useRegisterTransactions = () => {
 	}
 };
 
-export { useRegisterTransactions };
+export { useRegisterTransaction };

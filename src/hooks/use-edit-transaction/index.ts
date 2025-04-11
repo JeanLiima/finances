@@ -8,7 +8,7 @@ import { Transaction } from "@/types/transaction";
 
 import { useTransactionsRef } from "../use-transactions-ref";
 import { useDeleteTransaction } from "../use-delete-transaction";
-import { useRegisterTransactions } from "../use-register-transaction";
+import { useRegisterTransaction } from "../use-register-transaction";
 import { useAnalytics } from "../use-analytics";
 
 import { showTransactionWithInstallmentChangeAlert } from "./mappers/show-transaction-with-installment-change-alert";
@@ -21,7 +21,7 @@ type OnEditParams = {
 	shouldRedistributeValue?: boolean;
 }
 
-const useEditTransactions = () => {
+const useEditTransaction = () => {
 	const [description, setDescription] = useState<string>('');
 	const [amount, setAmount] = useState<string>('');
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
@@ -35,7 +35,7 @@ const useEditTransactions = () => {
 	const { transactionsDoc, transactionsQuery } = useTransactionsRef();
 	const { onDelete } = useDeleteTransaction();
 	const { onUpdateAnalytics } = useAnalytics();
-	const { onRegister } = useRegisterTransactions();
+	const { onRegister } = useRegisterTransaction();
 	const { navigate, isFocused } = useNavigation<NavigationProp<RootStackParamList>>();
 	const route = useRoute<RouteProp<RootStackParamList, typeof EDIT_TRANSACTION>>();
 	const id = route.params?.id;
@@ -273,4 +273,4 @@ const useEditTransactions = () => {
 	}
 };
 
-export { useEditTransactions };
+export { useEditTransaction };

@@ -23,33 +23,38 @@ const useTransactions = () => {
 
 	const { transactionsQuery } = useTransactionsRef()
 	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
-
 	
-	useEffect(() => {
+	const fetchTransactions = () => {
 		const transactionsWithMonthQuery = transactionsQuery(
 			[["yearMonth", "==", selectedYearMonth]],
 			[[orderBy.column, orderBy.order]]
 		);
-		if(!transactionsWithMonthQuery) return;
-
+	
+		if (!transactionsWithMonthQuery) return;
+	
 		const unsubscribe = onSnapshot(
-			transactionsWithMonthQuery, 
+			transactionsWithMonthQuery,
 			(snapshot) => {
 				const lista: Transaction[] = [];
-
+	
 				snapshot.forEach((doc) => {
 					lista.push({
 						id: doc.id,
 						...doc.data() as Omit<Transaction, 'id'>,
 					});
 				});
-
+	
 				setTransactions(lista);
 				setIsLoadingTransactions(false);
 			}
 		);
-
-		return () => unsubscribe();
+	
+		return unsubscribe;
+	};
+	
+	useEffect(() => {
+		const unsubscribe = fetchTransactions();
+		return () => unsubscribe?.();
 	}, [selectedYearMonth, orderBy]);
 
 	const onEdit = async (id: string) => {

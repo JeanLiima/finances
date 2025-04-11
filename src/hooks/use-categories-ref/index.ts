@@ -19,8 +19,8 @@ const useCategoriesRef = () => {
 		? collection(db, "users", loggedUser.id, "categories")
 		: undefined;
 
-	const categoriesDoc = (id: string) => loggedUser && id
-		? doc(db, "users", loggedUser.id, "categories", id)
+	const categoriesDoc = (categoryId: string) => loggedUser
+		? doc(db, "users", loggedUser.id, "categories", categoryId)
 		: undefined;
 
 	const categoriesQuery = (

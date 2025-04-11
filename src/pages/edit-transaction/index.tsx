@@ -12,8 +12,9 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Input } from "@/design-system/input";
 import { Select } from "@/design-system/select";
+import { Loading } from "@/components/loading";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
-import { useEditTransactions } from "@/hooks/use-edit-transaction";
+import { useEditTransaction } from "@/hooks/use-edit-transaction";
 import { useCategories } from "@/hooks/use-categories";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 
@@ -38,25 +39,16 @@ const EditTransaction = () => {
 		categoryId,
 		onChangeCategory,
 		isLoadingSubmitting
-	} = useEditTransactions();
+	} = useEditTransaction();
 
-	const { categories } = useCategories();
+	const { isLoadingCategories, categories } = useCategories();
 
 	const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
 	const isDisabled = description === '' || isNaN(parseFloat(amount)) || (isExpense && !categoryId);
 
-	if (isLoadingEdit) {
+	if (isLoadingEdit || isLoadingCategories) {
 		return (
-			<View
-				style={{
-					flex: 1,
-					justifyContent: 'center',
-					alignItems: 'center',
-					backgroundColor: '#F0F4FF',
-				}}
-			>
-				<ActivityIndicator size="large" color="#131313" />
-			</View>
+			<Loading />
 		);
 	}
 

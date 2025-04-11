@@ -7,8 +7,8 @@ import { MonthlyCarousel } from "@/components/monthly-carousel";
 import { AddTransactionFooterButton } from "@/components/add-transaction-footer-button";
 import { Loading } from "@/components/loading";
 import { Transaction } from "@/types/transaction";
+import { useTransactions } from "@/hooks/use-transactions";
 
-import { useTransactions } from "./hooks/use-transactions";
 import { TransactionItem } from "./components/transaction-item";
 import { SwipeOptions } from "./components/swipe-options";
 import { HeaderList } from "./components/header-list";

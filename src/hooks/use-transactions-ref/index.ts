@@ -19,8 +19,8 @@ const useTransactionsRef = () => {
 		? collection(db, "users", loggedUser.id, "transactions")
 		: undefined;
 
-	const transactionsDoc = (id: string) => loggedUser && id
-		? doc(db, "users", loggedUser.id, "transactions", id)
+	const transactionsDoc = (transactionId: string) => loggedUser
+		? doc(db, "users", loggedUser.id, "transactions", transactionId)
 		: undefined;
 
 	const transactionsQuery = (
