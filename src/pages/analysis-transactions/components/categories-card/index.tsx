@@ -6,15 +6,15 @@ import { styles } from "./styles";
 import { formatCurrency } from "@/utils/format-currency";
 import { Category } from "@/types/category";
 
-interface CategoryCardProps {
+type CategoriesCardProps = {
 	analytics: Analytics;
 	categories: Category[]
 }
 
-const CategoryCard = ({
+const CategoriesCard = ({
 	analytics,
 	categories,
-}: CategoryCardProps) => {
+}: CategoriesCardProps) => {
 	const totalIncome = analytics.types.income ?? 0;
 
 	return (
@@ -72,4 +72,4 @@ const CategoryCard = ({
 	);
 };
 
-export { CategoryCard };
+export { CategoriesCard };
