@@ -15,7 +15,7 @@ const useDeleteTransaction = () => {
 		if (!transactionsRef) return;
 
 		try {
-			if (!item.groupId) {
+			if (!item.installment) {
 				await onDeleteAnalytics({
 					amount: item.amount,
 					yearMonth: item.yearMonth,
@@ -27,7 +27,7 @@ const useDeleteTransaction = () => {
 				return;
 			} else {
 				const transactionsWithGroupIdQuery = transactionsQuery(
-					[["groupId", "==", item.groupId]],
+					[["installment.groupId", "==", item.installment.groupId]],
 					undefined,
 					12
 				);
@@ -53,7 +53,7 @@ const useDeleteTransaction = () => {
 	};
 
 	const onSelectDeleteType = async (item: Transaction) => {
-		if (!item.groupId) {
+		if (!item.installment) {
 			await onDelete(item);
 			return;
 		};
