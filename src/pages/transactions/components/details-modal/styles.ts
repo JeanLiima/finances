@@ -14,10 +14,11 @@ const styles = StyleSheet.create({
 		gap: 8,
 	},
 	modalDescriptionContent: {
-		flex: 0.8,
+		flex: 0.9,
 		justifyContent: "flex-start",
 		backgroundColor: "#FFF",
-		gap: 8
+		gap: 8,
+		marginBottom: 8,
 	},
 	title: {
 		alignSelf: "center",
