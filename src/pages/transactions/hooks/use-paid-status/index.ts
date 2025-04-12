@@ -24,12 +24,14 @@ const usePaidStatus = () => {
 					yearMonth: item.yearMonth,
 					status: item.status,
 					type: item.type,
+					categoryId: item.categoryId
 				},
 				{
 					amount: item.amount,
 					yearMonth: item.yearMonth,
 					status: newStatus,
 					type: item.type,
+					categoryId: item.categoryId
 				}
 			);
 		} catch (error) {
