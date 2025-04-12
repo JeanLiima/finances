@@ -23,16 +23,16 @@ const TransactionsFooterButtons = ({ yearMonth }: TransactionsFooterButtonsProps
 	return (
 		<View style={styles.container}>
 			<TouchableOpacity
-				onPress={onNew}
-				style={styles.addButton}
-			>
-				<Feather name="plus" size={24} color="#fff" />
-			</TouchableOpacity>
-			<TouchableOpacity
 				onPress={() => navigate(route.name === TRANSACTIONS ? TRANSACTIONS_ANALYSIS : TRANSACTIONS)}
 				style={styles.addButton}
 			>
 				<Feather name={route.name === TRANSACTIONS ? "bar-chart" : "list"} size={24} color="#fff" />
+			</TouchableOpacity>
+			<TouchableOpacity
+				onPress={onNew}
+				style={styles.addButton}
+			>
+				<Feather name="plus" size={24} color="#fff" />
 			</TouchableOpacity>
 		</View>
 	);
