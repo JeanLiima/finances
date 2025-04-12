@@ -6,6 +6,10 @@ import { db } from "@/services/firebase-connection";
 import { useAnalyticsRef } from "../use-analytics-ref";
 
 type AnalyticsData = Pick<Transaction, 'amount' | 'yearMonth' | 'type' | 'status' | 'categoryId'>;
+type AnalyticsUpdate = {
+	oldData: AnalyticsData;
+	newData: AnalyticsData;
+};
 
 const useAnalytics = () => {
 	const { analyticsDoc } = useAnalyticsRef();
@@ -205,11 +209,85 @@ const useAnalytics = () => {
 		}
 	};
 
+	const onBatchUpdateAnalytics = async (updates: AnalyticsUpdate[]) => {
+		const groupedByMonth: Record<string, AnalyticsUpdate[]> = {};
+	
+		for (const update of updates) {
+			const oldMonth = update.oldData.yearMonth;
+			const newMonth = update.newData.yearMonth;
+	
+			if (oldMonth !== newMonth) {
+				if (!groupedByMonth[oldMonth]) groupedByMonth[oldMonth] = [];
+				if (!groupedByMonth[newMonth]) groupedByMonth[newMonth] = [];
+	
+				groupedByMonth[oldMonth].push({ oldData: update.oldData, newData: null! });
+				groupedByMonth[newMonth].push({ oldData: null!, newData: update.newData });
+			} else {
+				if (!groupedByMonth[newMonth]) groupedByMonth[newMonth] = [];
+				groupedByMonth[newMonth].push(update);
+			}
+		}
+	
+		const promises = Object.entries(groupedByMonth).map(async ([yearMonth, updates]) => {
+			const analyticsRef = analyticsDoc(yearMonth);
+			if (!analyticsRef) return;
+	
+			await runTransaction(db, async (analytics) => {
+				const snapshot = await analytics.get(analyticsRef);
+				if (!snapshot.exists()) return;
+	
+				const data = snapshot.data();
+				const types = data.types || {};
+				const statusAgg = data.status || {};
+				const categoryAgg = data.categories || {};
+				const total = data.total || { count: 0, sum: 0 };
+	
+				for (const { oldData, newData } of updates) {
+					if (oldData) {
+						if (types[oldData.type]) types[oldData.type] -= oldData.amount;
+						if (statusAgg[oldData.status]) statusAgg[oldData.status] -= oldData.amount;
+						if (oldData.categoryId && categoryAgg[oldData.categoryId]) {
+							categoryAgg[oldData.categoryId] -= oldData.amount;
+						}
+						total.sum -= oldData.amount;
+					}
+	
+					if (newData) {
+						types[newData.type] = (types[newData.type] || 0) + newData.amount;
+						statusAgg[newData.status] = (statusAgg[newData.status] || 0) + newData.amount;
+						if (newData.categoryId) {
+							categoryAgg[newData.categoryId] = (categoryAgg[newData.categoryId] || 0) + newData.amount;
+						}
+						total.sum += newData.amount;
+					}
+				}
+	
+				analytics.set(
+					analyticsRef,
+					{
+						types,
+						status: statusAgg,
+						categories: categoryAgg,
+						total: {
+							count: total.count, 
+							sum: Math.max(total.sum, 0),
+						},
+						updatedAt: new Date(),
+					},
+					{ merge: true }
+				);
+			});
+		});
+	
+		await Promise.all(promises);
+	};
+
 	return {
 		onUpdateAnalytics,
 		onRegisterAnalytics,
-		onDeleteAnalytics
+		onDeleteAnalytics,
+		onBatchUpdateAnalytics,
 	};
 };
 
-export { useAnalytics };
+export { useAnalytics, type AnalyticsData, type AnalyticsUpdate };
