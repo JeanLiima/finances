@@ -20,10 +20,10 @@ const useTransactions = () => {
 		order: 'asc'
 	});
 	const [selectedYearMonth, setSelectedYearMonth] = useState<string>(formatYearMonth(new Date()));
-
+	
 	const { transactionsQuery } = useTransactionsRef()
 	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
-	
+
 	const fetchTransactions = () => {
 		const transactionsWithMonthQuery = transactionsQuery(
 			[["yearMonth", "==", selectedYearMonth]],
