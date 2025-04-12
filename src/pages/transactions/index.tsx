@@ -6,8 +6,8 @@ import { MonthlyCarousel } from "@/components/monthly-carousel";
 import { TransactionsFooterButtons } from "@/components/transactions-footer-buttons";
 import { Loading } from "@/components/loading";
 import { Transaction } from "@/types/transaction";
-import { useTransactions } from "@/hooks/use-transactions";
 
+import { useTransactions } from "./hooks/use-transactions";
 import { HeaderList } from "./components/header-list";
 import { DetailsModal } from "./components/details-modal";
 import { TransactionsList } from "./components/transactions-list";
