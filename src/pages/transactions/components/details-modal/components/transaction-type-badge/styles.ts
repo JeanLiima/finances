@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 		marginVertical: 13,
 		marginHorizontal: 15,
 		borderWidth: 1,
-		borderRadius: 4,
+		borderRadius: 8,
 		flexDirection: "row",
 	},
 	badgeText: {

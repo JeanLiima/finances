@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 		backgroundColor: "#FFF",
 		flexDirection: "row",
-		borderRadius: 4,
+		borderRadius: 8,
 		marginBottom: 10,
 		height: 50,
 		alignItems: "center",
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.1,
-		shadowRadius: 4,
+		shadowRadius: 8,
 		elevation: 3,
 	},
 	content:{

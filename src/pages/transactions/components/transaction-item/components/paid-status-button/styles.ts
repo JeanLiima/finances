@@ -4,8 +4,8 @@ const styles = StyleSheet.create({
 	paidButton: {
 		width: 50,
 		height: '100%',
-		borderTopLeftRadius: 4,
-		borderBottomLeftRadius: 4,
+		borderTopLeftRadius: 8,
+		borderBottomLeftRadius: 8,
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: '#3B82F6',
