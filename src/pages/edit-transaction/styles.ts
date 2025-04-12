@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 	submitButtonText: {
-        fontSize: 20,
+        fontSize: 16,
         color: '#FFF',
     },
 	backButton: {
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
 	},
 	backButtonText: {
-        fontSize: 20,
+        fontSize: 16,
         color: '#3b3dbf',
     },
 	disabled: {

@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     nextButtonText: {
-        fontSize: 20,
+        fontSize: 16,
         color: '#FFF',
     },
 	backButton: {
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
 	},
 	backButtonText: {
-        fontSize: 20,
+        fontSize: 16,
         color: '#3b3dbf',
     },
 });

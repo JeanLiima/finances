@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20,
     },
     submitButtonText: {
-        fontSize: 20,
+        fontSize: 16,
         color: '#FFF',
     },
 	disabled: {

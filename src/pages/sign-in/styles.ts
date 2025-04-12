@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     submitText: {
-        fontSize: 20,
+        fontSize: 16,
         color: '#FFF',
     },
     link: {

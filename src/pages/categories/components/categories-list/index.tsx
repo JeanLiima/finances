@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import { Category } from "@/types/category";
@@ -41,6 +41,7 @@ const CategoriesList = ({
 				onPress={onEdit}
 			>
 				<Feather name="edit" size={16} color="#FFF" />
+				<Text style={styles.editButtonText}>Editar porcentagens</Text>
 			</TouchableOpacity>
 			<SwipeListView
 				style={styles.list}

@@ -7,15 +7,19 @@ export const styles = StyleSheet.create({
 		padding: 16,
 	},
 	editButton: {
-		alignSelf: 'flex-end',
+		flexDirection: 'row',
 		marginBottom: 10,
-		width: 45,
 		height: 45,
         borderRadius: 8,
+		gap: 8,
         backgroundColor: '#3b3dbf',
         alignItems: 'center',
         justifyContent: 'center',
 	},
+	editButtonText: {
+        fontSize: 16,
+        color: '#FFF',
+    },
 	list: {
 		flex: 1,
 		marginTop: 8,
