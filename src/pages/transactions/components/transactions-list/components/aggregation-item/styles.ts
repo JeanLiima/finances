@@ -2,11 +2,10 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
 	container:{
-		marginTop: 10,
 		backgroundColor: "#FFF",
 		flexDirection: "row",
 		borderRadius: 8,
-		marginBottom: 5,
+		marginBottom: 14,
 		height: 50,
 		alignItems: "center",
 		justifyContent: "space-between",
@@ -18,16 +17,33 @@ const styles = StyleSheet.create({
 		shadowRadius: 8,
 		elevation: 3,
 	},
-	content:{
+	aggregationCard: {
+		backgroundColor: "transparent",
+		flexDirection: "column",
+		borderRadius: 8,
+		width: "100%",
+	},
+	aggregationChildren: {
+		width: "95%",
+		alignSelf: "flex-end"
+	},
+	dataContent: { 
+		height: "100%",
+		width: "100%", 
+		flexDirection: "row", 
+		alignItems: "center", 
+		paddingRight: 20,
+	},
+	textContent:{
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "space-between",
 		flexDirection: "row",
-		marginEnd: 35,
+		padding: 12,
 	},
 	item:{
-		marginLeft: 13,
 		color: "#000",
+		marginLeft: 8,
 		fontSize: 16,
 	},
 });
