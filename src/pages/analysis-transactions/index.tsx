@@ -5,7 +5,7 @@ import {
 
 import { EmptyTransactionState } from "@/components/empty-transaction-state";
 import { MonthlyCarousel } from "@/components/monthly-carousel";
-import { AddTransactionFooterButton } from "@/components/add-transaction-footer-button";
+import { TransactionsFooterButtons } from "@/components/transactions-footer-buttons";
 import { Loading } from "@/components/loading";
 import { useCategories } from "@/hooks/use-categories";
 
@@ -50,7 +50,7 @@ const TransactionAnalysis = () => {
 			) : (
 				<EmptyTransactionState />
 			)}
-			<AddTransactionFooterButton yearMonth={selectedYearMonth} />
+			<TransactionsFooterButtons yearMonth={selectedYearMonth} />
 		</View>
 	);
 };

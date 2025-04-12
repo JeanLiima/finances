@@ -4,7 +4,7 @@ import { View } from "react-native";
 
 import { EmptyTransactionState } from "@/components/empty-transaction-state";
 import { MonthlyCarousel } from "@/components/monthly-carousel";
-import { AddTransactionFooterButton } from "@/components/add-transaction-footer-button";
+import { TransactionsFooterButtons } from "@/components/transactions-footer-buttons";
 import { Loading } from "@/components/loading";
 import { Transaction } from "@/types/transaction";
 import { useTransactions } from "@/hooks/use-transactions";
@@ -63,7 +63,7 @@ const Transactions = () => {
 			) : (
 				<EmptyTransactionState />
 			)}
-			<AddTransactionFooterButton yearMonth={selectedYearMonth} />
+			<TransactionsFooterButtons yearMonth={selectedYearMonth} />
 			<DetailsModal 
 				data={transaction} 
 				onClose={() => setTransaction(null)}
