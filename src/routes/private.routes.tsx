@@ -9,6 +9,7 @@ import {
 	TRANSACTIONS_ANALYSIS,
 	SETTINGS,
 	CATEGORIES,
+	AGGREGATIONS,
 } from '@/constants/routes';
 import { RegisterTransaction } from '@/pages/register-transaction';
 import { Transactions } from '@/pages/transactions';
@@ -16,6 +17,7 @@ import { EditTransaction } from '@/pages/edit-transaction';
 import { TransactionAnalysis } from '@/pages/analysis-transactions';
 import { Settings } from '@/pages/settings';
 import { Categories } from '@/pages/categories';
+import { Aggregations } from '@/pages/aggregations';
 
 const PrivateDrawer = createDrawerNavigator();
 
@@ -31,7 +33,7 @@ const PrivateRoutes = () => (
 			headerTitleAlign: 'center',
 			drawerItemStyle: {
 				marginVertical: 4,
-				borderRadius: 4,
+				borderRadius: 8,
 			},
 			drawerActiveBackgroundColor: '#3b3dbf',
 			drawerActiveTintColor: '#FFF',
@@ -85,6 +87,14 @@ const PrivateRoutes = () => (
 			component={Categories}
 			options={{
 				title: 'Categorias',
+				drawerItemStyle: { display: 'none' },
+			}}
+		/>
+		<PrivateDrawer.Screen
+			name={AGGREGATIONS}
+			component={Aggregations}
+			options={{
+				title: 'Agrupamento',
 				drawerItemStyle: { display: 'none' },
 			}}
 		/>

@@ -12,7 +12,11 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		fontSize: 17,
 		color: '#121212',
-	}
+	},
+	label: {
+		fontSize: 18,
+		marginBottom: 10,
+	},
 });
 
 export { styles }

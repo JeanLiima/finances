@@ -6,6 +6,7 @@ const EDIT_TRANSACTION = 'edit-transaction';
 const TRANSACTIONS_ANALYSIS = 'transactions-analysis';
 const SETTINGS = 'settings';
 const CATEGORIES = 'categories';
+const AGGREGATIONS = 'aggregations';
 
 type RootStackParamList = {
 	[SIGN_IN]: undefined,
@@ -15,7 +16,8 @@ type RootStackParamList = {
 	[REGISTER_TRANSACTION]?: { yearMonth?: string },
 	[EDIT_TRANSACTION]?: { id?: string },
 	[SETTINGS]: undefined,
-	[CATEGORIES]: undefined
+	[CATEGORIES]: undefined,
+	[AGGREGATIONS]: undefined
 };
 
 export {
@@ -27,5 +29,6 @@ export {
 	TRANSACTIONS_ANALYSIS,
 	SETTINGS,
 	CATEGORIES,
+	AGGREGATIONS,
 	type RootStackParamList,
 };
