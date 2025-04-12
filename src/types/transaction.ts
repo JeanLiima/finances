@@ -14,8 +14,8 @@ type Transaction = {
 	categoryId: string | null,
 	totalAmount: number | null,
 	lastUpdatedAt: Timestamp | null,
-	groupId: string | null,
 	installment: {
+		groupId: string,
 		totalInstallment: number,
 		currentInstallment: number,
 	} | null
