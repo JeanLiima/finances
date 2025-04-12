@@ -46,7 +46,6 @@ const useRegisterTransaction = () => {
 			const { 
 				yearMonth,
 				installment,
-				groupId,
 				amount,
 				type = TRANSACTIONS_TYPES.EXPENSE,
 				description = '',
@@ -60,8 +59,8 @@ const useRegisterTransaction = () => {
 			: new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
 			const parsedInstallments = installment?.totalInstallment ? Number(installment.totalInstallment) : 1;
-			const parsedGroupId = groupId ?? doc(transactionsCollection).id;
-			const hasInstallmentAndGroupId = parsedInstallments > 1;
+			const parsedGroupId = installment?.groupId || doc(transactionsCollection).id;
+			const hasInstallment = parsedInstallments > 1;
 
 			for (let i = 0; i < parsedInstallments; i++) {
 				const installmentDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
@@ -82,12 +81,12 @@ const useRegisterTransaction = () => {
 					
 					status: PAID_STATUS.UNPAID,
 					yearMonth: formatYearMonth(installmentDate),
-					totalAmount: hasInstallmentAndGroupId ? parsedAmount : null,
-					installment: hasInstallmentAndGroupId ? {
+					totalAmount: hasInstallment ? parsedAmount : null,
+					installment: hasInstallment ? {
 						totalInstallment: parsedInstallments,
 						currentInstallment: i + 1,
+						groupId: parsedGroupId,
 					} : null,
-					groupId: hasInstallmentAndGroupId ? parsedGroupId : null,
 				};
 
 				await addDoc(transactionsCollection, payload);
@@ -117,7 +116,8 @@ const useRegisterTransaction = () => {
 			type,
 			installment: {
 				totalInstallment: Number(totalInstallment),
-				currentInstallment: 0
+				currentInstallment: 0,
+				groupId: ''
 			},
 			yearMonth
 		};
