@@ -8,9 +8,10 @@ import { TransactionsFooterButtons } from "@/components/transactions-footer-butt
 import { Loading } from "@/components/loading";
 import { Transaction } from "@/types/transaction";
 import { useTransactions } from "@/hooks/use-transactions";
+import { useDeleteTransaction } from "@/hooks/use-delete-transaction";
+import { SwipeOptions } from "@/components/swipe-options";
 
 import { TransactionItem } from "./components/transaction-item";
-import { SwipeOptions } from "./components/swipe-options";
 import { HeaderList } from "./components/header-list";
 import { DetailsModal } from "./components/details-modal";
 
@@ -27,6 +28,8 @@ const Transactions = () => {
 		onSelectYearMonth,
 		selectedYearMonth
 	} = useTransactions();
+
+	const {	onConfirmDelete } = useDeleteTransaction();
 
 	const hasTransactions = transactions.length > 0;
 
@@ -49,9 +52,10 @@ const Transactions = () => {
 						renderItem={({ item }) => <TransactionItem data={item} onViewDetails={() => setTransaction(item)} />}
 						renderHiddenItem={({ item }, rowMap) => (
 							<SwipeOptions
-								item={item}
+								itemId={item.id}
 								rowMap={rowMap}
 								onEdit={() => onEdit(item.id)}
+								onDelete={() => onConfirmDelete(item)}
 							/>
 						)}
 						swipeToOpenPercent={20}
@@ -63,7 +67,7 @@ const Transactions = () => {
 			) : (
 				<EmptyTransactionState />
 			)}
-			<TransactionsFooterButtons yearMonth={selectedYearMonth} />
+			<TransactionsFooterButtons yearMonth={selectedYearMonth} onlyAddButton={!hasTransactions} />
 			<DetailsModal 
 				data={transaction} 
 				onClose={() => setTransaction(null)}

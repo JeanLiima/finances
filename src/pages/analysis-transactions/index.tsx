@@ -26,7 +26,7 @@ const TransactionAnalysis = () => {
 
 	const { categories } = useCategories();
 
-	const hasAnalytics = !!analytics;
+	const hasAnalytics = !!analytics && (analytics?.total?.sum ?? 0) > 0;
 
 	if (isLoadingAnalysisTransactions) {
 		return (
@@ -50,7 +50,7 @@ const TransactionAnalysis = () => {
 			) : (
 				<EmptyTransactionState />
 			)}
-			<TransactionsFooterButtons yearMonth={selectedYearMonth} />
+			<TransactionsFooterButtons yearMonth={selectedYearMonth} onlyAddButton={!hasAnalytics}/>
 		</View>
 	);
 };
