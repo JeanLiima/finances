@@ -21,6 +21,7 @@ const useDeleteTransaction = () => {
 					yearMonth: item.yearMonth,
 					type: item.type,
 					status: item.status,
+					categoryId: item.categoryId
 				});
 				await deleteDoc(transactionsRef);
 				return;
@@ -41,6 +42,7 @@ const useDeleteTransaction = () => {
 						yearMonth: data.yearMonth,
 						type: data.type,
 						status: data.status,
+						categoryId: item.categoryId
 					});
 				});
 				await Promise.all(batchDeletes);
