@@ -121,7 +121,7 @@ const useEditTransaction = () => {
 			? newPayload.amount ?? 0 
 			: newPayload.totalAmount ?? 0;
 
-		await onDelete({ ...oldPayload, id });
+		await onDelete({ item: { ...oldPayload, id } });
 		await onRegister({
 			...newPayload,
 			amount,

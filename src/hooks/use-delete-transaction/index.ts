@@ -10,12 +10,18 @@ const useDeleteTransaction = () => {
 	const { transactionsDoc, transactionsQuery } = useTransactionsRef();
 	const { onDeleteAnalytics } = useAnalytics();
 
-	const onDelete = async (item: Transaction) => {
+	const onDelete = async ({
+		item, 
+		isIsolatedDelete = false 
+	}: {
+		item : Transaction, 
+		isIsolatedDelete?: boolean
+	}) => {
 		const transactionsRef = transactionsDoc(item.id);
 		if (!transactionsRef) return;
 
 		try {
-			if (!item.installment) {
+			if (isIsolatedDelete || !item.installment) {
 				await onDeleteAnalytics({
 					amount: item.amount,
 					yearMonth: item.yearMonth,
@@ -54,7 +60,7 @@ const useDeleteTransaction = () => {
 
 	const onSelectDeleteType = async (item: Transaction) => {
 		if (!item.installment) {
-			await onDelete(item);
+			await onDelete({ item });
 			return;
 		};
 		
@@ -70,7 +76,7 @@ const useDeleteTransaction = () => {
 						[
 							{
 								text: "Continuar",
-								onPress: () => {onDelete(item)},
+								onPress: () => {onDelete({ item, isIsolatedDelete: true })},
 								style: "destructive",
 							},
 							{
@@ -83,7 +89,7 @@ const useDeleteTransaction = () => {
 				},
 				{
 					text: "Todas",
-					onPress: () => {onDelete(item)},
+					onPress: () => {onDelete({ item })},
 					style: "destructive",
 				},
 				{
