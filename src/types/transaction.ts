@@ -11,7 +11,7 @@ type Transaction = {
 	type: TRANSACTIONS_TYPES,
 	createdAt: Timestamp,
 	yearMonth: string,
-	categoryId: string | null;
+	categoryId: string | null,
 	totalAmount: number | null,
 	lastUpdatedAt: Timestamp | null,
 	groupId: string | null,

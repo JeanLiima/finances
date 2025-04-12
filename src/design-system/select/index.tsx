@@ -1,5 +1,12 @@
-import { SetStateAction, useState } from 'react';
-import { View, Text, Modal, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import { useMemo, useState } from 'react';
+import { 
+	View, 
+	Text, 
+	Modal, 
+	TouchableWithoutFeedback, 
+	TouchableOpacity, 
+	Keyboard 
+} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 import { styles } from './styles';
@@ -11,7 +18,7 @@ interface Options {
 
 interface SelectProps { 
 	value?: string, 
-	onChangeValue: (value: SetStateAction<string | undefined>) => void,
+	onChangeValue: (id: string) => void,
 	options: Options[],
 	placeholder?: string,
 	label?: string,
@@ -28,17 +35,23 @@ const Select = ({
 }: SelectProps) => {
 	const [modalVisible, setModalVisible] = useState(false);
 
-	const hasValue = value && value.length > 0;
-	const formattedValue = options.find(option => option.value === value)?.label;
+	const hasValue = useMemo(() => !!value && value.length > 0, [value]);
+	const formattedValue = useMemo(() => hasValue? options.find(option => option.value === value)!.label : '', [options, value]);
 	const displayText = hasValue ? formattedValue : (placeholder ?? 'Selecionar');
 
-	const handleValueChange = (itemValue: string) => onChangeValue(itemValue ?? null);
+	const handleValueChange = (selectedId: string) => onChangeValue(selectedId);
 
 	return (
 		<>
 			<View style={styles.container}>
 				<Text style={styles.label}>{label}</Text>
-				<TouchableOpacity onPress={() => setModalVisible(true)} style={styles.trigger}>
+				<TouchableOpacity 
+					onPress={() => {
+						Keyboard.dismiss();
+						setModalVisible(true);
+					}} 
+					style={styles.trigger}
+				>
 					<Text style={[styles.triggerText, { color: hasValue ? '#121212' : "#ccc" }]}>
 						{displayText}
 					</Text>
