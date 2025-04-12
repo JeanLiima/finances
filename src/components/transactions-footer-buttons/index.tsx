@@ -7,10 +7,11 @@ import { REGISTER_TRANSACTION, RootStackParamList, TRANSACTIONS, TRANSACTIONS_AN
 import { styles } from "./styles";
 
 interface TransactionsFooterButtonsProps {
-	yearMonth?: string
+	yearMonth?: string,
+	onlyAddButton?: boolean
 }
 
-const TransactionsFooterButtons = ({ yearMonth }: TransactionsFooterButtonsProps) => {
+const TransactionsFooterButtons = ({ yearMonth, onlyAddButton = false }: TransactionsFooterButtonsProps) => {
 	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 	const route = useRoute<RouteProp<RootStackParamList>>();
 
@@ -22,12 +23,14 @@ const TransactionsFooterButtons = ({ yearMonth }: TransactionsFooterButtonsProps
 
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity
-				onPress={() => navigate(route.name === TRANSACTIONS ? TRANSACTIONS_ANALYSIS : TRANSACTIONS)}
-				style={styles.addButton}
-			>
-				<Feather name={route.name === TRANSACTIONS ? "bar-chart" : "list"} size={24} color="#fff" />
-			</TouchableOpacity>
+			{!onlyAddButton && (
+				<TouchableOpacity
+					onPress={() => navigate(route.name === TRANSACTIONS ? TRANSACTIONS_ANALYSIS : TRANSACTIONS)}
+					style={styles.addButton}
+					>
+					<Feather name={route.name === TRANSACTIONS ? "bar-chart" : "list"} size={24} color="#fff" />
+				</TouchableOpacity>
+			)}
 			<TouchableOpacity
 				onPress={onNew}
 				style={styles.addButton}
