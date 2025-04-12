@@ -21,7 +21,7 @@ const CategoriesList = ({
 			style={styles.editButton}
 			onPress={onEdit}
 		>
-			<Feather name="edit" size={16} color="#3b3dbf" />
+			<Feather name="edit" size={16} color="#FFF" />
 		</TouchableOpacity>
 		<FlatList
 			data={categories}
