@@ -8,9 +8,9 @@ import {
 } from "react-native"
 
 import { Aggregation } from "@/types/aggregation";
+import { Input } from "@/design-system/input";
 
 import { styles } from "./styles";
-import { Input } from "@/design-system/input";
 
 interface EditAggregationModalProps {
 	data: Aggregation | null,

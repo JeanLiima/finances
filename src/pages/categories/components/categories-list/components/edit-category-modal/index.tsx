@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { 
 	Modal, 
 	Text, 
@@ -7,28 +7,36 @@ import {
 	View 
 } from "react-native"
 
+import { Category } from "@/types/category";
 import { Input } from "@/design-system/input";
 
 import { styles } from "./styles";
 
-interface RegisterAggregationModalProps {
-	isOpen?: boolean,
-	onSubmit: (newName: string) => void,
+interface EditCategoryModalProps {
+	data: Category | null,
+	onSubmit: (id: string, newName: string) => void,
 	onClose: VoidFunction
 }
 
-const RegisterAggregationModal = ({ isOpen = false, onClose, onSubmit }: RegisterAggregationModalProps) => {
-	const [name, setName] = useState<string>('');
+const EditCategoryModal = ({ data, onClose, onSubmit }: EditCategoryModalProps) => {
+	const [name, setName] = useState<string>(data?.name ?? '');
+
+	useEffect(() => {
+		if(data) {
+			setName(data.name);
+		}
+	}, [data])
 
 	const isDisabled = name?.trim()?.length === 0;
 
 	const handleSubmit = () => {
-		onSubmit(name);
+		if(!data?.id) return onClose();
+		onSubmit(data.id, name);
 		onClose();
 	};
 
 	return (
-		<Modal visible={isOpen} animationType="fade" transparent>
+		<Modal visible={!!data} animationType="fade" transparent>
 			<TouchableWithoutFeedback onPress={onClose}>
 				<View style={styles.container}>
 					<TouchableWithoutFeedback>
@@ -61,4 +69,4 @@ const RegisterAggregationModal = ({ isOpen = false, onClose, onSubmit }: Registe
 	)
 };
 
-export { RegisterAggregationModal }
+export { EditCategoryModal }

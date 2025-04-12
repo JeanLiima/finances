@@ -3,11 +3,12 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
 	card: {
 		flexDirection: "row",
+		justifyContent: "center",
 		alignItems: "center",
-		justifyContent: "space-between",
+		gap: 8,
 		backgroundColor: '#fff',
 		borderRadius: 8,
-		padding: 16,
+		padding: 12,
 		marginBottom: 16,
 		shadowColor: '#000',
 		shadowOpacity: 0.05,

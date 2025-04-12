@@ -15,5 +15,11 @@ export const styles = StyleSheet.create({
         backgroundColor: '#3b3dbf',
         alignItems: 'center',
         justifyContent: 'center',
+	},
+	list: {
+		flex: 1,
+		marginTop: 8,
+		marginLeft: 8,
+		marginRight: 8,
 	}
 });

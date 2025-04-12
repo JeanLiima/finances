@@ -11,13 +11,13 @@ import { Input } from "@/design-system/input";
 
 import { styles } from "./styles";
 
-interface RegisterAggregationModalProps {
+interface RegisterCategoryModalProps {
 	isOpen?: boolean,
 	onSubmit: (newName: string) => void,
 	onClose: VoidFunction
 }
 
-const RegisterAggregationModal = ({ isOpen = false, onClose, onSubmit }: RegisterAggregationModalProps) => {
+const RegisterCategoryModal = ({ isOpen = false, onClose, onSubmit }: RegisterCategoryModalProps) => {
 	const [name, setName] = useState<string>('');
 
 	const isDisabled = name?.trim()?.length === 0;
@@ -61,4 +61,4 @@ const RegisterAggregationModal = ({ isOpen = false, onClose, onSubmit }: Registe
 	)
 };
 
-export { RegisterAggregationModal }
+export { RegisterCategoryModal }

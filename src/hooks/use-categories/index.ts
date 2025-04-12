@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { doc, getDoc, getDocs, writeBatch } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 
 import { useCategoriesRef } from "@/hooks/use-categories-ref";
 import { Category } from "@/types/category";
@@ -55,6 +55,10 @@ const useCategories = () => {
 		setIsLoadingCategories(false);
 	}, []);
 
+	useEffect(() => {
+		getCategories();
+	}, []);
+
 	const getCategoryById = async (id: string): Promise<Category | null> => {
 		const categoryRef = categoriesDoc(id);
 		if (!categoryRef) return null;
@@ -86,15 +90,43 @@ const useCategories = () => {
 		getCategories();
 	};
 
-	useEffect(() => {
-		getCategories();
-	}, []);
+	const onEditCategory = async (id: string, newName: string) => {
+			const categoryRef = categoriesDoc(id);
+			if (!categoryRef) return;
+		
+			await updateDoc(categoryRef, { name: newName });
+		
+			getCategories();
+		};
+	
+		const onDeleteCategory = async (id: string) => {
+			const categoryRef = categoriesDoc(id);
+			if (!categoryRef) return;
+		
+			await deleteDoc(categoryRef);
+		
+			getCategories();
+		};
+	
+		const onRegisterCategory = async (name: string) => {
+			if(!categoriesCollection) return;
+			const newCategoryRef = doc(categoriesCollection);
+			
+			await setDoc(newCategoryRef, {
+				name
+			});
+		
+			getCategories();
+		};
 
 	return {
 		isLoadingCategories,
 		categories,
 		onUpdateCategoryPercentages,
 		getCategoryById,
+		onRegisterCategory,
+		onDeleteCategory,
+		onEditCategory
 	}
 };
 

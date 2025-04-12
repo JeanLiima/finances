@@ -48,8 +48,8 @@ const Aggregations = () => {
 				)}
 				ListFooterComponent={<NewAggregationCard onNew={() => setIsAggregationToRegisterOpen(true)}/>}
 				swipeToOpenPercent={20}
-				rightOpenValue={-190}
-				leftOpenValue={-80}
+				rightOpenValue={-165}
+				disableRightSwipe
 				showsVerticalScrollIndicator={false}
 			/>
 			<EditAggregationModal 
