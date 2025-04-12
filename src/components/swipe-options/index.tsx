@@ -27,18 +27,21 @@ const SwipeOptions = ({
 
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity
-				style={styles.editButton}
-				onPress={handleEdit}
-			>
-				<Feather name="edit" size={24} color="#fff" />
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.deleteButton}
-				onPress={handleDelete}
-			>
-				<Feather name="trash-2" size={24} color="#fff" />
-			</TouchableOpacity>
+			<View style={{ flex: 0.5 }}></View>
+			<View style={styles.content}>
+				<TouchableOpacity
+					style={styles.editButton}
+					onPress={handleEdit}
+					>
+					<Feather name="edit" size={24} color="#fff" />
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.deleteButton}
+					onPress={handleDelete}
+					>
+					<Feather name="trash-2" size={24} color="#fff" />
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 };
