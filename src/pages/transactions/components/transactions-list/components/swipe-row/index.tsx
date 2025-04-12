@@ -37,6 +37,7 @@ const SwipeRow = ({
 			)}
 			swipeToOpenPercent={20}
 			rightOpenValue={rightOpenValue ?? -180}
+			leftOpenValue={-80}
 			disableRightSwipe
 			disableLeftSwipe={false}
 		/>

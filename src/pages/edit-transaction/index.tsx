@@ -63,85 +63,89 @@ const EditTransaction = () => {
 				behavior={Platform.OS === 'ios' ? 'padding' : undefined}
 				enabled
 			>
-				<Input
-					placeholder="Descrição"
-					value={description}
-					onChangeText={onChangeDescription}
-					returnKeyType="next"
-					onSubmitEditing={() => valueRef.current?.focus()}
-				/>
-				<Input
-					placeholder="Valor"
-					value={amount}
-					onChangeText={onChangeAmount}
-					keyboardType="numeric"
-					returnKeyType="done"
-					ref={valueRef}
-					onSubmitEditing={onConfirmeEdit}
-				/>
-				<TransactionTypeSelector value={type} onChange={onChangeType} />
-				{isExpense && (
-					<>
-						<Select 
-							value={categoryId} 
-							onChangeValue={onChangeCategory}
-							label="Categoria:"
-							options={categories.map(({id, name}) => ({
-								label: name,
-								value: id
-							}))}
-							optional={false}
+				<View style={styles.form}>
+					<Input
+						placeholder="Descrição"
+						value={description}
+						onChangeText={onChangeDescription}
+						returnKeyType="next"
+						onSubmitEditing={() => valueRef.current?.focus()}
 						/>
-						<Select 
-							value={aggregationId} 
-							onChangeValue={onChangeAggregation}
-							label="Agrupamento: (Opcional)"
-							options={aggregations.map(({id, name}) => ({
-								label: name,
-								value: id
-							}))}
+					<Input
+						placeholder="Valor"
+						value={amount}
+						onChangeText={onChangeAmount}
+						keyboardType="numeric"
+						returnKeyType="done"
+						ref={valueRef}
+						onSubmitEditing={onConfirmeEdit}
 						/>
-					</>
-				)}
-				<Select 
-					value={totalInstallment} 
-					onChangeValue={onChangeTotalInstallment}
-					label="Parcelamento: (Opcional)"
-					options={Array.from({ length: 12 }, (_, i) => ({
-						label: `${i + 1}x`,
-						value: `${i + 1}`,
-					}))}
-				/>
-				<TouchableOpacity
-                    activeOpacity={0.8}
-                    style={[
-						styles.submitButton,
-						isDisabled && styles.disabled
-					]}
-                    onPress={onConfirmeEdit}
-					disabled={isDisabled || isLoadingSubmitting}
-                >
-                    {isLoadingSubmitting ? (
-                        <ActivityIndicator size={20} color="#FFF" />
-                    ) : (
-                        <Text style={styles.submitButtonText}>
-							Salvar
-						</Text>
-                    )}
-                </TouchableOpacity>
-				<TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.backButton}
-                    onPress={goBack}
-                >
-                    {isLoadingSubmitting ? (
-                        <ActivityIndicator size={20} color="#3b3dbf" />
-                    ) : (
-                        <Text style={styles.backButtonText}>
-							Voltar
-						</Text>
-                    )}
-                </TouchableOpacity>
+					<TransactionTypeSelector value={type} onChange={onChangeType} />
+					{isExpense && (
+						<>
+							<Select 
+								value={categoryId} 
+								onChangeValue={onChangeCategory}
+								label="Categoria:"
+								options={categories.map(({id, name}) => ({
+									label: name,
+									value: id
+								}))}
+								optional={false}
+								/>
+							<Select 
+								value={aggregationId} 
+								onChangeValue={onChangeAggregation}
+								label="Agrupamento: (Opcional)"
+								options={aggregations.map(({id, name}) => ({
+									label: name,
+									value: id
+								}))}
+								/>
+						</>
+					)}
+					<Select 
+						value={totalInstallment} 
+						onChangeValue={onChangeTotalInstallment}
+						label="Parcelamento: (Opcional)"
+						options={Array.from({ length: 12 }, (_, i) => ({
+							label: `${i + 1}x`,
+							value: `${i + 1}`,
+						}))}
+					/>
+				</View>
+				<View style={styles.buttonsContent}>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						style={[
+							styles.submitButton,
+							isDisabled && styles.disabled
+						]}
+						onPress={onConfirmeEdit}
+						disabled={isDisabled || isLoadingSubmitting}
+						>
+						{isLoadingSubmitting ? (
+							<ActivityIndicator size={20} color="#FFF" />
+						) : (
+							<Text style={styles.submitButtonText}>
+								Salvar
+							</Text>
+						)}
+					</TouchableOpacity>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						style={styles.backButton}
+						onPress={goBack}
+						>
+						{isLoadingSubmitting ? (
+							<ActivityIndicator size={20} color="#3b3dbf" />
+						) : (
+							<Text style={styles.backButtonText}>
+								Voltar
+							</Text>
+						)}
+					</TouchableOpacity>
+				</View>
 			</KeyboardAvoidingView>
 		</View>
 	)

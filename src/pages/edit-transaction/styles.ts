@@ -8,10 +8,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-		paddingTop: 20
+		paddingTop: 20,
+		justifyContent: "space-between"
     },
+	form: {
+		width: '100%',
+	},
+	buttonsContent: {
+		width: '100%',
+		paddingHorizontal: 20,
+		paddingBottom: 40,
+	},
     submitButton: {
-        width: '89%',
+        width: '100%',
         height: 45,
         borderRadius: 8,
         backgroundColor: '#3b3dbf',
@@ -24,7 +33,7 @@ const styles = StyleSheet.create({
         color: '#FFF',
     },
 	backButton: {
-		width: '89%',
+		width: '100%',
         height: 45,
         borderRadius: 8,
 		backgroundColor: '#FFF',
