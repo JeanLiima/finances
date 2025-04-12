@@ -54,7 +54,7 @@ const AggregationItem = ({ item, onEdit, onDelete, onViewDetails }: AggregationI
 						</Text>
 						<Text style={[styles.item, {color: "#E83F5B"}]}>R$ -{totalAmount}</Text>
 					</View>
-					<AntDesign name={isChildrenOpen ? 'down' : 'up'} size={16} color="#000" />
+					<AntDesign name={isChildrenOpen ? 'up' : 'down'} size={16} color="#000" />
 				</TouchableOpacity>
 			</View>
 			{isChildrenOpen && (
