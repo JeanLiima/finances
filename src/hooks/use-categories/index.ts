@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { doc, getDocs, writeBatch } from "firebase/firestore";
+import { doc, getDoc, getDocs, writeBatch } from "firebase/firestore";
 
 import { useCategoriesRef } from "@/hooks/use-categories-ref";
 import { Category } from "@/types/category";
@@ -55,6 +55,20 @@ const useCategories = () => {
 		setIsLoadingCategories(false);
 	}, []);
 
+	const getCategoryById = async (id: string): Promise<Category | null> => {
+		const categoryRef = categoriesDoc(id);
+		if (!categoryRef) return null;
+	
+		const categorySnap = await getDoc(categoryRef);
+	
+		if (!categorySnap.exists()) return null;
+	
+		return {
+			id: categorySnap.id,
+			...(categorySnap.data() as Omit<Category, "id">),
+		};
+	};
+
 	const onUpdateCategoryPercentages = async (
 		updates: Record<string, number>
 	) => {
@@ -80,6 +94,7 @@ const useCategories = () => {
 		isLoadingCategories,
 		categories,
 		onUpdateCategoryPercentages,
+		getCategoryById,
 	}
 };
 

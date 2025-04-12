@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { 
 	Modal, 
 	Text, 
@@ -10,10 +11,12 @@ import { TermValue } from "@/design-system/term-value";
 import { formatCurrency } from "@/utils/format-currency";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 import { Transaction } from "@/types/transaction";
+import { Category } from "@/types/category";
+import { Divider } from "@/design-system/divider";
+import { useCategories } from "@/hooks/use-categories";
 
 import { TransactionTypeBadge } from "./components/transaction-type-badge";
 import { styles } from "./styles";
-import { Divider } from "@/design-system/divider";
 
 interface DetailsModalProps {
 	data: Transaction | null,
@@ -21,6 +24,20 @@ interface DetailsModalProps {
 }
 
 const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
+	const [category, setCategory] = useState<Category | null>(null);
+	
+	const  { getCategoryById } = useCategories();
+
+	useEffect(() => {
+		const fetchCategory = async () => {
+			if (data?.categoryId) {
+				const fetchedCategory = await getCategoryById(data.categoryId);
+				setCategory(fetchedCategory);
+			}
+		};
+		fetchCategory();
+	}, [data, getCategoryById]);
+	
 	const isIncomeType = data?.type === TRANSACTIONS_TYPES.INCOME;
 	
 	const formattedAmount = data?.amount ? formatCurrency(data?.amount) : undefined;
@@ -31,14 +48,15 @@ const DetailsModal = ({ data, onClose }: DetailsModalProps) => {
 		<Modal visible={!!data} animationType="fade" transparent={true}>
         	<View style={styles.container}>
 				<TouchableWithoutFeedback onPress={onClose}>
-				<View style={{ flex:1 }}></View>
+					<View style={{ flex:1 }}></View>
 				</TouchableWithoutFeedback>
 				<View style={styles.modalContent}>
 					{data?.type && <TransactionTypeBadge type={data.type} />}
 					<Text style={styles.title}>Detalhes</Text>
 					<Divider />
 					<View style={styles.modalDescriptionContent}>
-						<TermValue term={"Descrição: "}>{data?.description}</TermValue>
+						<TermValue term="Descrição: ">{data?.description}</TermValue>
+						{category && <TermValue term="Categoria: ">{category?.name}</TermValue>}
 						{data?.installment?.totalInstallment && (
 							<TermValue term={"Quantidade de vezes: "}>
 								{data?.installment?.totalInstallment}
