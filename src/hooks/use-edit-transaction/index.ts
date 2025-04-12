@@ -84,7 +84,7 @@ const useEditTransaction = () => {
 
 	const fetchOriginalTransactionData = async (groupId: string) => {
 		const transactionsWithGroupIdQuery = transactionsQuery(
-			[["groupId", "==", groupId]],
+			[["installment.groupId", "==", groupId]],
 			[["yearMonth", "asc"]],
 			1
 		);
@@ -112,7 +112,7 @@ const useEditTransaction = () => {
 		let originalCreatedAt = newPayload.createdAt;
 
 		if (hasGroupId) {
-			const { yearMonth, createdAt } = await fetchOriginalTransactionData(newPayload.groupId!);
+			const { yearMonth, createdAt } = await fetchOriginalTransactionData(newPayload.installment!.groupId);
 			originalYearMonth = yearMonth;
 			originalCreatedAt = createdAt;
 		}
@@ -128,11 +128,11 @@ const useEditTransaction = () => {
 			totalAmount: amount,
 			installment: hasInstallment ? {
 				totalInstallment: Number(newPayload.installment?.totalInstallment),
-				currentInstallment: 0
+				currentInstallment: 0,
+				groupId: newPayload.installment!.groupId,
 			} : undefined,
 			yearMonth: originalYearMonth,
 			createdAt: originalCreatedAt,
-			groupId: hasGroupId ? newPayload.groupId : undefined,
 		});
 	};
 
@@ -178,12 +178,12 @@ const useEditTransaction = () => {
 		setIsLoadingSubmitting(true);
 
 		try {
-			const { installment, groupId } = newPayload;
+			const { installment } = newPayload;
 
-			const hasGroupId = !!groupId;
-			const hasInstallment = !!installment?.totalInstallment && Number(installment.totalInstallment) > 1;
+			const hasGroupId = !!installment?.groupId;
+			const hasTotalInstallment = !!installment?.totalInstallment && Number(installment.totalInstallment) > 1;
 
-			if (isIsolatedEdit || (!hasGroupId && !hasInstallment)) {
+			if (isIsolatedEdit || !hasTotalInstallment) {
 				await handleUpdate(id, newPayload, oldPayload);
 			} else {
 				await handleDeleteAndRegister(
@@ -191,7 +191,7 @@ const useEditTransaction = () => {
 					oldPayload, 
 					id, 
 					hasGroupId, 
-					hasInstallment, 
+					hasTotalInstallment, 
 					shouldRedistributeValue
 				);
 			}
@@ -216,16 +216,16 @@ const useEditTransaction = () => {
 			categoryId: isExpense ? categoryId : undefined,
 			installment: {
 				totalInstallment: Number(totalInstallment),
-				currentInstallment: 0
+				currentInstallment: 0,
+				groupId: restOfData?.installment?.groupId ?? ''
 			},
 			lastUpdatedAt: Timestamp.fromDate(new Date()),
 			totalAmount: restOfData.totalAmount,
 			yearMonth: restOfData.yearMonth,
 			createdAt: restOfData.createdAt,
-			groupId: restOfData.groupId
 		};
 
-		if (!restOfData.groupId) {
+		if (!restOfData.installment?.groupId) {
 			await onEdit({ 
 				id, 
 				newPayload, 
