@@ -27,6 +27,7 @@ const useEditTransaction = () => {
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
 	const [totalInstallment, setTotalInstallment] = useState<string | undefined>(undefined);
 	const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
+	const [aggregationId, setAggregationId] = useState<string | undefined>(undefined);
 	const [restOfData, setRestOfData] = useState<Transaction | undefined>(undefined);
 
 	const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(true);
@@ -54,11 +55,12 @@ const useEditTransaction = () => {
 	
 			if (docSnap.exists()) {
 				const data = docSnap.data() as Transaction;
-				const { description, amount, installment, type, categoryId } = data; 
+				const { description, amount, installment, type, categoryId, aggregationId } = data; 
 				setDescription(description);
 				setAmount(amount.toString());
 				setType(type);
 				setCategoryId(categoryId ?? undefined);
+				setAggregationId(aggregationId ?? undefined);
 				setTotalInstallment(installment?.totalInstallment.toString());
 				setRestOfData(data);
 			} else {
@@ -80,6 +82,7 @@ const useEditTransaction = () => {
 		setTotalInstallment(undefined);
 		setCategoryId(undefined);
 		setRestOfData(undefined);
+		setAggregationId(undefined);
 	};
 
 	const fetchOriginalTransactionData = async (groupId: string) => {
@@ -214,6 +217,7 @@ const useEditTransaction = () => {
 			amount: Number(amount),
 			type,
 			categoryId: isExpense ? categoryId : undefined,
+			aggregationId: isExpense ? aggregationId : undefined,
 			installment: {
 				totalInstallment: Number(totalInstallment),
 				currentInstallment: 0,
@@ -262,11 +266,13 @@ const useEditTransaction = () => {
 		type,
 		totalInstallment,
 		categoryId,
+		aggregationId,
 		onChangeDescription: setDescription,
 		onChangeAmount: handleAmount,
 		onChangeType: setType,
 		onChangeTotalInstallment: (id: string) => setTotalInstallment(id),
 		onChangeCategory: (id: string) => setCategoryId(id),
+		onChangeAggregation: (id: string) => setAggregationId(id),
 		onConfirmeEdit,
 		isLoadingEdit,
 		isLoadingSubmitting,

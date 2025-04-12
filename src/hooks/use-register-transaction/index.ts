@@ -16,6 +16,7 @@ const useRegisterTransaction = () => {
 	const [amount, setAmount] = useState<string>('');
 	const [totalInstallment, setTotalInstallment] = useState<string | undefined>(undefined);
 	const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
+	const [aggregationId, setAggregationId] = useState<string | undefined>(undefined);
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
 	const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
 
@@ -31,6 +32,7 @@ const useRegisterTransaction = () => {
 		setType(TRANSACTIONS_TYPES.EXPENSE);
 		setTotalInstallment(undefined);
 		setCategoryId(undefined);
+		setAggregationId(undefined);
 	};
 
 	useEffect(() => {
@@ -52,6 +54,7 @@ const useRegisterTransaction = () => {
 				createdAt = Timestamp.fromDate(new Date()),
 				lastUpdatedAt = null,
 				categoryId = null,
+				aggregationId = null,
 			} = partialPayload;
 
 			const baseDate = yearMonth
@@ -74,6 +77,7 @@ const useRegisterTransaction = () => {
 
 					description,
 					categoryId: isExpense ? categoryId : null,
+					aggregationId: isExpense ? aggregationId : null,
 					type,
 					createdAt,
 					lastUpdatedAt,
@@ -113,6 +117,7 @@ const useRegisterTransaction = () => {
 			description,
 			amount: Number(amount),
 			categoryId,
+			aggregationId,
 			type,
 			installment: {
 				totalInstallment: Number(totalInstallment),
@@ -138,11 +143,13 @@ const useRegisterTransaction = () => {
 		type,
 		totalInstallment,
 		categoryId,
+		aggregationId,
 		onChangeDescription: setDescription,
 		onChangeAmount: handleAmount,
 		onChangeType: setType,
 		onChangeTotalInstallment: (id: string) => setTotalInstallment(id),
 		onChangeCategory: (id: string) => setCategoryId(id),
+		onChangeAggregation: (id: string) => setAggregationId(id),
 		onRegister,
 		onConfirmRegister,
 		isLoadingRegister

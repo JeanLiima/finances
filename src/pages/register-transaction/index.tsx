@@ -14,6 +14,7 @@ import { Input } from "@/design-system/input";
 import { Select } from "@/design-system/select";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
+import { useAggregations } from "@/hooks/use-aggregations";
 import { useRegisterTransaction } from "@/hooks/use-register-transaction";
 import { useCategories } from "@/hooks/use-categories";
 import { Loading } from "@/components/loading";
@@ -38,14 +39,17 @@ const RegisterTransaction = () => {
 		onChangeTotalInstallment,
 		categoryId,
 		onChangeCategory,
+		aggregationId,
+		onChangeAggregation
 	}= useRegisterTransaction();
 
 	const {	isLoadingCategories, categories } = useCategories();
+	const { isLoadingAggregations, aggregations } = useAggregations();
 
 	const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
 	const isDisabled = description === '' || isNaN(parseFloat(amount)) || (isExpense && !categoryId);
 
-	if (isLoadingCategories) {
+	if (isLoadingCategories || isLoadingAggregations) {
 		return (
 			<Loading />
 		);
@@ -76,16 +80,27 @@ const RegisterTransaction = () => {
 				/>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
 				{isExpense && (
-					<Select 
-						value={categoryId} 
-						onChangeValue={onChangeCategory}
-						label="Categoria:"
-						options={categories.map(({id, name}) => ({
-							label: name,
-							value: id
-						}))}
-						optional={false}
-					/>
+					<>
+						<Select 
+							value={categoryId} 
+							onChangeValue={onChangeCategory}
+							label="Categoria:"
+							options={categories.map(({id, name}) => ({
+								label: name,
+								value: id
+							}))}
+							optional={false}
+						/>
+						<Select 
+							value={aggregationId} 
+							onChangeValue={onChangeAggregation}
+							label="Agrupamento: (Opcional)"
+							options={aggregations.map(({id, name}) => ({
+								label: name,
+								value: id
+							}))}
+						/>
+					</>
 				)}
 				<Select 
 					value={totalInstallment} 

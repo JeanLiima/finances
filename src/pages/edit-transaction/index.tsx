@@ -16,6 +16,7 @@ import { Loading } from "@/components/loading";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
 import { useEditTransaction } from "@/hooks/use-edit-transaction";
 import { useCategories } from "@/hooks/use-categories";
+import { useAggregations } from "@/hooks/use-aggregations";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
 
 import { styles } from "./styles";
@@ -38,15 +39,18 @@ const EditTransaction = () => {
 		onChangeTotalInstallment,
 		categoryId,
 		onChangeCategory,
-		isLoadingSubmitting
+		isLoadingSubmitting,
+		aggregationId,
+		onChangeAggregation
 	} = useEditTransaction();
 
 	const { isLoadingCategories, categories } = useCategories();
+	const { isLoadingAggregations, aggregations } = useAggregations();
 
 	const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
 	const isDisabled = description === '' || isNaN(parseFloat(amount)) || (isExpense && !categoryId);
 
-	if (isLoadingEdit || isLoadingCategories) {
+	if (isLoadingEdit || isLoadingCategories || isLoadingAggregations) {
 		return (
 			<Loading />
 		);
@@ -77,16 +81,27 @@ const EditTransaction = () => {
 				/>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
 				{isExpense && (
-					<Select 
-						value={categoryId} 
-						onChangeValue={onChangeCategory}
-						label="Categoria:"
-						options={categories.map(({id, name}) => ({
-							label: name,
-							value: id
-						}))}
-						optional={false}
-					/>
+					<>
+						<Select 
+							value={categoryId} 
+							onChangeValue={onChangeCategory}
+							label="Categoria:"
+							options={categories.map(({id, name}) => ({
+								label: name,
+								value: id
+							}))}
+							optional={false}
+						/>
+						<Select 
+							value={aggregationId} 
+							onChangeValue={onChangeAggregation}
+							label="Agrupamento: (Opcional)"
+							options={aggregations.map(({id, name}) => ({
+								label: name,
+								value: id
+							}))}
+						/>
+					</>
 				)}
 				<Select 
 					value={totalInstallment} 
