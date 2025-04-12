@@ -16,7 +16,6 @@ const useRegisterTransaction = () => {
 	const [amount, setAmount] = useState<string>('');
 	const [totalInstallment, setTotalInstallment] = useState<string | undefined>(undefined);
 	const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
-	const [parentId, setParentId] = useState<string | undefined>(undefined);
 	const [type, setType] = useState<TRANSACTIONS_TYPES>(TRANSACTIONS_TYPES.EXPENSE);
 	const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
 
@@ -139,13 +138,11 @@ const useRegisterTransaction = () => {
 		type,
 		totalInstallment,
 		categoryId,
-		parentId,
 		onChangeDescription: setDescription,
 		onChangeAmount: handleAmount,
 		onChangeType: setType,
 		onChangeTotalInstallment: (id: string) => setTotalInstallment(id),
 		onChangeCategory: (id: string) => setCategoryId(id),
-		onChangeParentId: setParentId,
 		onRegister,
 		onConfirmRegister,
 		isLoadingRegister

@@ -13,7 +13,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Input } from "@/design-system/input";
 import { Select } from "@/design-system/select";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
-import { useTransactions } from "@/hooks/use-transactions";
 import { TransactionTypeSelector } from "@/components/transaction-type-selection";
 import { useRegisterTransaction } from "@/hooks/use-register-transaction";
 import { useCategories } from "@/hooks/use-categories";
@@ -39,18 +38,14 @@ const RegisterTransaction = () => {
 		onChangeTotalInstallment,
 		categoryId,
 		onChangeCategory,
-		parentId,
-		onChangeParentId,
 	}= useRegisterTransaction();
 
 	const {	isLoadingCategories, categories } = useCategories();
 
-	const { isLoadingTransactions, transactions } = useTransactions();
-
 	const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
 	const isDisabled = description === '' || isNaN(parseFloat(amount)) || (isExpense && !categoryId);
 
-	if (isLoadingTransactions || isLoadingCategories) {
+	if (isLoadingCategories) {
 		return (
 			<Loading />
 		);
@@ -81,28 +76,16 @@ const RegisterTransaction = () => {
 				/>
 				<TransactionTypeSelector value={type} onChange={onChangeType} />
 				{isExpense && (
-					<>
-						<Select 
-							value={categoryId} 
-							onChangeValue={onChangeCategory}
-							label="Categoria:"
-							options={categories.map(({id, name}) => ({
-								label: name,
-								value: id
-							}))}
-							optional={false}
-						/>
-						<Select 
-							value={parentId} 
-							onChangeValue={onChangeParentId}
-							label="Vínculo:"
-							options={transactions.map(({id, description}) => ({
-								label: description,
-								value: id
-							}))}
-							optional={false}
-						/>
-					</>
+					<Select 
+						value={categoryId} 
+						onChangeValue={onChangeCategory}
+						label="Categoria:"
+						options={categories.map(({id, name}) => ({
+							label: name,
+							value: id
+						}))}
+						optional={false}
+					/>
 				)}
 				<Select 
 					value={totalInstallment} 
