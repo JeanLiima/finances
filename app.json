@@ -29,13 +29,10 @@
 			"projectId": "8a0ba4fc-390c-44f6-a30f-29426c062e37"
 		}
     },
-    "sdkVersion": "52.0.0",
     "updates": {
       	"url": "https://u.expo.dev/8a0ba4fc-390c-44f6-a30f-29426c062e37"
     },
     "owner": "jean_liima",
-    "runtimeVersion": {
-      	"policy": "appVersion"
-    }
+    "runtimeVersion": "exposdk:52.0.0"
   }
 }

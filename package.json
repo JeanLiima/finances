@@ -7,7 +7,8 @@
 		"android": "expo start --android",
 		"ios": "expo start --ios",
 		"web": "expo start --web",
-		"update:prod": "dotenv -e .env.production eas update --branch production --message \"Update production\""
+		"update:prod": "dotenv -e .env.production eas update --branch production --message \"Update production\"",
+		"deploy:prod": "eas deploy --prod"
 	},
 	"dependencies": {
 		"@expo/vector-icons": "^14.0.2",
