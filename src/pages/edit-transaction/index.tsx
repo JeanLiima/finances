@@ -6,7 +6,8 @@ import {
 	KeyboardAvoidingView, 
 	Platform,
 	ActivityIndicator,
-	TextInput
+	TextInput,
+	Keyboard
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -18,6 +19,7 @@ import { useEditTransaction } from "@/hooks/use-edit-transaction";
 import { useCategories } from "@/hooks/use-categories";
 import { useAggregations } from "@/hooks/use-aggregations";
 import { TRANSACTIONS_TYPES } from "@/constants/transaction-types";
+import { CurrencyInput } from "@/components/currency-input";
 
 import { styles } from "./styles";
 
@@ -70,16 +72,15 @@ const EditTransaction = () => {
 						onChangeText={onChangeDescription}
 						returnKeyType="next"
 						onSubmitEditing={() => valueRef.current?.focus()}
-						/>
-					<Input
+					/>
+					<CurrencyInput
 						placeholder="Valor"
 						value={amount}
 						onChangeText={onChangeAmount}
-						keyboardType="numeric"
 						returnKeyType="done"
 						ref={valueRef}
-						onSubmitEditing={onConfirmeEdit}
-						/>
+						onSubmitEditing={() => Keyboard.dismiss()}
+					/>
 					<TransactionTypeSelector value={type} onChange={onChangeType} />
 					{isExpense && (
 						<>
@@ -91,8 +92,7 @@ const EditTransaction = () => {
 									label: name,
 									value: id
 								}))}
-								optional={false}
-								/>
+							/>
 							<Select 
 								value={aggregationId} 
 								onChangeValue={onChangeAggregation}

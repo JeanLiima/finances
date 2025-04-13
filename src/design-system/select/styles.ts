@@ -14,20 +14,24 @@ export const styles = StyleSheet.create({
 		padding: 10,
 		backgroundColor: '#FFF',
 		borderRadius: 8,
+		overflow: 'hidden',
+		borderWidth: 1,
+		borderColor: "#ccc",
 	},
 	triggerText: {
 		fontSize: 17,
 		color: '#121212',
 	},
 	label: {
-		fontSize: 18,
-		marginBottom: 10,
+		marginBottom: 8,
+		color: "#333",
+		fontSize: 14,
+		fontWeight: "bold",
 	},
 	pickerContainer: {
 		flex: 0.4,
 		backgroundColor: '#fff',
 		borderRadius: 8,
-		overflow: 'hidden',
 	},
 	picker: {
 		justifyContent: "flex-start",

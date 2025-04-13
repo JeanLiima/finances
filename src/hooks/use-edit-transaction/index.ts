@@ -57,7 +57,11 @@ const useEditTransaction = () => {
 				const data = docSnap.data() as Transaction;
 				const { description, amount, installment, type, categoryId, aggregationId } = data; 
 				setDescription(description);
-				setAmount(amount.toString());
+				setAmount(amount.toLocaleString("pt-BR", {
+					style: "currency",
+					currency: "BRL",
+					minimumFractionDigits: 2,
+				}));
 				setType(type);
 				setCategoryId(categoryId ?? undefined);
 				setAggregationId(aggregationId ?? undefined);
@@ -211,10 +215,11 @@ const useEditTransaction = () => {
 	const onSelectEditType = async () => {
 		if(!id || !restOfData) return;
 
+		const cleaned = amount.replace(/\./g, "").replace(",", ".");
 		const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
 		const newPayload: Partial<Transaction> = {
 			description,
-			amount: Number(amount),
+			amount: parseFloat(cleaned),
 			type,
 			categoryId: isExpense ? categoryId : undefined,
 			aggregationId: isExpense ? aggregationId : undefined,
@@ -247,19 +252,6 @@ const useEditTransaction = () => {
 		});
 	};
 
-	const onConfirmeEdit = () => {
-		onSelectEditType();
-	};
-
-	const handleAmount = (newAmount: string) => {
-		const formattedAmount = newAmount.replace(',', '.');
-
-		if (formattedAmount?.split('.')[0]?.length > 14) return;
-		if (formattedAmount?.split('.')[1]?.length > 2) return;
-
-		setAmount(formattedAmount);
-	};
-
 	return {
 		description,
 		amount,
@@ -268,12 +260,12 @@ const useEditTransaction = () => {
 		categoryId,
 		aggregationId,
 		onChangeDescription: setDescription,
-		onChangeAmount: handleAmount,
+		onChangeAmount: setAmount,
 		onChangeType: setType,
-		onChangeTotalInstallment: (id: string) => setTotalInstallment(id),
-		onChangeCategory: (id: string) => setCategoryId(id),
-		onChangeAggregation: (id: string) => setAggregationId(id),
-		onConfirmeEdit,
+		onChangeTotalInstallment: setTotalInstallment,
+		onChangeCategory: setCategoryId,
+		onChangeAggregation: setAggregationId,
+		onConfirmeEdit: onSelectEditType,
 		isLoadingEdit,
 		isLoadingSubmitting,
 	}

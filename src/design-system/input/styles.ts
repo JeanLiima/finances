@@ -6,16 +6,30 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 		marginBottom: 15,
 	},
-	input: {
-		backgroundColor: '#FFF',
-		padding: 10,
-		borderRadius: 8,
-		fontSize: 17,
-		color: '#121212',
-	},
 	label: {
-		fontSize: 18,
-		marginBottom: 10,
+		marginBottom: 8,
+		color: "#333",
+		fontSize: 14,
+		fontWeight: "bold",
+	},
+	inputWrapper: {
+		backgroundColor: '#FFF',
+		flexDirection: "row",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: "#ccc",
+		borderRadius: 8,
+		padding: 10,
+	},
+	input: {
+		flex: 1,
+		fontSize: 16,
+		color: "#000",
+	},
+	prefix: {
+		marginRight: 8,
+		fontSize: 16,
+		color: "#666",
 	},
 });
 

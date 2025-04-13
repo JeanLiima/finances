@@ -21,8 +21,7 @@ interface SelectProps {
 	onChangeValue: (id: string) => void,
 	options: Options[],
 	placeholder?: string,
-	label?: string,
-	optional?: boolean,
+	label?: string
 }
 
 const Select = ({
@@ -31,7 +30,6 @@ const Select = ({
 	value,
 	onChangeValue,
 	options,
-	optional = true
 }: SelectProps) => {
 	const [modalVisible, setModalVisible] = useState(false);
 
@@ -44,7 +42,7 @@ const Select = ({
 	return (
 		<>
 			<View style={styles.container}>
-				{ label && <Text style={styles.label}>{label}</Text> }
+				{ label && <Text style={styles.label}>{label}</Text>}
 				<TouchableOpacity 
 					onPress={() => {
 						Keyboard.dismiss();
@@ -72,7 +70,7 @@ const Select = ({
 						itemStyle={styles.pickerItem}
 						mode="dropdown"
 					>
-						{optional && <Picker.Item label="Selecione..." value={''} enabled={false} />}
+						<Picker.Item label="Selecione..." value={''} enabled={false} />
 						{options.map(item => (
 							<Picker.Item 
 								key={item.value} 

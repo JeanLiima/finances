@@ -24,7 +24,7 @@ const TypeButton = ({ label, selected, onPress, icon, color }: TypeButtonProps) 
 		]}
 		onPress={onPress}
 	>
-		<Feather name={icon} size={20} color={selected ? color : "#ccc"} />
+		<Feather name={icon} size={16} color={selected ? color : "#ccc"} />
 		<Text style={[styles.label, { color: selected ? color : "#ccc" }]}>{label}</Text>
 	</TouchableOpacity>
 );

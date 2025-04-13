@@ -113,9 +113,10 @@ const useRegisterTransaction = () => {
 	};
 
 	const onConfirmRegister = () => {
+		const cleaned = amount.replace(/\./g, "").replace(",", ".");
 		const partialPayload: Partial<Transaction> = {
 			description,
-			amount: Number(amount),
+			amount: parseFloat(cleaned),
 			categoryId,
 			aggregationId,
 			type,
@@ -130,13 +131,6 @@ const useRegisterTransaction = () => {
 		onRegister(partialPayload);
 	};
 
-	const handleAmount = (newAmount: string) => {
-		const formattedAmount = newAmount.replace(',', '.');
-		if(formattedAmount?.split('.')[0]?.length > 14) return;
-		if(formattedAmount?.split('.')[1]?.length > 2) return;
-		setAmount(formattedAmount);
-	};
-
 	return {
 		description,
 		amount,
@@ -145,11 +139,11 @@ const useRegisterTransaction = () => {
 		categoryId,
 		aggregationId,
 		onChangeDescription: setDescription,
-		onChangeAmount: handleAmount,
+		onChangeAmount: setAmount,
 		onChangeType: setType,
-		onChangeTotalInstallment: (id: string) => setTotalInstallment(id),
-		onChangeCategory: (id: string) => setCategoryId(id),
-		onChangeAggregation: (id: string) => setAggregationId(id),
+		onChangeTotalInstallment: setTotalInstallment,
+		onChangeCategory: setCategoryId,
+		onChangeAggregation: setAggregationId,
 		onRegister,
 		onConfirmRegister,
 		isLoadingRegister

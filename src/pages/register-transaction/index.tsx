@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useMemo, useRef } from "react"
 import { 
 	View, 
 	Text, 
@@ -6,7 +6,8 @@ import {
 	KeyboardAvoidingView, 
 	Platform,
 	ActivityIndicator,
-	TextInput
+	TextInput,
+	Keyboard
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -18,6 +19,7 @@ import { useAggregations } from "@/hooks/use-aggregations";
 import { useRegisterTransaction } from "@/hooks/use-register-transaction";
 import { useCategories } from "@/hooks/use-categories";
 import { Loading } from "@/components/loading";
+import { CurrencyInput } from "@/components/currency-input";
 
 import { styles } from "./styles";
 
@@ -47,7 +49,13 @@ const RegisterTransaction = () => {
 	const { isLoadingAggregations, aggregations } = useAggregations();
 
 	const isExpense = type === TRANSACTIONS_TYPES.EXPENSE;
-	const isDisabled = description === '' || isNaN(parseFloat(amount)) || (isExpense && !categoryId);
+
+	const hasAmount = useMemo(() => {
+		const raw = amount.replace(/\D/g, "");
+		const numeric = parseInt(raw || "0", 10);
+		return numeric > 0;
+	}, [amount]);
+	const isDisabled = description === '' || !hasAmount || (isExpense && !categoryId);
 
 	if (isLoadingCategories || isLoadingAggregations) {
 		return (
@@ -70,14 +78,13 @@ const RegisterTransaction = () => {
 						returnKeyType="next"
 						onSubmitEditing={() => valueRef.current?.focus()}
 					/>
-					<Input
+					<CurrencyInput
 						placeholder="Valor"
 						value={amount}
 						onChangeText={onChangeAmount}
-						keyboardType="numeric"
 						returnKeyType="done"
 						ref={valueRef}
-						onSubmitEditing={onConfirmRegister}
+						onSubmitEditing={() => Keyboard.dismiss()}
 					/>
 					<TransactionTypeSelector value={type} onChange={onChangeType} />
 					{isExpense && (
@@ -90,7 +97,6 @@ const RegisterTransaction = () => {
 									label: name,
 									value: id
 								}))}
-								optional={false}
 							/>
 							<Select 
 								value={aggregationId} 
