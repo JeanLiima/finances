@@ -8,33 +8,34 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+		"image": "",
+		"resizeMode": "contain",
+		"backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      	"supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "",
-        "backgroundColor": "#ffffff"
-      }
+		"adaptiveIcon": {
+			"foregroundImage": "",
+			"backgroundColor": "#ffffff"
+		}
     },
     "web": {
-      "favicon": ""
+      	"favicon": ""
     },
     "extra": {
-      "eas": {
-        "projectId": "8a0ba4fc-390c-44f6-a30f-29426c062e37"
-      }
+		"eas": {
+			"projectId": "8a0ba4fc-390c-44f6-a30f-29426c062e37"
+		}
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+    "sdkVersion": "52.0.0",
     "updates": {
-      "url": "https://u.expo.dev/8a0ba4fc-390c-44f6-a30f-29426c062e37"
+      	"url": "https://u.expo.dev/8a0ba4fc-390c-44f6-a30f-29426c062e37"
     },
-    "owner": "jean_liima"
+    "owner": "jean_liima",
+    "runtimeVersion": {
+      	"policy": "appVersion"
+    }
   }
 }
