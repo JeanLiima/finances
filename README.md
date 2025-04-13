@@ -91,7 +91,6 @@ FIREBASE_PROJECT_ID=
 FIREBASE_STORAGE_BUCKET=
 FIREBASE_MESSAGING_SENDER_ID=
 FIREBASE_APP_ID=
-FIREBASE_MEASUREMENT_ID=
 ```
 
 ### 4. **Inicie o Expo:**
@@ -119,5 +118,3 @@ FIREBASE_MEASUREMENT_ID=
 ## 📄 Licença
 
 Este projeto está sob a licença MIT.
-
-
