@@ -171,7 +171,7 @@ const useEditTransaction = () => {
 		await updateDoc(transactionsRef, {
 			...newPayload,
 			installment: null,
-			groupId: null
+			aggregationId: null
 		});
 	};
 
