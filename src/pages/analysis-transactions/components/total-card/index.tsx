@@ -11,7 +11,9 @@ interface TotalCardProps {
 }
 
 const TotalCard = ({ analytics }: TotalCardProps) => {
-	const formattedTotalSum = formatCurrency(analytics.total.sum ?? 0);
+	const availableTotal = (analytics.types.income ?? 0) - (analytics.types.expense ?? 0);
+	const formattedTotalSum = formatCurrency(availableTotal);
+	const isDebit = availableTotal < 0;
 
 	return (
 		<View style={styles.card}>
@@ -30,7 +32,16 @@ const TotalCard = ({ analytics }: TotalCardProps) => {
 					<Feather name="dollar-sign" size={18} />
 					<Text style={styles.label}>Total</Text>
 				</View>
-				<Text style={styles.value}>R$ {formattedTotalSum ?? 0}</Text>
+				<Text 
+					style={[
+						styles.value,
+						{
+							color: isDebit ? "#E83F5B" : "#12A454",
+						}
+					]}
+				>
+					R$ {formattedTotalSum ?? 0}
+				</Text>
 			</View>
 		</View>
 	);

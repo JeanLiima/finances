@@ -101,7 +101,7 @@ const EditTransaction = () => {
 									label: name,
 									value: id
 								}))}
-								/>
+							/>
 						</>
 					)}
 					<Select 

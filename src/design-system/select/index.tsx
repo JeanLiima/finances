@@ -42,7 +42,7 @@ const Select = ({
 	return (
 		<>
 			<View style={styles.container}>
-				{ label && <Text style={styles.label}>{label}</Text>}
+				{!!label && <Text style={styles.label}>{label}</Text>}
 				<TouchableOpacity 
 					onPress={() => {
 						Keyboard.dismiss();
