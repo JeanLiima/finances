@@ -8,29 +8,32 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-		"image": "",
-		"resizeMode": "contain",
-		"backgroundColor": "#ffffff"
+      "image": "",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
     "ios": {
-      	"supportsTablet": true
+      "supportsTablet": true
     },
     "android": {
-		"adaptiveIcon": {
-			"foregroundImage": "",
-			"backgroundColor": "#ffffff"
-		}
+      "adaptiveIcon": {
+        "foregroundImage": "",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.jean_liima.finance"
     },
     "web": {
       "favicon": ""
     },
     "extra": {
-		"eas": {
-			"projectId": "8a0ba4fc-390c-44f6-a30f-29426c062e37"
-		}
+      "eas": {
+        "projectId": "8a0ba4fc-390c-44f6-a30f-29426c062e37"
+      }
     },
     "updates": {
-      "url": "https://u.expo.dev/8a0ba4fc-390c-44f6-a30f-29426c062e37"
+      "url": "https://u.expo.dev/8a0ba4fc-390c-44f6-a30f-29426c062e37",
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_ERROR_RECOVERY"
     },
     "owner": "jean_liima",
     "runtimeVersion": "exposdk:52.0.0"
